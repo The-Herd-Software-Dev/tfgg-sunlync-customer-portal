@@ -1,0 +1,10 @@
+global $wp_admin_bar;
+            $wp_admin_bar->remove_menu('edit-profile');    
+            
+            /*$args = array(
+            	'id'    => 'tfgg-edit-profile',
+            	'title' => 'Edit Profile',
+            	'href'  => 'www.google.com',
+            	'meta'  => array( 'class' => 'my-toolbar-page' )
+            );
+            $wp_admin_bar->add_menu( $args );*/
