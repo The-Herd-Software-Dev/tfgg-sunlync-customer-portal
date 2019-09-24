@@ -1157,6 +1157,7 @@
 
     remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
 
+    //2019-09-23 CB V1.0.0.2b - added new class definition
     class tfgg_scp_updater {
 
         private $slug;
