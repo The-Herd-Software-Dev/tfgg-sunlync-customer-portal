@@ -24,10 +24,8 @@
     require_once('register-files.php');
     require_once('tfgg-sunlync-errors.php');
 
-
-    require_once( 'TheHerdGitHubPluginUpdater.php' );
     if ( is_admin() ) {
-        new TheHerdGitHubPluginUpdater( __FILE__, 'The-Herd-Software-Dev', "tfgg-scp-customer-portal" );
+        new tfgg_scp_updater( __FILE__, 'The-Herd-Software-Dev', "tfgg-scp-customer-portal" );
     }
     
 ?>
