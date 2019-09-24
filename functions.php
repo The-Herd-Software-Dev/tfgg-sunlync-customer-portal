@@ -1326,7 +1326,7 @@
             $response->download_link = $downloadLink;
     
             // Load Parsedown
-            require_once __DIR__ . DIRECTORY_SEPARATOR . 'Parsedown.php';
+            require_once __DIR__ . DIRECTORY_SEPARATOR . 'parsedown.php';
     
             // Create tabs in the lightbox
             $response->sections = array(
