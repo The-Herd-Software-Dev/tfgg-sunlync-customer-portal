@@ -1335,6 +1335,7 @@
                     ? Parsedown::instance()->parse( $this->githubAPIResult->body )
                     : $this->githubAPIResult->body
             );
+            $response->name = $this->pluginData["Name"];
     
             // Gets the required version of WP if available
             $matches = null;
