@@ -28,7 +28,7 @@
 
     //2019-09-23 CB V1.0.0.2 - added
     if ( is_admin()  ) {
-        new tfgg_scp_updater( __FILE__, 'The-Herd-Software-Dev', "tfgg-scp-customer-portal" );
+        new tfgg_scp_updater( __FILE__, 'The-Herd-Software-Dev', "tfgg-sunlync-customer-portal" );
     }
     
 ?>
