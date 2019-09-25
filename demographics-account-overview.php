@@ -84,12 +84,12 @@
 			    
 				    <div class="account-overview-generic-container">
 						<div class="account-overview-input-double">
-							<label for="tfgg_cp_demo_firstname"><?php _e('First Name') ?></label>
+							<label for="tfgg_cp_demo_firstname" class="account-overview-label"><?php _e('First Name') ?></label>
 							<input data-alertpnl="alertpnl_firstname" name="tfgg_cp_demo_firstname" id="tfgg_cp_demo_firstname" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->first_name ?>"/>
 							<span id="alertpnl_firstname" style="display:none;" class="reg_alert"></span>
 						</div>
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_demo_lastname"><?php _e('Last Name') ?></label>
+							<label for="tfgg_cp_demo_lastname" class="account-overview-label"><?php _e('Last Name') ?></label>
 							<input data-alertpnl="alertpnl_lastname" name="tfgg_cp_demo_lastname" id="tfgg_cp_demo_lastname" class="required account-overview-input read-only" readonly  <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->last_name ?>" />
 							<span id="alertpnl_lastname" style="display:none;" class="reg_alert"></span>
 						</div>
@@ -99,7 +99,7 @@
 					
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_demo_address"><?php _e('Address') ?></label>
+							<label for="tfgg_cp_demo_address" class="account-overview-label"><?php _e('Address') ?></label>
 							<input data-alertpnl="alertpnl_address" name="tfgg_cp_demo_address" id="tfgg_cp_demo_address" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->address1 ?>" />
 							<span id="alertpnl_address" style="display:none;" class="reg_alert"></span>
 						</div>
@@ -107,7 +107,7 @@
 					
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_demo_address2"><?php _e('Address 2')  ?></label>
+							<label for="tfgg_cp_demo_address2" class="account-overview-label"><?php _e('Address 2')  ?></label>
 							<input data-alertpnl="alertpnl_address2" name="tfgg_cp_demo_address2" id="tfgg_cp_demo_address2" class="account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->address2 ?>" />
 							<span id="alertpnl_address2" style="display:none;" class="reg_alert"></span>
 						</div>
@@ -115,13 +115,13 @@
 					
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-double">					
-							<label for="tfgg_cp_demo_city"><?php _e('City') ?></label>
+							<label for="tfgg_cp_demo_city" class="account-overview-label"><?php _e('City') ?></label>
 							<input data-alertpnl="alertpnl_city" name="tfgg_cp_demo_city" id="tfgg_cp_demo_city" class="account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->city ?>" />
 							<span id="alertpnl_city" style="display:none;" class="reg_alert"></span>
 						</div>
 					
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_demo_postcode"><?php _e('Post Code') ?></label>
+							<label for="tfgg_cp_demo_postcode" class="account-overview-label"><?php _e('Post Code') ?></label>
 							<input data-alertpnl="alertpnl_postcode" name="tfgg_cp_demo_postcode" id="tfgg_cp_demo_postcode" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->zip ?>" />
 							<span id="alertpnl_postcode" style="display:none;" class="reg_alert"></span>
 						</div>
@@ -130,7 +130,7 @@
 	
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-single">	
-							<label for="tfgg_cp_demo_email"><?php _e('E-Mail') ?></label>
+							<label for="tfgg_cp_demo_email" class="account-overview-label"><?php _e('E-Mail') ?></label>
 							<input data-alertpnl="alertpnl_email" name="tfgg_cp_demo_email" id="tfgg_cp_demo_email" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->email ?>" />
 							<span id="alertpnl_email" style="display:none;" class="reg_alert"></span>
 						</div>
@@ -139,7 +139,7 @@
 				
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-single">	
-							<label for="tfgg_cp_demo_cellphone"><?php _e('Mobile Phone') ?></label>
+							<label for="tfgg_cp_demo_cellphone" class="account-overview-label"><?php _e('Mobile Phone') ?></label>
 							<input data-alertpnl="alertpnl_mobile" name="tfgg_cp_demo_cellphone" id="tfgg_cp_demo_cellphone" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->cellphone?>" />
 							<span id="alertpnl_mobile" style="display:none;" class="reg_alert"></span>
 						</div>
@@ -181,7 +181,7 @@
 					
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_demo_username"><?php _e('Login ID') ?></label>
+							<label for="tfgg_cp_demo_username" class="account-overview-label"><?php _e('Login ID') ?></label>
 							<input  name="tfgg_cp_demo_username" id="tfgg_cp_demo_username" class="required account-overview-input-readonly read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $wp_login; ?>" />
 							<span id="tfgg_cp_demo_username" style="display:none;" class="reg_alert"></span>
 						</div>
@@ -189,12 +189,12 @@
 					
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-double">
-							<label for="tfgg_cp_demo_password"><?php _e('Password') ?></label>
+							<label for="tfgg_cp_demo_password" class="account-overview-label"><?php _e('Password') ?></label>
 							<input data-alertpnl="alertpnl_password" name="tfgg_cp_demo_password" id="tfgg_cp_demo_password" class="account-overview-input read-only" readonly <?php echo $disabled ?> type="password" value=""/>
 							<span id="alertpnl_password" style="display:none;" class="reg_alert"></span>
 						</div>
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_demo_password_confirm"><?php _e('Confirm Password') ?></label>
+							<label for="tfgg_cp_demo_password_confirm" class="account-overview-label"><?php _e('Confirm Password') ?></label>
 							<input data-alertpnl="alertpnl_password_confirm" name="tfgg_cp_demo_password_confirm" id="tfgg_cp_demo_password_confirm" class="account-overview-input read-only" readonly  <?php echo $disabled ?> type="password" value="" />
 							<span id="alertpnl_password_confirm" style="display:none;" class="reg_alert"></span>
 						</div>

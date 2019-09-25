@@ -52,7 +52,7 @@
 
                     <h5>Select Store</h5>
                     <div>
-                        <label for="tfgg_store_filter"><?php _e('Filter store by name'); ?></label>
+                        <label for="tfgg_store_filter" class="account-overview-label"><?php _e('Filter store by name'); ?></label>
 						<input id="tfgg_store_filter" name="tfgg_store_filter" class="account-overview-input" type="text"/>							
                     </div>
                     <hr/>

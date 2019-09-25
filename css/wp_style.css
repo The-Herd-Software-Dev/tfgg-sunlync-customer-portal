@@ -56,7 +56,7 @@
     font-weight:400 !important;
 }
 
-input, label {
+input.account-overview-input, label.account-overview-label {
     display:block;
     font-size:0.8em !important;
     padding-right:5px;

@@ -21,7 +21,7 @@
         		
 			    <div class="login-container">
 					<div class="account-overview-input-single">
-						<label for="tfgg_cp_user_login">Login</label>
+						<label for="tfgg_cp_user_login" class="account-overview-label">Login</label>
 						<input name="tfgg_cp_user_login" id="tfgg_cp_user_login" class="required account-overview-input" type="text"/>
 					</div>
 				</div>
@@ -58,14 +58,14 @@
            
             <div class="login-container">
 				<div class="account-overview-input-single">
-					<label for="tfgg_cp_user_login">Login</label>
+					<label for="tfgg_cp_user_login"  class="account-overview-label">Login</label>
 					<input name="tfgg_cp_user_login" id="tfgg_cp_user_login" class="required account-overview-input" type="text"/>
 				</div>
 			</div>
 				
 			<div class="login-container">
 				 <div class="account-overview-input-single">
-						<label for="tfgg_cp_user_pass">Password</label>
+						<label for="tfgg_cp_user_pass" class="account-overview-label">Password</label>
 						<input name="tfgg_cp_user_pass" id="tfgg_cp_user_pass" class="required account-overview-input" type="password"/>
 				</div>
 			</div>

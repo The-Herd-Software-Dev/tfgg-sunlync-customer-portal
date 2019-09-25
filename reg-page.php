@@ -39,7 +39,7 @@
 				
 					<div class="registration-container">
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_user_email"><?php _e('Email'); ?></label>
+							<label for="tfgg_cp_user_email" class="account-overview-label"><?php _e('Email'); ?></label>
 							<input data-alertpnl="new_reg_email" name="tfgg_cp_user_email" id="tfgg_cp_user_email" class="required account-overview-input" type="email"
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_user_email',$_POST))){echo $_POST['tfgg_cp_user_email'];} ?>"
 							/>
@@ -49,13 +49,13 @@
 						
 					<div class="registration-container">
 						<div class="account-overview-input-double">
-							<label for="tfgg_cp_user_first"><?php _e('First Name'); ?></label>
+							<label for="tfgg_cp_user_first" class="account-overview-label"><?php _e('First Name'); ?></label>
 							<input data-alertpnl="new_reg_fname" name="tfgg_cp_user_first" id="tfgg_cp_user_first" class="required account-overview-input" type="text"
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_user_first',$_POST))){echo $_POST['tfgg_cp_user_first'];} ?>"
 							/>
 							<div style="display:none" id="new_reg_fname" class="reg_alert"></div>
 						</div>
-						<div class="account-overview-input-single">
+						<div class="account-overview-input-single" class="account-overview-label">
 							<label for="tfgg_cp_user_last"><?php _e('Last Name'); ?></label>
 							<input data-alertpnl="new_reg_lname" name="tfgg_cp_user_last" id="tfgg_cp_user_last" class="required account-overview-input" type="text"
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_user_last',$_POST))){echo $_POST['tfgg_cp_user_last'];} ?>"
@@ -66,14 +66,14 @@
 					
 					<div class="registration-container">
 						<div class="account-overview-input-double">
-							<label for="tfgg_cp_street_address"><?php _e('Street Address'); ?></label>
+							<label for="tfgg_cp_street_address" class="account-overview-label"><?php _e('Street Address'); ?></label>
 							<input data-alertpnl="new_reg_street_address" id="tfgg_cp_street_address" name="tfgg_cp_street_address" class="required account-overview-input" type="text"
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_street_address',$_POST))){echo $_POST['tfgg_cp_street_address'];} ?>"
 							/>
 							<div style="display:none" id="new_reg_street_address" class="reg_alert"></div>
 						</div>
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_post_code"><?php _e('Post Code'); ?></label>
+							<label for="tfgg_cp_post_code" class="account-overview-label"><?php _e('Post Code'); ?></label>
 							<input data-alertpnl="new_reg_post_code_alertpnl" name="tfgg_cp_post_code" id="tfgg_cp_post_code" class="required account-overview-input" type="text"
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_post_code',$_POST))){echo $_POST['tfgg_cp_post_code'];} ?>"
 							/>
@@ -87,7 +87,7 @@
 
 					<div class="registration-container">
 						<div class="account-overview-input-double">
-							<label for="tfgg_cp_mobile_phone"><?php _e('Mobile Phone'); ?></label>
+							<label for="tfgg_cp_mobile_phone" class="account-overview-label"><?php _e('Mobile Phone'); ?></label>
 							<input data-alertpnl="new_reg_mobile_phone" id="tfgg_cp_mobile_phone" name="tfgg_cp_mobile_phone" class="required account-overview-input" type="text"
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_mobile_phone',$_POST))){echo $_POST['tfgg_cp_mobile_phone'];} ?>"
 							/>
@@ -96,7 +96,7 @@
 
 
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_store"><?php _e('Store'); ?></label>
+							<label for="tfgg_cp_store" class="account-overview-label"><?php _e('Store'); ?></label>
 							<!--<input data-alertpnl="new_reg_post_code" name="tfgg_cp_store" id="tfgg_cp_store" class="required account-overview-input" type="text"/>-->
 							
 							<div class="select-container">
@@ -136,7 +136,7 @@
 
 					<div class="registration-container">
 						<div class="account-overview-input-double">
-							<label for="tfgg_cp_user_dob"><?php _e('Date Of Birth'); ?></label>
+							<label for="tfgg_cp_user_dob" class="account-overview-label"><?php _e('Date Of Birth'); ?></label>
 							<input readonly="true" id="tfgg_cp_user_dob_value" name="tfgg_cp_user_dob_value" class="account-overview-input" type="text"
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_user_dob_value',$_POST))){echo $_POST['tfgg_cp_user_dob_value'];} ?>"
 							/>
@@ -144,7 +144,7 @@
 							<div style="display:none" id="new_reg_dob" class="reg_alert"></div>
 						</div>
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_user_gender"><?php _e('Gender'); ?></label>
+							<label for="tfgg_cp_user_gender" class="account-overview-label"><?php _e('Gender'); ?></label>
 							<select data-alertpnl="new_reg_gender" name="tfgg_cp_user_gender" id="tfgg_cp_user_gender" class="required account-overview-input">
 								<option value="please select">Please Select...</option>
 								<option value="Male" <?php if(($repopulate)&&(array_key_exists('tfgg_cp_user_gender',$_POST))&&($_POST['tfgg_cp_user_gender']=='Male')){echo 'selected';} ?>>Male</option>
@@ -156,7 +156,7 @@
 
 					<div class="registration-container">
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_skin_type"><?php _e('Skin Type'); ?></label>
+							<label for="tfgg_cp_skin_type" class="account-overview-label"><?php _e('Skin Type'); ?></label>
 							<!--<input data-alertpnl="new_reg_post_code" name="tfgg_cp_store" id="tfgg_cp_store" class="required account-overview-input" type="text"/>-->
 							<select data-alertpnl="new_reg_skin_type_alertpnl" name="tfgg_cp_skin_type" id="tfgg_cp_skin_type" class="required account-overview-input">
 								<option value="please select">Please Select...</option>
@@ -179,7 +179,7 @@
 							<div style="display:none" id="new_reg_skin_type_alertpnl" class="reg_alert"></div>
 							<br/>
 							<input data-alertpnl="new_reg_skin_type_confirm_alertpnl" id="tfgg_cp_skin_type_confirm" name="tfgg_cp_skin_type_confirm" class="required account-overview-survey-input" type="checkbox" value="1"/>
-							<label for="tfgg_cp_skin_type_confirm"><?php _e('I hereby certify that the skin type selected is accurate'); ?>&#42;</label>
+							<label for="tfgg_cp_skin_type_confirm" class="account-overview-label" style="display: inline"><?php _e('I hereby certify that the skin type selected is accurate'); ?>&#42;</label>
 							<div style="display:none" id="new_reg_skin_type_confirm_alertpnl" class="reg_alert"></div>
 						</div>
 					</div>
@@ -207,14 +207,14 @@
 					</div>
 					<div class="registration-container">
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_user_pass"><?php _e('Password'); ?></label>
+							<label for="tfgg_cp_user_pass" class="account-overview-label"><?php _e('Password'); ?></label>
 							<input data-alertpnl="new_reg_pass" id="tfgg_cp_user_pass" name="tfgg_cp_user_pass" class="required account-overview-input" type="password"/>
 							<div style="display:none" id="new_reg_pass" class="reg_alert"></div> 
 						</div>
 					</div>
 					<div class="registration-container">
 						<div class="account-overview-input-single">
-							<label for="tfgg_cp_user_pass_confirm"><?php _e('Password Confirm'); ?></label>
+							<label for="tfgg_cp_user_pass_confirm" class="account-overview-label"><?php _e('Password Confirm'); ?></label>
 							<input data-alertpnl="new_reg_pass_confirm" name="tfgg_cp_user_pass_confirm" id="tfgg_cp_user_pass_confirm" class="required account-overview-input" type="password"/>
 							<div style="display:none" id="new_reg_pass_confirm" class="reg_alert"></div>
 						</div>
@@ -241,7 +241,7 @@
 
 				<div class="registration-container">
 							<div class="account-overview-input-double">
-								<label for="tfgg_cp_how_hear"><?php _e('How did you hear about us?'); ?></label>
+								<label for="tfgg_cp_how_hear" class="account-overview-label"><?php _e('How did you hear about us?'); ?></label>
 								<select data-alertpnl="new_reg_how_hear" name="tfgg_cp_how_hear" id="tfgg_cp_how_hear" class="required account-overview-input">
 									<option value="please select">Please select&#8230;</option>
 									<option value="Website" <?php if(($repopulate)&&(array_key_exists('tfgg_cp_how_hear',$_POST))&&($_POST['tfgg_cp_how_hear']=='Website')){echo 'selected';} ?>>Website</option>
@@ -321,8 +321,8 @@
 			</script>
 
         <?php
-		//return ob_get_clean();
-        return ob_get_contents();
+		return ob_get_clean();
+        //return ob_get_contents();
     }
     
     function tfgg_sunlync_client_registration(){
