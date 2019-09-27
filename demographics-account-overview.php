@@ -165,6 +165,10 @@
 		        </div>
 		        
 		        <div class="account_overview-section account-overview-comm-prefs">
+				<?php
+				//2019-09-27 CB V1.0.0.5 - only allow comm pref updates if customer is not currently enrolled in marketing as per customer request
+				if ($commPref->allow==='0'){
+				?>
 		        	<h4>Communication Preferences</h4>
 	
 					<p>Allow Marketing:
@@ -183,7 +187,9 @@
 					</div>
 					
 					<br /> 
-					
+					<?php
+					}	
+					?>
 							   
 		        	<h4>Login Info</h4>
 					
