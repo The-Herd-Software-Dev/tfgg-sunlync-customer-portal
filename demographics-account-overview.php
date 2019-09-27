@@ -333,16 +333,19 @@
 		    		if(StrToUpper($clientPkgs->results) === 'SUCCESS'){
 		    			$clientPkgs = $clientPkgs->clientPackages;
 		    			//["description"]=> string(11) "100 Minutes" ["package_id"]=> string(10) "0000000004" ["purchase_date"]=> string(9) "3/26/2019" ["expiration_date"]=> string(10) "12/30/1899" ["status"]=> string(6) "Active" ["units"]=> string(2) "67" ["unit_type"]=> string(7) "Minutes" ["store_location"]=> string(4) "BFLO"
-		    			//var_dump($clientPkgs);
+						//var_dump($clientPkgs);
+						//purchase_date
 		    			foreach($clientPkgs as &$details){
-		    				if((StrToUpper($details->status)=='ACTIVE')||(StrToUpper($details->status)=='PURCHASED')){
-		    					
+							//2019-09-27 CB V1.0.0.5 - changed if statement to include call to check of purchased with X months
+							if(((StrToUpper($details->status)=='ACTIVE')||(StrToUpper($details->status)=='PURCHASED'))&&
+							(tfgg_purchased_within_acceptable_period($details->purchase_date))){
+		    					$description=tfgg_delete_all_between('(',')',$details->description);
 		    					?>
 		    					<div class="account-overview-service-container">
 		    						<table class="account-overview-table">
 										<tr class="account_overview_row account_overview_row_header">
 			    							<td><span class="account-overview-generic-label">Package: </span></td>
-			    							<td><span class="account-overview-generic-title "><?php echo $details->description ?></span></td>
+			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span></td>
 			    						</tr>
 			    						<tr class="account_overview_row">
 			    							<td><span class="account-overview-generic-label">Purchased: </span></td>

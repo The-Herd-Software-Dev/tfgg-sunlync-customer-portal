@@ -1082,6 +1082,34 @@
         $date = new DateTime($date);
         return $date->format('Y-m-d');   
     }
+
+    //2019-09-27 CB V1.0.0.5 - clean up the names
+    function tfgg_delete_all_between($beginning, $end, $string) {
+        $beginningPos = strpos($string, $beginning);
+        $endPos = strpos($string, $end);
+        if ($beginningPos === false || $endPos === false) {
+            return $string;
+        }
+
+        $textToDelete = substr($string, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
+
+        return tfgg_delete_all_between($beginning, $end, str_replace($textToDelete, '', $string)); // recursion to ensure all occurrences are replaced
+    }
+
+    //2019-09-27 CB V1.0.0.5 - function to not show services if they were purchased too long ago
+    //hardcoded to 18 months at present
+    function tfgg_purchased_within_acceptable_period($purchase_date){
+        //return true;
+        $purchase_date = str_replace('/', '-', $purchase_date); //this line is to ensure UK dates parse correctly
+        $purchase_date = new DateTime($purchase_date);
+
+        $now = new DateTime();
+
+        $diff = $purchase_date->diff($now); // Returns DateInterval
+
+        $lessThanMonths = $diff->y === 0 && $diff->m < 18;//18 is hardcoded
+        return $lessThanMonths;
+    }
     
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();
@@ -1117,7 +1145,16 @@
         show_admin_bar( false );
     }*/
     
-    add_filter('show_admin_bar', '__return_false');//prevents the admin bar from showing after tfgg_sunlync user logs in
+    //2019-09-27 CB V1.0.0.5 - deprecated to show only for admin
+    //add_filter('show_admin_bar', '__return_false');//prevents the admin bar from showing after tfgg_sunlync user logs in
+
+    add_action('after_setup_theme', 'remove_admin_bar');
+    function remove_admin_bar(){
+        if (!current_user_can('administrator') && !is_admin()) {
+            show_admin_bar(false);
+        }
+    }
+
     add_action('admin_init', 'blockusers_init');
     function blockusers_init() {
         //if the user is logged in and is not an admin, do not give them access to wp-admin
