@@ -165,10 +165,7 @@
 		        </div>
 		        
 		        <div class="account_overview-section account-overview-comm-prefs">
-				<?php
-				//2019-09-27 CB V1.0.0.5 - only allow comm pref updates if customer is not currently enrolled in marketing as per customer request
-				if ($commPref->allow==='0'){
-				?>
+				<div <?php if($commPref->allow==='1'){echo 'style="display:none"';} ?>>
 		        	<h4>Communication Preferences</h4>
 	
 					<p>Allow Marketing:
@@ -186,11 +183,8 @@
 						<input type="checkbox" class="comm-pref check-button" name="allow_phone_marketing" id="allow_phone_marketing" value="1" disabled <?php echo($commPref->cell_voice==='1' ? 'checked':'');?>/><label class="check-label">Via Phone</label>
 					</div>
 					
-					<br /> 
-					<?php
-					}	
-					?>
-							   
+					<br />
+				</div>			   
 		        	<h4>Login Info</h4>
 					
 					<div class="account-overview-generic-container">
