@@ -79,8 +79,16 @@
 	                        	</span>
 			        		</div>
 			        		<?php
-			        	}
+						}
+						
+						//2019-09-27 CB V1.0.0.5 - added client number at customer request
 			        ?>
+					 
+					<div class="account-overview-generic-container">
+						<div class="account-overview-input-single">
+							<span><strong>Customer ID: </Strong><?php echo $client;?></span>
+						</div>
+					</div>
 			    
 				    <div class="account-overview-generic-container">
 						<div class="account-overview-input-double">
