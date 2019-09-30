@@ -35,7 +35,7 @@
 				
 				<div class="account-overview-input-single-left">
 				
-					<h4>Demographic Information</h4>
+					<h4>Customer Information</h4>
 				
 					<div class="registration-container">
 						<div class="account-overview-input-single">
