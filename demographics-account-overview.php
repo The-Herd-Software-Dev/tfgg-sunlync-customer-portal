@@ -55,7 +55,7 @@
 			<?php } ?>
 	        		
 					<div style="display:flex">
-			        	<h4>Demographic Info</h4>
+			        	<h4>Customer Information</h4>
 						<?php
 						if (get_option('tfgg_scp_demogrphics_allow') === '1') { ?>
 						   <div style="margin-left: auto;" class="mobile-button-container">

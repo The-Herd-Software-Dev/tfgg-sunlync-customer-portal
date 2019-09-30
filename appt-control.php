@@ -79,15 +79,16 @@
                                     echo substr($details->address2,0,35).'<br /> ';//2019-09-30 CB V1.0.0.6 - substr starts at 0
                                     
                                     if (!empty($details->city))
-                                        echo $details->city.', ';
-                                    
-                                    echo $details->zip;
+                                        echo $details->city;
+                                    if($details->zip<>''){echo ',';}
+                                    echo ' '.$details->zip;
+
 
                                     echo '</span>';
-                                    echo '<br />';
+                                   /* echo '<br />';
                                     echo '<span class="appts-store-phone">Phone: ';
                                     echo $details->phone;
-                                    echo '</span>';
+                                    echo '</span>';*/
                                     echo '</div>';
                                     
                                 }

@@ -55,8 +55,8 @@
 							/>
 							<div style="display:none" id="new_reg_fname" class="reg_alert"></div>
 						</div>
-						<div class="account-overview-input-single" class="account-overview-label">
-							<label for="tfgg_cp_user_last"><?php _e('Last Name'); ?></label>
+						<div class="account-overview-input-single">
+							<label for="tfgg_cp_user_last" class="account-overview-label"><?php _e('Last Name'); ?></label>
 							<input data-alertpnl="new_reg_lname" name="tfgg_cp_user_last" id="tfgg_cp_user_last" class="required account-overview-input" type="text"
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_user_last',$_POST))){echo $_POST['tfgg_cp_user_last'];} ?>"
 							/>
@@ -262,7 +262,22 @@
 
 					<div style="display:none" id="new_reg_marketing" class="reg_alert"></div>
 			
-			
+				<div id="chiswick_display_warning" style="display:none">	
+				<br/>
+				<strong>DO NOT USE UV TANNING EQUIPMENT IF YOU...</strong>
+				<ul>
+				<li>Are under 18</li>
+				<li>Suffer from: ill effects from normal sunbathing, epilepsy, giddiness or fainting, headaches or migraine, heart condition, blood pressure, hypertension, prickly heat, cold sores, allergies, skin ulcers or raised/ multiple moles?</li>
+				<li>Are: under medical supervision, prescribed or taking any form of drug, ointment/lotion, antibiotic or tranquilliser, diabetic, pregnant or hypersensitive to light?</li>
+				<li>Have had: hot waxing, tattooing, bleaching, laser hair removal or electrolysis in the past 24 hours?</li>
+				<li>Currently have, or recently have been treated for, skin cancer</li>
+				<li>Have a large number of moles, freckles or have red hair</li>
+				<li>Are taking any photosensitising medication</li>
+				</ul>
+				<strong>DO NOT USE SPRAY TANNING EQUIPMENT IF YOU...</strong>
+				<p>You are in your first trimester of pregnancy. If you are pregnant and not in your first trimester please take care when using our booths as the floor may be slippery.</p>
+				<br/>
+				</div>
 				<?php
 					//check to see if reCaptcha is active and if so, display it
 					include_once( ABSPATH . 'wp-admin/includes/plugin.php' );

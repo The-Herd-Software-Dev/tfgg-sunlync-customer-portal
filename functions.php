@@ -593,7 +593,17 @@
 		}else{
 		    
             $result["results"]="success";
-            $result["skintypes"]=array_slice($data,0,-1);//2019-07-19 CB - fixed offset as no 'result' is returned
+            //2019-09-30 CB V1.0.0.6 - forcing a specific order
+            //$result["skintypes"]=array_slice($data,0,-1);//2019-07-19 CB - fixed offset as no 'result' is returned
+
+            $skintypes = array_slice($data,0,-1);
+            $returnTypes=array();
+            array_push($returnTypes,$skintypes[0]);
+            array_push($returnTypes,$skintypes[2]);
+            array_push($returnTypes,$skintypes[1]);
+            array_push($returnTypes,$skintypes[3]);
+
+            $result["skintypes"]=$returnTypes;
             return json_encode($result);
 		}    
     }
@@ -1194,7 +1204,7 @@
     }
 
     //2019-09-30 CB V1.0.0.6 - new menu item
-    add_filter('wp_nav_menu_items', 'tfgg_add_mobile_appt_link', 9, 2 );
+    //add_filter('wp_nav_menu_items', 'tfgg_add_mobile_appt_link', 9, 2 );
     function tfgg_add_mobile_appt_link($items, $args){
         //add the appt link to the nav bar
         if(wp_is_mobile()){//only show the item if it's a mobile device
