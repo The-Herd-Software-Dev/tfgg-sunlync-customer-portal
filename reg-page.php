@@ -115,10 +115,10 @@
 										//2019-07-19 CB - added strpos check to remove 'CLOSED'/'DELETED' stores
 										if((!strpos(StrToUpper($details->store_loc),'CLOSED'))&&
 										(!strpos(StrToUpper($details->store_loc),'DELETED'))){
-											if($selectedStore==$details->store_code){
-												echo '<option value="'.$details->store_code.'" selected>'.$details->store_loc.'</option>';
+											if($selectedStore==$details->store_id){
+												echo '<option value="'.$details->store_id.'" selected>'.$details->store_loc.'</option>';
 											}else{
-												echo '<option value="'.$details->store_code.'">'.$details->store_loc.'</option>';
+												echo '<option value="'.$details->store_id.'">'.$details->store_loc.'</option>';
 											}	
 										}
 									}

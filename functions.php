@@ -431,9 +431,12 @@
     }
     
     function tfgg_api_get_stores(){
-        $url=tfgg_get_api_url().'TSunLyncAPI/ApptGetStoreSettings/sStoreCode';
+        //2019-09-30 CB V1.0.0.6 - changed to use store demo appt info
+        //$url=tfgg_get_api_url().'TSunLyncAPI/ApptGetStoreSettings/sStoreCode';
+        $url= tfgg_get_api_url().'TSunLyncAPI/CIPGetStoreDemoApptInfo/sStoreCode/nInAppts';
         
         $url=str_replace('sStoreCode','',$url);
+        $url=str_replace('nInAppts','',$url);
         
         try{
             $data = tfgg_sunlync_execute_url($url);
@@ -457,11 +460,16 @@
 		       
             $result["results"]="success";
             $result["stores"]=array_slice($data,1,-1);
+            usort($result["stores"],"tfgg_store_store_by_name");//2019-09-30 CB V1.0.0.6 - the new api call is not sorted alphabetically
             return json_encode($result);
 		}
         
     }
     add_action( 'wp_ajax_tfgg_api_get_stores', 'tfgg_api_get_stores' );
+
+    function tfgg_store_store_by_name($a,$b){
+        return strcmp($a->store_loc, $b->store_loc);
+    }
     
     function tfgg_api_get_equip_type_appt_slots(){
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetApptSlotForEquipType/sStoreCode/sEquipType/sDate/nApptLen';
@@ -1181,6 +1189,19 @@
         $sunlyncuser = tfgg_cp_get_sunlync_client();
         if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='secondary-menu'){
           $items .='<li><a href="'. get_option('tfgg_scp_acct_overview') .'">Account Overview</a></li>';  
+        }
+        return $items;
+    }
+
+    //2019-09-30 CB V1.0.0.6 - new menu item
+    add_filter('wp_nav_menu_items', 'tfgg_add_mobile_appt_link', 9, 2 );
+    function tfgg_add_mobile_appt_link($items, $args){
+        //add the appt link to the nav bar
+        if(wp_is_mobile()){//only show the item if it's a mobile device
+            $sunlyncuser = tfgg_cp_get_sunlync_client();
+            if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='primary-menu'){
+            $items .='<li><a href="'. get_option('tfgg_scp_cpappt_page') .'">Book Appointment</a></li>';  
+            }            
         }
         return $items;
     }

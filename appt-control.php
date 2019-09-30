@@ -67,15 +67,16 @@
                         foreach($storelist as &$details){
                             if((!strpos(StrToUpper($details->store_loc),'CLOSED'))&&
 							(!strpos(StrToUpper($details->store_loc),'DELETED'))){
-                                if($details->allowappts==='1'){
+                                if(($details->allowappts==='1')&&($details->ApptLync==='0')){
                                 
-                                    echo '<div class="appts-selector appts-store-selector" id="appt_store_panel_' . $details->store_code . '" data-storelocation="' .$details->store_loc . '" data-storecode="'.$details->store_code.'" data-apptlength="'.$details->apptlength.'" '.
-                                    'data-apptstarttime="'.$details->apptstarttime.'" data-apptendtime="'.$details->apptendtime.'" onclick="selectStore(\'appt_store_panel_' . $details->store_code.'\');">';
+                                    echo '<div class="appts-selector appts-store-selector" id="appt_store_panel_' . $details->store_id . '" data-storelocation="' .$details->store_loc . '" data-storecode="'.$details->store_id.'" data-apptlength="'.$details->apptlength.'" '.
+                                    'data-apptstarttime="'.$details->apptstarttime.'" data-apptendtime="'.$details->apptendtime.'" onclick="selectStore(\'appt_store_panel_' . $details->store_id.'\');">';
                                     
                                     echo '<span class="appts-store-name"><strong>'.$details->store_loc.'</strong></span>';
                                     echo  '<br />';
                                     echo '<span class="appts-store-address">';
-                                    echo substr($details->address,1,35).'<br /> ';
+                                    echo substr($details->address1,0,35).'<br /> ';//2019-09-30 CB V1.0.0.6 - substr starts at 0
+                                    echo substr($details->address2,0,35).'<br /> ';//2019-09-30 CB V1.0.0.6 - substr starts at 0
                                     
                                     if (!empty($details->city))
                                         echo $details->city.', ';
