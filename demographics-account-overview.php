@@ -42,6 +42,163 @@
        
         <form id="tfgg_sunlync_cp_demo" method="POST" action="">
     	
+
+		<div class="account-overview-generic-container">
+		        
+		        <div class="account_overview-section account-overview-comm-prefs">
+					<div style="display:block;">
+						<div style="width:50%; float:left;">
+							<h4>Booked Appointments</h4>
+						</div>
+						<div style="">
+							<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-book-button" onclick="location.href='<?php echo get_option('tfgg_scp_cpappt_page'); ?>'">Book Appointment</button>
+						</div>
+					</div>
+					<br/>
+		        <?php
+		    		$appointments = json_decode(tfgg_api_get_client_appointments($client)); 	 
+		    		
+		    		if(StrToUpper($appointments->results) === 'SUCCESS'){
+		    			$appointments = $appointments->appointments;
+		    			foreach($appointments as &$details){
+		    				//var_dump($details);
+							?>
+							<div id="appt-cancel-response<?php echo $details->appt_id;?>" style="display:none" role="alert" class="alert">
+							
+		    					<span id="appt-cancel-response<?php echo $details->appt_id;?>-message" style="text-align:left;"></span>
+		    					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							    	<span aria-hidden="true">&times;</span>
+							  	</button>
+		    				</div>
+		    				<div class="account-overview-appts-container" id="apptContainer<?php echo $details->appt_id;?>">
+		    					<table class="account-overview-table">
+		    					
+		    					<?php if(StrToUpper($details->appt_type_desc)=='TAN') { ?>
+		    						<tr class="account_overview_row account_overview_row_header">
+			    						<td><span class="account-overview-generic-label">Equipment: </span></td>
+			    						<td><span class="account-overview-generic-title"><?php echo $details->equip_type_desc ?></span>
+			    						<?php
+			    							if(tfgg_scp_can_appt_be_cancelled($details->date,$details->start_time)){
+			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
+			    						?>
+			    						<button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="CancelAppt(<?php echo $details->appt_id; ?>);">CANCEL</button>
+			    						<?php
+			    							}//if
+			    						?>
+			    						</td>
+			    					</tr>	
+			    				
+			    				<?php } else { ?>
+			    					<tr class="account_overview_row account_overview_row_header">
+			    						<td><span class="account-overview-generic-label">Employee: </span></td>
+			    						<td><span class="account-overview-generic-title "><?php echo $details->emp_name ?></span>
+			    						<?php
+			    							if(tfgg_scp_can_appt_be_cancelled($details->date,$details->start_time)){
+			    						?>
+			    						<button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="CancelAppt(<?php echo $details->appt_id; ?>);">CANCEL</button></td>
+			    						<?php
+			    							}//if
+			    						?>
+			    						</td>
+			    					</tr>	
+			    				<?php } ?>
+			    				
+		    						<tr class="account_overview_row">
+		    							<td><span class="account-overview-generic-label">Store: </span></td>
+		    							<td><span class="account-overview-generic-value"><?php echo $details->store_location ?></span></td>
+		    						</tr>
+		    						
+		    						<tr class="account_overview_row">
+		    							<td><span class="account-overview-generic-label">Date: </span></td>
+		    							<td><span class="account-overview-generic-value"><?php echo tfgg_format_date_for_display($details->date) . ' ' . tfgg_format_time_for_display($details->start_time) ?></span></td>
+		    						</tr>
+		    						
+		    						<tr class="account_overview_row">
+		    							<td><span class="account-overview-generic-label">Duration: </span></td>
+		    							<td><span class="account-overview-generic-value"><?php echo $details->duration ?> minutes</span></td>
+		    						</tr>
+		    						
+		    						<tr class="account_overview_row">
+		    							<td colspan=2></td>
+		    						</tr>
+		    					
+		    					</table>
+		    				</div>
+		    				
+		    				<?php
+		    				
+		    			}
+		    			
+		    			unset($details);
+		    			
+		    		}else{
+		    			?><br /><br /><div><Span>No appointments currently scheduled</Span></div><?php
+		    		}
+		    		
+		        ?>
+				</div>
+				
+				<div class="account_overview-section account-overview-comm-prefs">
+		        	<h4>Active Services</h4>
+		        <?php
+		    		$clientPkgs = json_decode(tfgg_api_get_client_pkgs($client)); 
+		    		$clientMems = json_decode(tfgg_api_get_client_mems($client)); 
+		    		
+		    		if(StrToUpper($clientPkgs->results) === 'SUCCESS'){
+		    			$clientPkgs = $clientPkgs->clientPackages;
+		    			//["description"]=> string(11) "100 Minutes" ["package_id"]=> string(10) "0000000004" ["purchase_date"]=> string(9) "3/26/2019" ["expiration_date"]=> string(10) "12/30/1899" ["status"]=> string(6) "Active" ["units"]=> string(2) "67" ["unit_type"]=> string(7) "Minutes" ["store_location"]=> string(4) "BFLO"
+						//var_dump($clientPkgs);
+						//purchase_date
+		    			foreach($clientPkgs as &$details){
+							//2019-09-27 CB V1.0.0.5 - changed if statement to include call to check of purchased with X months
+							if(((StrToUpper($details->status)=='ACTIVE')||(StrToUpper($details->status)=='PURCHASED'))&&
+							(tfgg_purchased_within_acceptable_period($details->purchase_date))){
+		    					$description=tfgg_delete_all_between('(',')',$details->description);
+		    					?>
+		    					<div class="account-overview-service-container">
+		    						<table class="account-overview-table">
+										<tr class="account_overview_row account_overview_row_header">
+			    							<td><span class="account-overview-generic-label">Package: </span></td>
+			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span></td>
+			    						</tr>
+			    						<tr class="account_overview_row">
+			    							<td><span class="account-overview-generic-label">Purchased: </span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo $details->purchase_date ?></span></td>
+			    						</tr>
+			    						<?php if(strpos($details->expiration_date,'1899')<1){ ?>
+			    						<tr class="account_overview_row">
+			    							<td><span class="account-overview-generic-label">Expires: </span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo $details->expiration_date ?></span></td>
+			    						</tr>
+			    						<?php } ?>
+			    						<tr class="account_overview_row">
+			    							<td><span class="account-overview-generic-label">Units Remaining: </span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo $details->units ?></span></td>
+			    						</tr>
+			    						
+		    						</table>
+			    				</div>
+			    				<?php
+			    				
+		    				}
+		    			}
+		    			unset($details);
+		    		}
+		    		
+		    		if(StrToUpper($clientMems->results) === 'SUCCESS'){
+		    			$clientMems = $clientMems->clientMemberships;
+		    		}
+		    		
+		        ?>
+		        </div>
+		    	
+		    	
+		    </div>
+
+
+            <hr />
+
+
 	        <div class="account-overview-generic-container">
 	        	
 	        	<div class="account_overview-section account-overview-demo-info">
@@ -233,160 +390,9 @@
 	
 	
 		    </form>
-		    <hr />
+		   
 		    
-		    <div class="account-overview-generic-container">
-		        
-		        <div class="account_overview-section account-overview-comm-prefs">
-					<div style="display:block;">
-						<div style="width:50%; float:left;">
-							<h4>Booked Appointments</h4>
-						</div>
-						<div style="">
-							<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-book-button" onclick="location.href='<?php echo get_option('tfgg_scp_cpappt_page'); ?>'">Book Appointment</button>
-						</div>
-					</div>
-					<br/>
-		        <?php
-		    		$appointments = json_decode(tfgg_api_get_client_appointments($client)); 	 
-		    		
-		    		if(StrToUpper($appointments->results) === 'SUCCESS'){
-		    			$appointments = $appointments->appointments;
-		    			foreach($appointments as &$details){
-		    				//var_dump($details);
-							?>
-							<div id="appt-cancel-response<?php echo $details->appt_id;?>" style="display:none" role="alert" class="alert">
-							
-		    					<span id="appt-cancel-response<?php echo $details->appt_id;?>-message" style="text-align:left;"></span>
-		    					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-							    	<span aria-hidden="true">&times;</span>
-							  	</button>
-		    				</div>
-		    				<div class="account-overview-appts-container" id="apptContainer<?php echo $details->appt_id;?>">
-		    					<table class="account-overview-table">
-		    					
-		    					<?php if(StrToUpper($details->appt_type_desc)=='TAN') { ?>
-		    						<tr class="account_overview_row account_overview_row_header">
-			    						<td><span class="account-overview-generic-label">Equipment: </span></td>
-			    						<td><span class="account-overview-generic-title"><?php echo $details->equip_type_desc ?></span>
-			    						<?php
-			    							if(tfgg_scp_can_appt_be_cancelled($details->date,$details->start_time)){
-			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
-			    						?>
-			    						<button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="CancelAppt(<?php echo $details->appt_id; ?>);">CANCEL</button>
-			    						<?php
-			    							}//if
-			    						?>
-			    						</td>
-			    					</tr>	
-			    				
-			    				<?php } else { ?>
-			    					<tr class="account_overview_row account_overview_row_header">
-			    						<td><span class="account-overview-generic-label">Employee: </span></td>
-			    						<td><span class="account-overview-generic-title "><?php echo $details->emp_name ?></span>
-			    						<?php
-			    							if(tfgg_scp_can_appt_be_cancelled($details->date,$details->start_time)){
-			    						?>
-			    						<button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="CancelAppt(<?php echo $details->appt_id; ?>);">CANCEL</button></td>
-			    						<?php
-			    							}//if
-			    						?>
-			    						</td>
-			    					</tr>	
-			    				<?php } ?>
-			    				
-		    						<tr class="account_overview_row">
-		    							<td><span class="account-overview-generic-label">Store: </span></td>
-		    							<td><span class="account-overview-generic-value"><?php echo $details->store_location ?></span></td>
-		    						</tr>
-		    						
-		    						<tr class="account_overview_row">
-		    							<td><span class="account-overview-generic-label">Date: </span></td>
-		    							<td><span class="account-overview-generic-value"><?php echo tfgg_format_date_for_display($details->date) . ' ' . tfgg_format_time_for_display($details->start_time) ?></span></td>
-		    						</tr>
-		    						
-		    						<tr class="account_overview_row">
-		    							<td><span class="account-overview-generic-label">Duration: </span></td>
-		    							<td><span class="account-overview-generic-value"><?php echo $details->duration ?> minutes</span></td>
-		    						</tr>
-		    						
-		    						<tr class="account_overview_row">
-		    							<td colspan=2></td>
-		    						</tr>
-		    					
-		    					</table>
-		    				</div>
-		    				
-		    				<?php
-		    				
-		    			}
-		    			
-		    			unset($details);
-		    			
-		    		}else{
-		    			?><br /><br /><div><Span>No appointments currently scheduled</Span></div><?php
-		    		}
-		    		
-		        ?>
-				</div>
-				
-				<div class="account_overview-section account-overview-comm-prefs">
-		        	<h4>Active Services</h4>
-		        <?php
-		    		$clientPkgs = json_decode(tfgg_api_get_client_pkgs($client)); 
-		    		$clientMems = json_decode(tfgg_api_get_client_mems($client)); 
-		    		
-		    		if(StrToUpper($clientPkgs->results) === 'SUCCESS'){
-		    			$clientPkgs = $clientPkgs->clientPackages;
-		    			//["description"]=> string(11) "100 Minutes" ["package_id"]=> string(10) "0000000004" ["purchase_date"]=> string(9) "3/26/2019" ["expiration_date"]=> string(10) "12/30/1899" ["status"]=> string(6) "Active" ["units"]=> string(2) "67" ["unit_type"]=> string(7) "Minutes" ["store_location"]=> string(4) "BFLO"
-						//var_dump($clientPkgs);
-						//purchase_date
-		    			foreach($clientPkgs as &$details){
-							//2019-09-27 CB V1.0.0.5 - changed if statement to include call to check of purchased with X months
-							if(((StrToUpper($details->status)=='ACTIVE')||(StrToUpper($details->status)=='PURCHASED'))&&
-							(tfgg_purchased_within_acceptable_period($details->purchase_date))){
-		    					$description=tfgg_delete_all_between('(',')',$details->description);
-		    					?>
-		    					<div class="account-overview-service-container">
-		    						<table class="account-overview-table">
-										<tr class="account_overview_row account_overview_row_header">
-			    							<td><span class="account-overview-generic-label">Package: </span></td>
-			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span></td>
-			    						</tr>
-			    						<tr class="account_overview_row">
-			    							<td><span class="account-overview-generic-label">Purchased: </span></td>
-			    							<td><span class="account-overview-generic-value"><?php echo $details->purchase_date ?></span></td>
-			    						</tr>
-			    						<?php if(strpos($details->expiration_date,'1899')<1){ ?>
-			    						<tr class="account_overview_row">
-			    							<td><span class="account-overview-generic-label">Expires: </span></td>
-			    							<td><span class="account-overview-generic-value"><?php echo $details->expiration_date ?></span></td>
-			    						</tr>
-			    						<?php } ?>
-			    						<tr class="account_overview_row">
-			    							<td><span class="account-overview-generic-label">Units Remaining: </span></td>
-			    							<td><span class="account-overview-generic-value"><?php echo $details->units ?></span></td>
-			    						</tr>
-			    						
-		    						</table>
-			    				</div>
-			    				<?php
-			    				
-		    				}
-		    			}
-		    			unset($details);
-		    		}
-		    		
-		    		if(StrToUpper($clientMems->results) === 'SUCCESS'){
-		    			$clientMems = $clientMems->clientMemberships;
-		    		}
-		    		
-		        ?>
-		        </div>
-		    	
-		    	
-		    </div>
-
+		    
 	        
         <div id="tfgg_demo_update_response" class="notice is-dismissible" style="display:none">
         	<p><strong><span id="tfgg_demo_update_response_text"></span></strong></p>
