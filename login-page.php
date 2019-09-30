@@ -129,7 +129,9 @@
 	    		//username does not exist
 	    		if(!$user) {
 					// if the user name doesn't exist
-					tfgg_cp_errors()->add('error_no_matching_user', __('No user account found'));
+					//tfgg_cp_errors()->add('error_no_matching_user', __('No user account found'));
+					//2019-09-30 CB V1.0.0.6 - new error message
+					tfgg_cp_errors()->add('error_no_matching_user', __('Email and/or password is incorrect, please try again'));					
 				}else{
 					if(!wp_check_password($_POST['tfgg_cp_user_pass'], $user->user_pass)) {
 						// if the password is incorrect for the specified user
