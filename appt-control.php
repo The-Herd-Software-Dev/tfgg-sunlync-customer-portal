@@ -67,7 +67,7 @@
                         foreach($storelist as &$details){
                             if((!strpos(StrToUpper($details->store_loc),'CLOSED'))&&
 							(!strpos(StrToUpper($details->store_loc),'DELETED'))){
-                                if(($details->allowappts==='1')&&($details->ApptLync==='0')){
+                                if(($details->allowappts==='1')&&($details->ApptLync==='1')){
                                 
                                     echo '<div class="appts-selector appts-store-selector" id="appt_store_panel_' . $details->store_id . '" data-storelocation="' .$details->store_loc . '" data-storecode="'.$details->store_id.'" data-apptlength="'.$details->apptlength.'" '.
                                     'data-apptstarttime="'.$details->apptstarttime.'" data-apptendtime="'.$details->apptendtime.'" onclick="selectStore(\'appt_store_panel_' . $details->store_id.'\');">';

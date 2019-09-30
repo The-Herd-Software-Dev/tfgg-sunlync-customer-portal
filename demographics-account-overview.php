@@ -236,8 +236,6 @@
 		    <hr />
 		    
 		    <div class="account-overview-generic-container">
-		    	
-
 		        
 		        <div class="account_overview-section account-overview-comm-prefs">
 					<div style="display:block;">
