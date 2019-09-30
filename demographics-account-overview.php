@@ -365,7 +365,18 @@
 						</div>
 					</div>
 					<div class="account-overview-generic-container">
-						<div class="account-overview-input-single" style="font-size: x-small;">
+						<?php
+						//2019-09-30 CB V1.0.0.6
+						if(wp_is_mobile()){
+						?>
+							<div class="account-overview-input-single" style="font-size: small;">
+						<?php
+						}else{
+						?>
+							<div class="account-overview-input-single" style="font-size: x-small;">
+						<?php
+						}
+						?>
 							<span>Passwords must contain:</span><br/>
 							<ul style="line-height:0.9;"><li>At least 1 lower and 1 upper case letter</li>
 							<li>At least 1 number</li>

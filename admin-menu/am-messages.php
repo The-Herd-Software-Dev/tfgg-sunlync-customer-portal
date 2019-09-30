@@ -8,8 +8,13 @@ function display_appts_success(){
         'wpautop' => false
     );
     wp_editor( get_option('tfgg_scp_appts_success'), 'tfgg_scp_appts_success', $settings); 
+
+    if(wp_is_mobile()){
     ?>
+    <div>
+    <?php }else{ ?>}
     <div style="font-size: small">
+    <?php } ?>
         <p>Placeholders: <ul>
         <li>!@#store#@! -> The appointment store location</li>
         <li>!@#apptdate#@! -> The date of the appointment</li>
@@ -37,8 +42,12 @@ function display_email_pass_rest(){
         'wpautop' => false
     );
     wp_editor( get_option('tfgg_scp_email_pass_reset'), 'tfgg_scp_email_pass_reset', $settings); 
+    if(wp_is_mobile()){
     ?>
+    <div>
+    <?php }else{ ?>}
     <div style="font-size: small">
+    <?php } ?>
         <p>Placeholders: <ul>
         <li>!@#url#@! -> Reset password link</li>
         <li>!@#sitename#@! -> Site Name</li>

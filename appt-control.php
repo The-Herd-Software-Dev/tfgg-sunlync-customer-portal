@@ -46,8 +46,13 @@
                 <div class="appts-child-main">
 
                     <h5 style="display:inline-block;padding-right:25px;">Appointment Date</h5>
+                    <?php if(wp_is_mobile()){ ?>
+                    <input type="text" readonly="true" name="tfgg_appt_set_date" id="tfgg_appt_set_date" min="<?php echo date_format($minDate,'Y-m-d');?>" style="display:inline-block;line-height:20px;border-radius:5px;font-size:1em !important;" /><br/>
+                    <span style="font-size:small;"><em>You may only book one appointment per calendar day & 24hr period - future appointment dates are blocked</em></span>
+                    <?php }else{ ?>
                     <input type="text" readonly="true" name="tfgg_appt_set_date" id="tfgg_appt_set_date" min="<?php echo date_format($minDate,'Y-m-d');?>" style="display:inline-block;line-height:20px;border-radius:5px;font-size:0.9em !important;" /><br/>
                     <span style="font-size:x-small;"><em>You may only book one appointment per calendar day & 24hr period - future appointment dates are blocked</em></span>
+                    <?php } ?>                    
                     <hr />
 
                     <h5>Select Store</h5>

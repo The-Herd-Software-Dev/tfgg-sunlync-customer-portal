@@ -320,6 +320,90 @@ tr.account_overview_row > td {
 }
 }
 
+/* 2019-09-30 CB V1.0.0.6 - increase all font sizes for mobile devices per customer request*/
+@media only screen and (max-width: 640px){
+    .account-overview-appt-cancel-button {
+        font-size:0.7em !important;
+    }
+    
+    input.account-overview-input, label.account-overview-label {
+        font-size:0.9em !important;
+    }
+    
+    .account-overvier-survey-option-title {
+        font-size:1.0em !important;
+    }
+    
+    .account-overview-input {
+        font-size:1.1em !important;
+    }
+    
+    .select2-selection__rendered {
+        font-size:1.1em !important;
+    }
+    
+    .account-overview-input-readonly {
+        font-size:1.1em !important;
+    }
+    
+    .radio-label {
+        font-size: 1.1em !important;
+    }
+    
+    .check-label {
+        font-size: 0.9em !important;
+    }
+    
+    .account-overview-generic-label {
+        font-size:0.9em;
+    }
+    
+    .account-overview-generic-value {
+        font-size:0.9em;
+    }
+    
+    .account-overview-generic-title {
+        font-size:0.9em;
+    }
+    
+    .account-overview-button {
+        font-size:0.9em;
+    }
+    
+    .reg_alert {
+        font-size:0.9em;
+    }
+    
+    .registration-link {
+        font-size:0.8em;
+    }
+    
+    .reset-password-message {
+        font-size:1.0em;
+    }
+    
+    .account-overview-button {
+        font-size:0.8em;
+    
+    }
+    
+    .appts-button {
+        font-size:0.9em;
+    }
+    
+    .dialog-close-button{
+        font-size: 0.9em !important;
+    }
+    
+    .password-hints {
+        font-size: small;
+    }
+    
+    .account-overview-appt-book-button {
+        font-size:0.9em !important;
+    }    
+}
+
 @media only screen and (max-width: 1200px) {
   .account-overview-table {
     width:100% !important;
