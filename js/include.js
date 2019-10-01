@@ -27,9 +27,9 @@ function edit_mode() {
     document.getElementById('btn_demo_edit').style.display = 'none';
     document.getElementById('btn_demo_cancel').style.display = 'inline-block';
     document.getElementById('btn_demo_save').style.display = 'inline-block';
-    document.getElementById('btn_demo_edit_mobile').style.display = 'none';
+    /*document.getElementById('btn_demo_edit_mobile').style.display = 'none';
     document.getElementById('btn_demo_cancel_mobile').style.display = 'inline-block';
-    document.getElementById('btn_demo_save_mobile').style.display = 'inline-block';
+    document.getElementById('btn_demo_save_mobile').style.display = 'inline-block';*/
 }
 
 function CancelUpdate() {

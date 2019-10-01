@@ -1264,6 +1264,7 @@
             $this->username 	= $gitHubUsername;
             $this->repo 		= $gitHubProjectName;
             $this->accessToken 	= $accessToken;
+            
         }
     
         /**
@@ -1274,7 +1275,11 @@
         private function initPluginData()
         {
             $this->slug = plugin_basename( $this->pluginFile );
-    
+            
+            if( !function_exists('get_plugin_data') ){
+                require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+            }
+            
             $this->pluginData = get_plugin_data( $this->pluginFile );
         }
     
@@ -1285,6 +1290,7 @@
          */
         private function getRepoReleaseInfo()
         {
+            
             if ( ! empty( $this->githubAPIResult ) )
             {
                 return;
@@ -1336,10 +1342,10 @@
             {
                 $package = $this->githubAPIResult->zipball_url;
     
-                if ( ! empty( $this->accessToken ) )
+                /*if ( ! empty( $this->accessToken ) )
                 {
                     $package = add_query_arg( array( "access_token" => $this->accessToken ), $package );
-                }
+                }*/
     
                 // Plugin object
                 $obj = new stdClass();

@@ -212,14 +212,14 @@
 			<?php } ?>
 	        		
 					<div style="display:flex">
-			        	<h4>Customer Information</h4>
+			        	<h4>Your Information</h4>
 						<?php
 						if (get_option('tfgg_scp_demogrphics_allow') === '1') { ?>
-						   <div style="margin-left: auto;" class="mobile-button-container">
-								<button id="btn_demo_edit_mobile"   class="account-overview-button account-overview-standard-button" onclick="edit_mode();" type="button"><?php _e('EDIT') ?></button>
-								<input type="hidden" name="tfgg_cp_demo_nonce" id="tfgg_cp_demo_nonce_mobile" value="<?php echo wp_create_nonce('tfgg_cp_demo_nonce'); ?>"/>
-								<button id="btn_demo_save_mobile" class="account-overview-button account-overview-standard-button" style="display:none;" onclick="ValidDemoInfo();" type="submit"><?php _e('UPDATE') ?></button>
-					    		<button id="btn_demo_cancel_mobile" class="account-overview-button account-overview-cancel-button" style="display:none;" onclick="CancelUpdate();" type="button"><?php _e('CANCEL') ?></button>	
+						   <div style="margin-left: auto;" >
+								<button id="btn_demo_edit"   class="account-overview-button account-overview-standard-button" onclick="edit_mode();" type="button"><?php _e('Edit Information') ?></button>
+								<input type="hidden" name="tfgg_cp_demo_nonce" id="tfgg_cp_demo_nonce" value="<?php echo wp_create_nonce('tfgg_cp_demo_nonce'); ?>"/>
+								<button id="btn_demo_save" class="account-overview-button account-overview-standard-button" style="display:none;" onclick="ValidDemoInfo();" type="submit"><?php _e('UPDATE') ?></button>
+					    		<button id="btn_demo_cancel" class="account-overview-button account-overview-cancel-button" style="display:none;" onclick="CancelUpdate();" type="button"><?php _e('CANCEL') ?></button>	
 							</div>
 						<?php } ?>
 					</div>
@@ -246,14 +246,26 @@
 							<span><strong>Customer ID: </Strong><?php echo $client;?></span>
 						</div>
 					</div>
+					<div class="account-overview-generic-container">
+						<div class="account-overview-input-double">	
+							<label for="tfgg_cp_demo_email" class="account-overview-label"><?php _e('E-Mail') ?></label>
+							<input data-alertpnl="alertpnl_email" name="tfgg_cp_demo_email" id="tfgg_cp_demo_email" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->email ?>" />
+							<span id="alertpnl_email" style="display:none;" class="reg_alert"></span>
+						</div>
+						<div class="account-overview-input-single">	
+							<label for="tfgg_cp_demo_cellphone" class="account-overview-label"><?php _e('Mobile Phone') ?></label>
+							<input data-alertpnl="alertpnl_mobile" name="tfgg_cp_demo_cellphone" id="tfgg_cp_demo_cellphone" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->cellphone?>" />
+							<span id="alertpnl_mobile" style="display:none;" class="reg_alert"></span>
+						</div>
+					</div>
 			    
 				    <div class="account-overview-generic-container">
-						<div class="account-overview-input-double">
+						<div class="account-overview-input-double" <?php if(wp_is_mobile()){ echo "style=\"width:48%; display:inline\"";}?>>
 							<label for="tfgg_cp_demo_firstname" class="account-overview-label"><?php _e('First Name') ?></label>
 							<input data-alertpnl="alertpnl_firstname" name="tfgg_cp_demo_firstname" id="tfgg_cp_demo_firstname" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->first_name ?>"/>
 							<span id="alertpnl_firstname" style="display:none;" class="reg_alert"></span>
 						</div>
-						<div class="account-overview-input-single">
+						<div class="account-overview-input-single" <?php if(wp_is_mobile()){ echo "style=\"width:48%; display:inline\"";}?>>
 							<label for="tfgg_cp_demo_lastname" class="account-overview-label"><?php _e('Last Name') ?></label>
 							<input data-alertpnl="alertpnl_lastname" name="tfgg_cp_demo_lastname" id="tfgg_cp_demo_lastname" class="required account-overview-input read-only" readonly  <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->last_name ?>" />
 							<span id="alertpnl_lastname" style="display:none;" class="reg_alert"></span>
@@ -290,33 +302,7 @@
 							<input data-alertpnl="alertpnl_postcode" name="tfgg_cp_demo_postcode" id="tfgg_cp_demo_postcode" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->zip ?>" />
 							<span id="alertpnl_postcode" style="display:none;" class="reg_alert"></span>
 						</div>
-					</div>
-			
-	
-					<div class="account-overview-generic-container">
-						<div class="account-overview-input-single">	
-							<label for="tfgg_cp_demo_email" class="account-overview-label"><?php _e('E-Mail') ?></label>
-							<input data-alertpnl="alertpnl_email" name="tfgg_cp_demo_email" id="tfgg_cp_demo_email" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->email ?>" />
-							<span id="alertpnl_email" style="display:none;" class="reg_alert"></span>
-						</div>
-					</div>
-					
-				
-					<div class="account-overview-generic-container">
-						<div class="account-overview-input-single">	
-							<label for="tfgg_cp_demo_cellphone" class="account-overview-label"><?php _e('Mobile Phone') ?></label>
-							<input data-alertpnl="alertpnl_mobile" name="tfgg_cp_demo_cellphone" id="tfgg_cp_demo_cellphone" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $actualDemographics->cellphone?>" />
-							<span id="alertpnl_mobile" style="display:none;" class="reg_alert"></span>
-						</div>
-					
-						<?php
-						/*2019-06-04 CB REMOVED
-						<div class="account-overview-input-single">	
-							<label for="tfgg_cp_demo_homephone"><?php _e('Home Phone') ?><span id="alertpnl_homephone" style="display:none; color:red"></span></label>
-							<input data-alertpnl="alertpnl_homephone" name="tfgg_cp_demo_homephone" id="tfgg_cp_demo_homephone" class="required account-overview-input read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo tfgg_format_number_for_display($actualDemographics->homephone) ?>" />
-						</div>*/
-						?>
-					</div>
+					</div>					
 					
 			
 		        </div>
@@ -388,15 +374,7 @@
 		        
 		    </div>
 		    
-			<?php
-			if (get_option('tfgg_scp_demogrphics_allow') === '1') { ?>
-				<div class="standard-button-container" style="padding-left:20px;">
-					<input type="hidden" name="tfgg_cp_demo_nonce" id="tfgg_cp_demo_nonce" value="<?php echo wp_create_nonce('tfgg_cp_demo_nonce'); ?>"/>
-					<button id="btn_demo_save" class="account-overview-button account-overview-standard-button" style="display:none;" onclick="ValidDemoInfo();" type="submit"><?php _e('UPDATE') ?></button>
-					<button id="btn_demo_cancel" class="account-overview-button account-overview-cancel-button" style="display:none;" onclick="CancelUpdate();" type="button"><?php _e('CANCEL') ?></button>
-					<button id="btn_demo_edit" class="account-overview-button account-overview-standard-button" onclick="edit_mode();" type="button"><?php _e('EDIT') ?></button>
-				</div>
-			<?php } ?>
+			
 			
 	
 	

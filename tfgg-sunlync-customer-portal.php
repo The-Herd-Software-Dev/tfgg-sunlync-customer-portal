@@ -9,7 +9,7 @@
     //ob_start();
 
     //2019-09-25 CB V1.0.0.3 - should only be set on the dev environment
-    if($_SERVER['HTTP_HOST']=='localhost:8888'){    
+    if($_SERVER['HTTP_HOST']=='localhost:8888'){   
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);    
@@ -27,7 +27,7 @@
     require_once('tfgg-sunlync-errors.php');
 
     //2019-09-23 CB V1.0.0.2 - added
-    if ( is_admin()  ) {
+    if ( is_admin()  ) {        
         new tfgg_scp_updater( __FILE__, 'The-Herd-Software-Dev', "tfgg-sunlync-customer-portal" );
     }
     
