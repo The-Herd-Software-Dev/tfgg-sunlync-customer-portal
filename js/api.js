@@ -654,16 +654,18 @@ function LoadStoreEquipment(storecode){
             jQuery.each(returnData["equipment"], function(key,details){
                 var pnlName="'equipPnl_"+details['equipmenttype']+"'";
                 
+                //2019-10-03 CB V1.0.0.9 - added replace(/ \([\s\S]*?\)/g, '') to description to strip data between ()
+
                 var pnl='<div id="equipPnl_'+details["equipmenttype"]+'" class="appts-equip-selector equipPnl" onclick="highlightEquipment('+pnlName+')" style="cursor: pointer;" '+ 
                 'data-equipmenttype="'+details["equipmenttype"]+'"'+
-                'data-description="'+details["description"]+'" data-apptblocks="'+details["minappointmentblocks"]+'">' +
+                'data-description="'+details["description"].replace(/ \([\s\S]*?\)/g, '')+'" data-apptblocks="'+details["minappointmentblocks"]+'">' +
                
                 '<div class="bed-image" style="float:right;"> '+
                     '<img src="../'+returnData["picDir"]+'/'+details["image"]+'" style="display:block; max-height: 50px;max-width:70px; width: auto; height: auto;"> '+
                 '</div>'+
                
                 '<div class="row-body" style="">'+
-                    '<span class="room-name">'+details["description"]+'</span>'+
+                    '<span class="room-name">'+details["description"].replace(/ \([\s\S]*?\)/g, '')+'</span>'+
                     '<br />'+
                         //'<a class="details-link" href="javascript:void(0)" onclick="moreEquipInfo('+details["equipmenttype"]+')">More Info ></a>'+
                         '<span style="font-size:smallest;">Appointment Length: '+details["minappointmentblocks"]*jQuery('#tfgg_appt_len').val()+' minutes</span>'+
@@ -928,7 +930,7 @@ function recaptchaCallback(){
     jQuery('#registrationSubmitButton').removeAttr('disabled');
 }
 
-  function getAgeYears(dateVal) {
+function getAgeYears(dateVal) {
     var
         birthday = new Date(dateVal),
         today = new Date(),
@@ -977,7 +979,7 @@ function getApptStores(dateSelected){
                 
                 var pnl='<div class="appts-selector appts-store-selector" '+
                 'id="appt_store_panel_' + details['store_id'] + '" '+
-                'data-storelocation="' +details['store_loc'] + '" '+
+                'data-storelocation="' +details['store_loc'].replace(/ \([\s\S]*?\)/g, '') + '" '+
                 'data-storecode="'+details['store_id']+'" '+
                 'data-apptlength="'+details['apptlength']+'" ';
 
@@ -1015,7 +1017,7 @@ function getApptStores(dateSelected){
                 pnl=pnl+'onclick="selectStore('+pnlName+');" > ';
 
                 //fill in the rest of the data!
-                pnl=pnl+'<span class="appts-store-name"><strong>'+details['store_loc']+'</strong></span>';
+                pnl=pnl+'<span class="appts-store-name"><strong>'+details['store_loc'].replace(/ \([\s\S]*?\)/g, '')+'</strong></span>';
                 pnl=pnl+'<br/>';
                 //address
                 pnl=pnl+'<span class="appts-store-address">';
@@ -1023,7 +1025,7 @@ function getApptStores(dateSelected){
                 pnl=pnl+details['address2'].substring(0,35)+'<br/>';
                 pnl=pnl+details['city'];
                 if(details['zip']!=''){ pnl=pnl+', '}
-                pnl=pnl+details['zip'];
+                pnl=pnl+details['zip']+'<br/>';//this br needs to be here in case the zip is empty and the line isn't rendered
                 pnl=pnl+'</span>';//end span for appts-store-address
                 pnl=pnl+'</div>';
                    

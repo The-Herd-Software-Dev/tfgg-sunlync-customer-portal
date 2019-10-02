@@ -76,7 +76,7 @@
 		    					<?php if(StrToUpper($details->appt_type_desc)=='TAN') { ?>
 		    						<tr class="account_overview_row account_overview_row_header">
 			    						<td><span class="account-overview-generic-label">Equipment: </span></td>
-			    						<td><span class="account-overview-generic-title"><?php echo $details->equip_type_desc ?></span>
+			    						<td><span class="account-overview-generic-title"><?php echo tfgg_delete_all_between('(',')',$details->equip_type_desc); ?></span>
 			    						<?php
 			    							if(tfgg_scp_can_appt_be_cancelled($details->date,$details->start_time)){
 			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
