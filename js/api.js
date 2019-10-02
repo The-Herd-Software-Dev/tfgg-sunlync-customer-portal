@@ -108,7 +108,7 @@ function TestAPICredentials(){
     jQuery("#tfgg-api-test-response").text('');
 
     var pathname = window.location.pathname;
-    //console.log(localAccess);
+   
     jQuery.get(localAccess.adminAjaxURL,{
         'action'    : 'tfgg_get_api_version',
         'dataType'  : 'json',
@@ -946,4 +946,92 @@ function markTandCchecked(){
 
 function markMarketingChecked(){
     jQuery('#tfgg_cp_marketing').prop('checked')=true;
+}
+
+function getApptStores(dateSelected){
+    //clear these elements
+    jQuery('#tfgg_store_filter').val('');
+    jQuery('#tfgg_appt_store_panels').html('');
+    jQuery('#tfgg_storeselect_warning').css('display','none');
+
+    //get the 'day' selected
+    dateSelected = new Date(dateSelected);
+    dateSelected = dateSelected.getUTCDay();
+    //console.log(dateSelected);
+    var pathname = window.location.pathname;
+    
+    jQuery.get(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_api_get_stores_for_appts',
+        'dataType'  : 'json',
+        'data'      : {apptDay: dateSelected, store_code:"0000000001"},
+		'pathname'  : pathname
+    },function(data){
+        
+        var returnData = jQuery.parseJSON(data);
+        console.log(returnData);
+        
+        if(returnData["results"]=='success'){
+            //console.log(returnData["equipment"]);
+            jQuery.each(returnData["stores"], function(key,details){
+                var pnlName="'appt_store_panel_"+details['store_id']+"'";
+                
+                var pnl='<div class="appts-selector appts-store-selector" '+
+                'id="appt_store_panel_' + details['store_id'] + '" '+
+                'data-storelocation="' +details['store_loc'] + '" '+
+                'data-storecode="'+details['store_id']+'" '+
+                'data-apptlength="'+details['apptlength']+'" ';
+
+                //pull the start and end time based on the day selected
+                switch(dateSelected){
+                    case 0:
+                        pnl=pnl+'data-apptstarttime="' +details['SunStart']+'" '+
+                        'data-apptendtime="'+details['SunEnd']+'" ';
+                        break;
+                    case 1:
+                        pnl=pnl+'data-apptstarttime="' +details['MonStart']+'" '+
+                        'data-apptendtime="'+details['MonEnd']+'" ';
+                        break;
+                    case 2:
+                        pnl=pnl+'data-apptstarttime="' +details['TuesStart']+'" '+
+                        'data-apptendtime="'+details['TuesEnd']+'" ';
+                        break;
+                    case 3:
+                        pnl=pnl+'data-apptstarttime="' +details['WedStart']+'" '+
+                        'data-apptendtime="'+details['WedEnd']+'" ';
+                        break;
+                    case 4:
+                        pnl=pnl+'data-apptstarttime="' +details['ThursStart']+'" '+
+                        'data-apptendtime="'+details['ThursEnd']+'" ';
+                        break;
+                    case 5:
+                        pnl=pnl+'data-apptstarttime="' +details['FriStart']+'" '+
+                        'data-apptendtime="'+details['FriEnd']+'" ';
+                        break;
+                    case 6:
+                        pnl=pnl+'data-apptstarttime="' +details['SatStart']+'" '+
+                        'data-apptendtime="'+details['SatEnd']+'" ';
+                        break;
+                }
+                pnl=pnl+'onclick="selectStore('+pnlName+');" > ';
+
+                //fill in the rest of the data!
+                pnl=pnl+'<span class="appts-store-name"><strong>'+details['store_loc']+'</strong></span>';
+                pnl=pnl+'<br/>';
+                //address
+                pnl=pnl+'<span class="appts-store-address">';
+                pnl=pnl+details['address1'].substring(0,35)+'<br/>';
+                pnl=pnl+details['address2'].substring(0,35)+'<br/>';
+                pnl=pnl+details['city'];
+                if(details['zip']!=''){ pnl=pnl+', '}
+                pnl=pnl+details['zip'];
+                pnl=pnl+'</span>';//end span for appts-store-address
+                pnl=pnl+'</div>';
+                   
+                jQuery('#tfgg_appt_store_panels').append(pnl);
+            });
+            
+        }else{
+            jQuery('#tfgg_storeselect_warning').css('display','block');
+        }
+    });
 }

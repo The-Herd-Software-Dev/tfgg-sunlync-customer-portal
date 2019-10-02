@@ -209,7 +209,7 @@
     function tfgg_api_get_store_equipment(){
         $url = tfgg_get_api_url();
         $url.='TSunLyncAPI/CIPGetStoreEquipmentTypes/storecode/inAppts/1';
-        
+
         $url=str_replace('storecode',$_GET['data']['store_code'],$url);
         $url=str_replace('inAppts','1',$url);
         
@@ -466,6 +466,46 @@
         
     }
     add_action( 'wp_ajax_tfgg_api_get_stores', 'tfgg_api_get_stores' );
+
+    function tfgg_api_get_stores_for_appts(){
+        //2019-10-01 CB V1.0.0.8 - new method added to retrieve stores
+        //based on day selected from appt-control
+        
+        $apptDay = $_GET['data']['apptDay'];
+        $url= tfgg_get_api_url().'TSunLyncAPI/TFGG_GetStoresAndHours/sStoreCode/nInAppts/nApptDay';
+        
+        $url=str_replace('sStoreCode','',$url);
+        $url=str_replace('nInAppts','1',$url);
+        $url=str_replace('nApptDay',$apptDay,$url);
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            exit(json_encode($result));
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			
+			exit(json_encode($result));
+		}else{
+		       
+            $result["results"]="success";
+            $result["stores"]=array_slice($data,1,-1);
+            usort($result["stores"],"tfgg_store_store_by_name");//2019-09-30 CB V1.0.0.6 - the new api call is not sorted alphabetically
+            exit(json_encode($result));
+		}
+
+    }
+    add_action( 'wp_ajax_tfgg_api_get_stores_for_appts', 'tfgg_api_get_stores_for_appts' );
 
     function tfgg_store_store_by_name($a,$b){
         return strcmp($a->store_loc, $b->store_loc);

@@ -6,8 +6,9 @@
         $client=tfgg_cp_get_sunlync_client();
         if($client!=FALSE){
             
+            /*2019-10-01 CB V1.0.0.8 - deprecated in favor of getApptStores() in api.js
             $storelist=json_decode(tfgg_api_get_stores());
-            $storelist=$storelist->stores;
+            $storelist=$storelist->stores;*/
             $minDate=new DateTime();
 
             $appointments = json_decode(tfgg_api_get_client_appointments($client));
@@ -61,46 +62,15 @@
 						<input id="tfgg_store_filter" name="tfgg_store_filter" class="account-overview-input" type="text"/>							
                     </div>
                     <hr/>
-                  
+                    
                     <div class="appts-store-container">
                         <div id="tfgg_storeselect_warning" class="alert alert-warning" style="display: none;">
-                        <p> 
-                            No stores match your search
-                        </p>
+                            <p> 
+                                No stores match your search
+                            </p>
+                        </div>       
+                        <div id="tfgg_appt_store_panels">
                         </div>
-                    <?php
-                        foreach($storelist as &$details){
-                            if((!strpos(StrToUpper($details->store_loc),'CLOSED'))&&
-							(!strpos(StrToUpper($details->store_loc),'DELETED'))){
-                                if(($details->allowappts==='1')&&($details->ApptLync==='1')){
-                                
-                                    echo '<div class="appts-selector appts-store-selector" id="appt_store_panel_' . $details->store_id . '" data-storelocation="' .$details->store_loc . '" data-storecode="'.$details->store_id.'" data-apptlength="'.$details->apptlength.'" '.
-                                    'data-apptstarttime="'.$details->apptstarttime.'" data-apptendtime="'.$details->apptendtime.'" onclick="selectStore(\'appt_store_panel_' . $details->store_id.'\');">';
-                                    
-                                    echo '<span class="appts-store-name"><strong>'.$details->store_loc.'</strong></span>';
-                                    echo  '<br />';
-                                    echo '<span class="appts-store-address">';
-                                    echo substr($details->address1,0,35).'<br /> ';//2019-09-30 CB V1.0.0.6 - substr starts at 0
-                                    echo substr($details->address2,0,35).'<br /> ';//2019-09-30 CB V1.0.0.6 - substr starts at 0
-                                    
-                                    if (!empty($details->city))
-                                        echo $details->city;
-                                    if($details->zip<>''){echo ',';}
-                                    echo ' '.$details->zip;
-
-
-                                    echo '</span>';
-                                   /* echo '<br />';
-                                    echo '<span class="appts-store-phone">Phone: ';
-                                    echo $details->phone;
-                                    echo '</span>';*/
-                                    echo '</div>';
-                                    
-                                }
-                            }
-    				    }
-                    ?>
-                        
                     </div>
 
                 </div>
@@ -255,7 +225,13 @@
                     beforeShowDay: function(date){
                         var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
                         return [ exclude.indexOf(string) == -1 ]
-                    }}
+                    },
+                    onSelect:function(date){
+                        //before passing the date, format it
+                        var formatted = date.split('-');
+                        getApptStores(formatted[2]+'-'+formatted[1]+'-'+formatted[0]);
+                    }
+                },
                 );
             } );
         </script>
