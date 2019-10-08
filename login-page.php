@@ -184,6 +184,8 @@
 					$key        = get_password_reset_key( $user_data );
 				
 					if ( is_wp_error( $key ) ) {
+						//2019-10-07 CB V1.0.1.1 - return the error code
+						tfgg_cp_errors()->add('error_generating_reset_key', __('We encountered an error generateing your reset key: '.$key->get_error_message()));
 						return $key;
 					}
 				

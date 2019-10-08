@@ -70,6 +70,7 @@
                             </p>
                         </div>       
                         <div id="tfgg_appt_store_panels">
+                        <div class="alert alert-warning">Please select your appointment date to get started</div>
                         </div>
                     </div>
 

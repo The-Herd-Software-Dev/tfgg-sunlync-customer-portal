@@ -592,9 +592,9 @@ function ApptStoreSelect(){
         jQuery('#alertpnl_tfgg_appt_set_store_date').show(); 
         return false;
     }
-    
-    jQuery('#tfgg_appt_date_text').text(dateselected.toLocaleDateString());
-    jQuery('#tfgg_appt_success_date').text(dateselected.toLocaleDateString());
+    //console.log(dateselected.toLocaleDateString('en-GB'));
+    jQuery('#tfgg_appt_date_text').text(dateselected.toLocaleDateString('en-GB'));
+    jQuery('#tfgg_appt_success_date').text(dateselected.toLocaleDateString('en-GB'));
     //jQuery('#tfgg_appt_date').val(jQuery('#tfgg_appt_set_date').val());
     jQuery('#tfgg_appt_date').val(jQuery.datepicker.formatDate('yy-mm-dd',dateselected));
 
@@ -706,7 +706,7 @@ function LoadEquipTimeSlots(){
     var equipmenttype = jQuery('#tfgg_appt_equip_type').val();
     var storecode = jQuery('#tfgg_appt_storecode').val();
     var apptdate = jQuery('#tfgg_appt_date').val();
-
+    var aDate = apptdate.split('-');//2019-10-08 CB V1.0.1.1
     
     var apptlength = jQuery('#tfgg_appt_len').val()*jQuery('#tfgg_appt_equip_type_multiplier').val();
 
@@ -728,7 +728,10 @@ function LoadEquipTimeSlots(){
            var i=0; 
            jQuery.each(returnData["availableSlots"], function(key,details){
                 i++;
-                if(new Date(details['start_time'],apptdate) < new Date(returnData["earlistAppt"])){
+                var aTime = details['start_time'].split(':');//2019-10-08 CB V1.0.1.1
+                //if(new Date(details['start_time'],apptdate) < new Date(returnData["earlistAppt"])){
+                    if(new Date(aDate[0], aDate[1]-1, aDate[2], aTime[0], aTime[1], aTime[2]) < new Date(returnData["earlistAppt"])){
+                        //month is adate[1]-1 because months are 0 index for js                        
                     return;//continue to next iteration
                 }
                 if (ApptDoesNotConflict(details['start_time'],apptdate)){
@@ -758,7 +761,6 @@ function LoadEquipTimeSlots(){
 function ApptDoesNotConflict(start_time, appt_date){
     var bResult = true;
     var validate = new Date(appt_date+' '+start_time);
-    
     //loop through each of the existing appts and verify if
     //it does not fall within +/- 24hs
     jQuery('.excludeAptsDateTime').each(function(){
@@ -951,6 +953,7 @@ function markMarketingChecked(){
 }
 
 function getApptStores(dateSelected){
+    changeActiveContentPanel('appts_loading');
     //clear these elements
     jQuery('#tfgg_store_filter').val('');
     jQuery('#tfgg_appt_store_panels').html('');
@@ -970,7 +973,6 @@ function getApptStores(dateSelected){
     },function(data){
         
         var returnData = jQuery.parseJSON(data);
-        console.log(returnData);
         
         if(returnData["results"]=='success'){
             //console.log(returnData["equipment"]);
@@ -1035,5 +1037,7 @@ function getApptStores(dateSelected){
         }else{
             jQuery('#tfgg_storeselect_warning').css('display','block');
         }
+
+    changeActiveContentPanel('appts_date_store');
     });
 }
