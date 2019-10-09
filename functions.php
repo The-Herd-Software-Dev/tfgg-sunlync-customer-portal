@@ -1091,6 +1091,7 @@
         if (get_option('tfgg_scp_appointments_allow_cancel')!=1){
             return false;
         }
+        //2019-10-08 CB V1.0.1.2 - 
         $buffer = get_option('tfgg_scp_appointments_cancel_allowed_hrs');
         if(($buffer=='0')||($buffer=='')){
             return true;//no buffer was set
@@ -1245,7 +1246,8 @@
         //add the account overview link to the nav bar
         $sunlyncuser = tfgg_cp_get_sunlync_client();
         if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='secondary-menu'){
-          $items .='<li><a href="'. get_option('tfgg_scp_acct_overview') .'">Account Overview</a></li>';  
+        //2019-10-09 CB V1.0.1.3 - added full site URL
+          $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_acct_overview') .'">Account Overview</a></li>';  
         }
         return $items;
     }
@@ -1257,7 +1259,8 @@
         if(wp_is_mobile()){//only show the item if it's a mobile device
             $sunlyncuser = tfgg_cp_get_sunlync_client();
             if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='primary-menu'){
-            $items .='<li><a href="'. get_option('tfgg_scp_cpappt_page') .'">Book Appointment</a></li>';  
+                //2019-10-09 CB V1.0.1.3 - added full site URL
+                $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_cpappt_page') .'">Book Appointment</a></li>';  
             }            
         }
         return $items;

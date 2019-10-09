@@ -662,6 +662,10 @@ tr.account_overview_row > td {
     height: 96% !important;
 }
 
+.ui-datepicker table{
+    font-size: 0.75em !important;
+}
+
 .dialog-buttons{
     position: absolute;
     bottom: 0;

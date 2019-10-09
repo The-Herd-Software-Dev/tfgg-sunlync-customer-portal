@@ -141,9 +141,9 @@
 				<div class="account_overview-section account-overview-comm-prefs">
 		        	<h4>Active Services</h4>
 		        <?php
-		    		$clientPkgs = json_decode(tfgg_api_get_client_pkgs($client)); 
+					$clientPkgs = json_decode(tfgg_api_get_client_pkgs($client)); 
 		    		$clientMems = json_decode(tfgg_api_get_client_mems($client)); 
-		    		
+					
 		    		if(StrToUpper($clientPkgs->results) === 'SUCCESS'){
 		    			$clientPkgs = $clientPkgs->clientPackages;
 		    			//["description"]=> string(11) "100 Minutes" ["package_id"]=> string(10) "0000000004" ["purchase_date"]=> string(9) "3/26/2019" ["expiration_date"]=> string(10) "12/30/1899" ["status"]=> string(6) "Active" ["units"]=> string(2) "67" ["unit_type"]=> string(7) "Minutes" ["store_location"]=> string(4) "BFLO"
@@ -187,7 +187,7 @@
 		    		
 		    		if(StrToUpper($clientMems->results) === 'SUCCESS'){
 						$clientMems = $clientMems->clientMemberships;
-						foreach($clientPkgs as &$details){
+						foreach($clientMems as &$details){
 							if((StrToUpper($details->status)=='ACTIVE')||(StrToUpper($details->status)=='PURCHASED')){
 								$description=tfgg_delete_all_between('(',')',$details->description);
 
