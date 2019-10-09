@@ -1091,6 +1091,10 @@
         if (get_option('tfgg_scp_appointments_allow_cancel')!=1){
             return false;
         }
+        $buffer = get_option('tfgg_scp_appointments_cancel_allowed_hrs');
+        if(($buffer=='0')||($buffer=='')){
+            return true;//no buffer was set
+        }
         
         //$apptDateTime = DateTime::createFromFormat('m/d/Y H:i:s',$apptDate.' '.$apptTime);
         $apptDate = tfgg_format_date_to_ymd($apptDate);

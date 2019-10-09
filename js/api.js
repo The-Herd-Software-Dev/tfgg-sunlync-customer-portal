@@ -583,7 +583,7 @@ function ApptStoreSelect(){
     //var day=dateselected.substring(8,10);
     //dateselected=new Date(year,mth-1,day);
     
-    dateselected = jQuery("#tfgg_appt_set_date").datepicker('getDate');
+    dateselected = jQuery("#appt_date_calendar").datepicker('getDate');
 
     //console.log(dateselected.toLocaleDateString());
 
@@ -713,7 +713,8 @@ function LoadEquipTimeSlots(){
     var emptypnl='<div id="alertpnl_tfgg_appt_no_time_slot" style="display:block;" class="alert alert-warning">'+
                         '<span id="alertpnl_tfgg_appt_no_time_slot_message">No appointments are available, please try a different selection</span>'+
                     '</div><br/>'+
-                    '<span><button class="appts-button appts-standard-button" onclick="ApptGoToStoreAndDate()">Store and Date selection</button></span><br/><br/>'+
+                    '<span><button class="appts-button appts-standard-button" onclick="ApptGoToApptDate()">Date selection</button></span><br/><br/>'+
+                    '<span><button class="appts-button appts-standard-button" onclick="ApptGoToApptStore()">Store selection</button></span><br/><br/>'+
                     '<span><button class="appts-button appts-standard-button" onclick="ApptGoToEquipment()">Equipment Selection</button></span>';
     
     var pathname = window.location.pathname;
@@ -774,6 +775,14 @@ function ApptDoesNotConflict(start_time, appt_date){
     });
 
     return bResult;
+}
+
+function ApptGoToApptDate(){
+    changeActiveContentPanel('appts_date_select');    
+}
+
+function ApptGoToApptStore(){
+    changeActiveContentPanel('appts_store_select');    
 }
 
 function ApptGoToStoreAndDate(){
@@ -1038,6 +1047,6 @@ function getApptStores(dateSelected){
             jQuery('#tfgg_storeselect_warning').css('display','block');
         }
 
-    changeActiveContentPanel('appts_date_store');
+    changeActiveContentPanel('appts_store_select');
     });
 }

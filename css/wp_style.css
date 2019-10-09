@@ -656,6 +656,12 @@ tr.account_overview_row > td {
     font-family: "Open Sans",Arial,sans-serif;
 }
 
+.ui-datepicker-inline{
+    display: inline-block !important;
+    width: 96% !important; 
+    height: 96% !important;
+}
+
 .dialog-buttons{
     position: absolute;
     bottom: 0;

@@ -158,7 +158,7 @@
 		    					<div class="account-overview-service-container">
 		    						<table class="account-overview-table">
 										<tr class="account_overview_row account_overview_row_header">
-			    							<td><span class="account-overview-generic-label">Package: </span></td>
+			    							<td><span class="account-overview-generic-label">Service: </span></td>
 			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span></td>
 			    						</tr>
 			    						<tr class="account_overview_row">
@@ -186,7 +186,34 @@
 		    		}
 		    		
 		    		if(StrToUpper($clientMems->results) === 'SUCCESS'){
-		    			$clientMems = $clientMems->clientMemberships;
+						$clientMems = $clientMems->clientMemberships;
+						foreach($clientPkgs as &$details){
+							if((StrToUpper($details->status)=='ACTIVE')||(StrToUpper($details->status)=='PURCHASED')){
+								$description=tfgg_delete_all_between('(',')',$details->description);
+
+								?>
+								<div class="account-overview-service-container">
+		    						<table class="account-overview-table">
+										<tr class="account_overview_row account_overview_row_header">
+			    							<td><span class="account-overview-generic-label">Service: </span></td>
+			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span></td>
+			    						</tr>
+			    						<tr class="account_overview_row">
+			    							<td><span class="account-overview-generic-label">Purchased: </span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo $details->purchase_date ?></span></td>
+			    						</tr>
+			    						<?php if(strpos($details->expiration_date,'1899')<1){ ?>
+			    						<tr class="account_overview_row">
+			    							<td><span class="account-overview-generic-label">Expires: </span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo $details->expiration_date ?></span></td>
+			    						</tr>
+			    						<?php } ?>			    						
+		    						</table>
+			    				</div>
+								<?php	
+							}						
+						}
+						unset($details);
 		    		}
 		    		
 		        ?>

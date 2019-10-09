@@ -41,20 +41,25 @@
         </div>
         
         <div class="appts-container">
-            
-            <div id="appts_date_store" class="appts-content appts-container-active">
-
+            <div id="appts_date_select" class="appts-content appts-container-active">
                 <div class="appts-child-main">
-
                     <h5 style="display:inline-block;padding-right:25px;">Appointment Date</h5>
-                    <?php if(wp_is_mobile()){ ?>
-                    <input type="text" readonly="true" name="tfgg_appt_set_date" id="tfgg_appt_set_date" min="<?php echo date_format($minDate,'Y-m-d');?>" style="display:inline-block;line-height:20px;border-radius:5px;font-size:1em !important;" /><br/>
+                    <br/>
+                    <?php if(wp_is_mobile()){ ?>                    
                     <span style="font-size:small;"><em>You may only book one appointment per calendar day & 24hr period - future appointment dates are blocked</em></span>
                     <?php }else{ ?>
-                    <input type="text" readonly="true" name="tfgg_appt_set_date" id="tfgg_appt_set_date" min="<?php echo date_format($minDate,'Y-m-d');?>" style="display:inline-block;line-height:20px;border-radius:5px;font-size:0.9em !important;" /><br/>
                     <span style="font-size:x-small;"><em>You may only book one appointment per calendar day & 24hr period - future appointment dates are blocked</em></span>
                     <?php } ?>                    
                     <hr />
+                    <input type="hidden"  name="tfgg_appt_set_date" id="tfgg_appt_set_date" value=""/>
+                    <div id="appt_date_calendar"></div>
+
+                </div>
+            </div>
+
+            <div id="appts_store_select" class="appts-content appts-container-inactive">
+
+                <div class="appts-child-main">
 
                     <h5>Select Store</h5>
                     <div>
@@ -70,7 +75,7 @@
                             </p>
                         </div>       
                         <div id="tfgg_appt_store_panels">
-                        <div class="alert alert-warning">Please select your appointment date to get started</div>
+                        
                         </div>
                     </div>
 
@@ -79,6 +84,7 @@
                 <div class="appts-child-bottom">
 
                     <div class="appts-button-container">
+                        <button id="tfgg_appt_store_back" class="appts-button appts-back-button" onclick="changeActiveContentPanel('appts_date_select')">BACK</button>
                         <button id="tfgg_appt_store_next" class="appts-button appts-standard-button" onclick="ApptStoreSelect();">NEXT</button>
                     </div>
 
@@ -106,7 +112,7 @@
                 <div class="appts-child-bottom">
 
                     <div class="appts-button-container">
-                        <button id="btn_equipment_back" class="appts-button appts-back-button" onclick="changeActiveContentPanel('appts_date_store')">BACK</button>
+                        <button id="btn_equipment_back" class="appts-button appts-back-button" onclick="changeActiveContentPanel('appts_store_select')">BACK</button>
                         <button id="btn_equipment_next" class="appts-button appts-standard-button" onclick="ApptEquipSelect()">NEXT</button>
                     </div>
 
@@ -220,16 +226,17 @@
                 var now = new Date();
                 var exclude = [<?php echo $excludeAppts;?>];
                 //exclude=[];
-                jQuery( "#tfgg_appt_set_date" ).datepicker({ 
+                jQuery( "#appt_date_calendar" ).datepicker({ 
                     minDate: now,
                     dateFormat: 'dd-mm-yy',
-                    beforeShowDay: function(date){
+                    beforeShowDay: function(date){                        
                         var string = jQuery.datepicker.formatDate('yy-mm-dd', date);
                         return [ exclude.indexOf(string) == -1 ]
                     },
                     onSelect:function(date){
-                        //before passing the date, format it
+                        //before passing the date, format it                        
                         var formatted = date.split('-');
+                        jQuery('#tfgg_appt_set_date').val(formatted[2]+'-'+formatted[1]+'-'+formatted[0]);                        
                         getApptStores(formatted[2]+'-'+formatted[1]+'-'+formatted[0]);
                     }
                 },
