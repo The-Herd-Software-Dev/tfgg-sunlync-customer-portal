@@ -563,7 +563,7 @@
 				wp_set_password($_POST['tfgg_cp_demo_password'],$user->ID);
 				wp_signon(array('user_login'=>$user->user_login,'user_password'=>$_POST['tfgg_cp_demo_password']));
 				tfgg_cp_errors()->add('success_update_password',__('Your password was successfully updated'));
-				tfgg_api_sync_password(tfgg_cp_get_sunlync_client(),$_POST['tfgg_cp_demo_password']);//tfgg_api_sync_password will call the password hash
+				tfgg_api_sync_password($user,$_POST['tfgg_cp_demo_password']);//tfgg_api_sync_password will call the password hash
 			}
 	
 		}

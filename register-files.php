@@ -22,12 +22,17 @@
     add_action( 'admin_enqueue_scripts', 'load_api_scripts' );
     function load_api_scripts(){   
         
-        wp_enqueue_script( 'tfgg-api-scripts', plugin_dir_url(__FILE__).'js/api.js', array( 'jquery' ) );
+        //2019-10-11 CB V1.0.1.4 - versioning added to css and js
+        $apiJsV = date("ymd-Gis", filemtime( plugin_dir_path( __FILE__ ) . 'js/api.js' ));
+        $includeJsV = date("ymd-Gis", filemtime( plugin_dir_path( __FILE__ ) . 'js/include.js' ));
+        $wpStuleV = date("ymd-Gis", filemtime( plugin_dir_path( __FILE__ ) . 'css/wp_style.css' ));
+
+        wp_enqueue_script( 'tfgg-api-scripts', plugin_dir_url(__FILE__).'js/api.js', array( 'jquery' ), $apiJsV );
         wp_localize_script('tfgg-api-scripts', 'localAccess', array('pluginsUrl' => plugin_dir_url(__FILE__),
         'adminAjaxURL' => admin_url( 'admin-ajax.php' ),
         'acctOverview' => get_option('tfgg_scp_acct_overview')));
         
-        wp_enqueue_script( 'tfgg-wp-scripts', plugin_dir_url(__FILE__).'js/include.js', array( 'jquery' ) );
+        wp_enqueue_script( 'tfgg-wp-scripts', plugin_dir_url(__FILE__).'js/include.js', array( 'jquery' ), $includeJsV );
         wp_localize_script('tfgg-wp-scripts', 'localAccess', array('pluginsUrl' => plugin_dir_url(__FILE__),
         'adminAjaxURL' => admin_url( 'admin-ajax.php' ),
         'acctOverview' => get_option('tfgg_scp_acct_overview')));

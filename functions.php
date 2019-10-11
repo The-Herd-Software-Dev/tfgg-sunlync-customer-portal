@@ -537,7 +537,14 @@
     }
     add_action('wp_ajax_tfgg_api_get_equip_type_appt_slots', 'tfgg_api_get_equip_type_appt_slots');
     
-    function tfgg_api_sync_password($clientnumber, $password){
+    function tfgg_api_sync_password($user, $password){
+
+        $clientnumber = get_user_meta($user->ID, 'sunlync_client',true);
+
+        if(!$clientnumber){
+            return true;//exit
+        }
+
         //TFGG_SyncPassword(sclientNumber, sEmpNo, sNewPass
         $employeenumber = get_option('tfgg_scp_update_employee');
         
@@ -573,6 +580,7 @@
 		}
 
     }
+    //add_action( 'password_reset', 'tfgg_api_sync_password', 10, 2 );
 
     function tfgg_api_get_employees($onlyAppts=0){
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetEmpList/sStatus/sEmpNo/sAvailableForAppts/'.
