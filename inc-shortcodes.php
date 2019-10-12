@@ -6,7 +6,8 @@
 */
 
 require_once('reg-page.php');
-require_once('login-page.php');
+//require_once('login-page.php');
+require_once('api-login-page.php');
 
 /*function tfgg_cp_sunlync_clientnumber(){
     return 'sunlync client number';

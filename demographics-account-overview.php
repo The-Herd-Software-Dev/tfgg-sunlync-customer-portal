@@ -2,7 +2,8 @@
 
     function account_overview(){
         ob_start();
-        $client=tfgg_cp_get_sunlync_client();
+		$client=tfgg_cp_get_sunlync_client();
+		
         if ($client!=FALSE){
             //$client="0000000002";
             $demographics = json_decode(tfgg_api_get_client_demographics($client)); 
@@ -32,7 +33,8 @@
 			
 			//var_dump($commPref);
 			
-			$wp_login = tfgg_cp_get_user_loginid();
+			//2019-10-12 CB V1.1.1.1 - deprecated
+			//$wp_login = tfgg_cp_get_user_loginid();
 			//echo $wp_login;
                 
         ?>
@@ -356,15 +358,16 @@
 					<br />
 				</div>			   
 		        	<h4>Login Info</h4>
-					
+					<?php
+					/*2019-10-12 CB V1.1.1.1 - deprecated
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-single">
 							<label for="tfgg_cp_demo_username" class="account-overview-label"><?php _e('Login ID') ?></label>
 							<input  name="tfgg_cp_demo_username" id="tfgg_cp_demo_username" class="required account-overview-input-readonly read-only" readonly <?php echo $disabled ?> type="text" value="<?php echo $wp_login; ?>" />
 							<span id="tfgg_cp_demo_username" style="display:none;" class="reg_alert"></span>
 						</div>
-					</div>
-					
+					</div>*/
+					?>
 					<div class="account-overview-generic-container">
 						<div class="account-overview-input-double">
 							<label for="tfgg_cp_demo_password" class="account-overview-label"><?php _e('Password') ?></label>

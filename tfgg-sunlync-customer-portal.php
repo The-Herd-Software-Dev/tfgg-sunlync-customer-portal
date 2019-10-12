@@ -15,6 +15,9 @@
         error_reporting(E_ALL);    
     }
     
+    //2019-10-12 CB V1.1.1.1 - if no session exists, start one
+    if(session_status() !== PHP_SESSION_ACTIVE) session_start();
+
     $dir = plugin_dir_url(__FILE__);
     require_once('functions.php');
     require_once('api-class.php');

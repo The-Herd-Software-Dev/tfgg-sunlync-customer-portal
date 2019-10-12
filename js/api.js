@@ -120,7 +120,7 @@ function TestAPICredentials(){
     },function(data){
         //console.log(data);
         var obj = jQuery.parseJSON(data);
-        //console.log(obj);
+        console.log(obj);
 
         if(obj["results"]=='success'){
             jQuery("#tfgg-api-options-test-api-response").addClass('notice-success');
@@ -1062,4 +1062,44 @@ function getApptStores(dateSelected){
 
     changeActiveContentPanel('appts_store_select');
     });
+}
+
+function ValidateLoginData(){
+    var bResult=true;
+    
+    if(jQuery('#tfgg_cp_user_login').val()===''){
+        jQuery('#login_alert_email').css('display','block');
+	    jQuery('#login_alert_email').html('Please enter your login ID');
+	    bResult = false;
+    }
+
+    if(jQuery('#tfgg_cp_user_pass').val()===''){
+        jQuery('#login_alert_password').css('display','block');
+	    jQuery('#login_alert_password').html('Please enter your password');
+	    bResult = false;   
+    }
+    
+    return bResult;
+}
+
+function portalLogin(){
+    ResetRegValidation();//we can use this as we are using the same class
+    event.preventDefault();
+
+    if(ValidateLoginData()){
+        jQuery('#tfgg_cp_api_login').submit();
+    }
+}
+
+function endPortalSession(){
+    event.preventDefault();
+    jQuery.get(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_cp_portal_logout',
+        'dataType'  : 'json',
+		'pathname'  : window.location.pathname
+    },function(data){
+        var obj = jQuery.parseJSON(data);
+        window.location.replace(obj["logout"]);
+    });
+    
 }
