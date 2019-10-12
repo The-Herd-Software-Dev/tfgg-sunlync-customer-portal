@@ -658,13 +658,36 @@ tr.account_overview_row > td {
 
 .ui-datepicker-inline{
     display: inline-block !important;
-    width: 96% !important; 
+    width: 100% !important; 
     height: 96% !important;
 }
 
 .ui-datepicker table{
-    font-size: 0.75em !important;
+    font-size: 0.7em !important;
+
 }
+
+@media only screen 
+  and (min-width: 320px) 
+  and (max-width: 568px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+    .ui-datepicker table{
+        font-size: 0.5em !important;       
+    }
+}
+
+@media only screen 
+  and (min-width: 375px) 
+  and (max-width: 667px) 
+  and (-webkit-min-device-pixel-ratio: 2) { 
+
+    .ui-datepicker table{
+        font-size: 0.6em !important;
+    
+    }
+}
+
+
 
 .dialog-buttons{
     position: absolute;
