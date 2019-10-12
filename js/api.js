@@ -89,14 +89,18 @@ var selectedStorePanel = "";
 function FormatTimeToUK(time){
     //note the 2000 date - this is arbitrary,
     //we are just using this to generate a valid Date()
-
-    var formattedTime = new Date('2000-01-01T'+time);
+    //2019-10-12 CB V1.0.1.5 - changed code to manually split and recreate for Safari
+    time = time.split(':');
+    //var formattedTime = new Date('2000-01-01'+time);
+    var formattedTime = new Date('2000','01','01', time[0], time[1], time[2]);
+    //console.log(formattedTime);
     var options = {
         hour: 'numeric',
         minute: 'numeric',
         hour12: true
     }; 
     formattedTime = formattedTime.toLocaleString('en-GB', options);
+    //console.log(formattedTime);
     return formattedTime;
 }
 
@@ -725,13 +729,19 @@ function LoadEquipTimeSlots(){
 		'pathname'  : pathname
     },function(data){
         var returnData = jQuery.parseJSON(data);
+        
         if(returnData["results"]==='success'){
            var i=0; 
+           var earliestDate = returnData["earlistApptDate"].split('-');
+           var earliestTime = returnData["earlistApptTime"].split(':');
+
+           var earliestAppt = (new Date(earliestDate[0], earliestDate[1]-1, earliestDate[2], earliestTime[0], earliestTime[1], earliestTime[2]));
            jQuery.each(returnData["availableSlots"], function(key,details){
                 i++;
                 var aTime = details['start_time'].split(':');//2019-10-08 CB V1.0.1.1
                 //if(new Date(details['start_time'],apptdate) < new Date(returnData["earlistAppt"])){
-                    if(new Date(aDate[0], aDate[1]-1, aDate[2], aTime[0], aTime[1], aTime[2]) < new Date(returnData["earlistAppt"])){
+                    
+                if(new Date(aDate[0], aDate[1]-1, aDate[2], aTime[0], aTime[1], aTime[2]) < earliestAppt){
                         //month is adate[1]-1 because months are 0 index for js                        
                     return;//continue to next iteration
                 }
@@ -765,7 +775,10 @@ function ApptDoesNotConflict(start_time, appt_date){
     //loop through each of the existing appts and verify if
     //it does not fall within +/- 24hs
     jQuery('.excludeAptsDateTime').each(function(){
-        var existing = new Date(jQuery(this).data('apptdate')+' '+jQuery(this).data('appttime'));
+        //var existing = new Date(jQuery(this).data('apptdate')+' '+jQuery(this).data('appttime'));
+        var existingDate = jQuery(this).data('apptdate').split('-');
+        var existingTime = jQuery(this).data('appttime').split(':');
+        var existing = new Date(existingDate[0], existingDate[1]+1, existingDate[2], existingTime[0], existingTime[1], existingTime[2]);
         var lowerBound = new Date(existing.setDate(existing.getDate()-1));//this decrements the existing by 1 day
         var upperBound = new Date(existing.setDate(existing.getDate()+2));//so we need to increment by 2 here
         if((validate>=lowerBound)&&(validate<=upperBound)){

@@ -531,7 +531,10 @@
         $currentDateBuffer=new DateTime();
         $currentDateBuffer->add(new DateInterval('PT'.get_option('tfgg_scp_appointments_allowed_hrs').'H'));
         $result["availableSlots"]=array_slice($data,1,-1);
-        $result["earlistAppt"]=$currentDateBuffer->format('Y-M-d H:i:s');
+        //2019-10-12 CB V1.0.1.5 - changed date formatting for increased Safari support
+        $result["earlistAppt"]=$currentDateBuffer->format('Y-m-d H:i:s');
+        $result["earlistApptDate"]=$currentDateBuffer->format('Y-m-d');
+        $result["earlistApptTime"]=$currentDateBuffer->format('H:i:s');
         exit(json_encode($result));
         
     }
