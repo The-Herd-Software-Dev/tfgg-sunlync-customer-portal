@@ -341,6 +341,8 @@
     }
     
     function tfgg_sunlync_client_registration(){
+		//2019-10-12 CB V1.1.1.1 - DEPRECATED!!
+		return true;//force exit in case we somehow ended up here
     	if(isset($_POST['tfgg_cp_user_email']) && wp_verify_nonce($_POST['tfgg_cp_register_nonce'],'tfgg-cp-register-nonce')){
     		
     		//check for an existing user in wp
@@ -461,10 +463,83 @@
 				tfgg_cp_errors()->add('warning_existing_user', __('This email is already linked to an account<br/>Try resetting your password from the login page'));	
 			}
 			$errors = tfgg_cp_errors()->get_error_messages();
-			
-			
+
     	}
     }
-    add_action('init','tfgg_sunlync_client_registration');
-    
+	//add_action('init','tfgg_sunlync_client_registration');
+	
+	function tfgg_sunlync_client_api_registration(){
+		if(isset($_POST['tfgg_cp_user_email']) && wp_verify_nonce($_POST['tfgg_cp_register_nonce'],'tfgg-cp-register-nonce')){
+			//organize the data
+			$address = array(
+			'street'	=> $_POST['tfgg_cp_street_address'],
+			'street_2'	=> '',
+			'city'		=> '',
+			'state'		=> '',
+			'postcode'	=> $_POST['tfgg_cp_post_code']
+			);
+			
+			$numbers = array(
+			'home'		=> '',
+			'work'		=> '',
+			'work_ext'	=> '',
+			'cell'		=> $_POST['tfgg_cp_mobile_phone']
+			);
+			
+			$demographics = array(
+			'firstname'	=> $_POST['tfgg_cp_user_first'],
+			'lastname'	=> $_POST['tfgg_cp_user_last'],
+			'midinit'	=> '',
+			'email'		=> $_POST['tfgg_cp_user_email'],
+			'dob'		=> $_POST['tfgg_cp_user_dob'],
+			'address'	=> $address,
+			'numbers'	=> $numbers,
+			'storecode'	=> $_POST['tfgg_cp_store'],
+			'howhear'	=> $_POST['tfgg_cp_how_hear'],
+			'eyecolor'	=> '',
+			'gender'	=> $_POST['tfgg_cp_user_gender'],
+			'skintype'	=> $_POST['tfgg_cp_skin_type']
+			);
+
+			if((array_key_exists('tfgg_cp_marketing',$_POST))&&($_POST['tfgg_cp_marketing']=='1')){
+				$commPref = array(
+					'doNotSolicit'	=> '0',
+					'email'			=> '1',
+					'sms'			=> '1',
+				);
+			}else{
+				$commPref = array(
+					'doNotSolicit'	=> '1',
+					'email'			=> '0',
+					'sms'			=> '0',
+				);	
+			}
+
+			//check to determine if the user exists in sunlync, if not, register them
+			$alreadyRegistered=json_decode(tfgg_api_check_user_exists($demographics['firstname'],
+			$demographics['lastname'],$demographics['dob'],$demographics['email']));
+			
+			if(StrToUpper($alreadyRegistered->results)==='SUCCESS'){
+				//user exists in SunLync
+				tfgg_cp_errors()->add('warning_existing_user', __('An account with these details already exists<br/>Try resetting your password from the login page or contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));	
+			}else{
+				//no user in SunLync, insert as a new user
+
+				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref));
+				if(strtoupper($reg_result->results)=='SUCCESS'){
+				
+					$clientNumber=$reg_result->clientnumber;
+					tfgg_cp_set_sunlync_client($clientNumber);
+					tfgg_cp_redirect_after_login();
+					
+				}else{
+					tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$reg_result->response.
+					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));
+				}
+			}
+
+
+		}
+	}
+    add_action('init','tfgg_sunlync_client_api_registration');
 ?>
