@@ -513,7 +513,7 @@
 			$newHomePhone='';
 			
 			if($updateDemo){
-				$reg_result = json_decode(tfgg_scp_update_demographics(tfgg_cp_get_sunlync_client(),$newFirstName,$newLastName,
+				$reg_result = json_decode(tfgg_scp_update_demographics($client,$newFirstName,$newLastName,
 					$newAddress,$newAddress2,$newCity,$newZip,
 					$newEmail,$newCellPhone,$newHomePhone));
 				
@@ -538,7 +538,7 @@
 			if($updateMarketing){
 			
 				if($allowMarketing=='0'){
-					$reg_result = json_decode(tfgg_scp_update_comm_pref(tfgg_cp_get_sunlync_client(),
+					$reg_result = json_decode(tfgg_scp_update_comm_pref($client,
 						'1','0','0','0','0'));
 						//donotsolicit == 1
 				}else{
@@ -547,7 +547,7 @@
 					$mail=(array_key_exists('allow_mail_marketing',$_POST) ? $_POST['allow_mail_marketing'] : 0);
 					$phone=(array_key_exists('allow_phone_marketing',$_POST) ? $_POST['allow_phone_marketing'] : 0);
 					
-					$reg_result = json_decode(tfgg_scp_update_comm_pref(tfgg_cp_get_sunlync_client(),
+					$reg_result = json_decode(tfgg_scp_update_comm_pref($client,
 					'0',$text,$email,$mail,$phone));
 					//donotsolicit==0
 				}
@@ -562,11 +562,19 @@
 			}
 			
 			if(array_key_exists('tfgg_cp_demo_password',$_POST)&&$_POST['tfgg_cp_demo_password']!=''){
+				/*2019-10-12 CB V1.1.1.1 - Deprecated
 				$user = wp_get_current_user();
 				wp_set_password($_POST['tfgg_cp_demo_password'],$user->ID);
 				wp_signon(array('user_login'=>$user->user_login,'user_password'=>$_POST['tfgg_cp_demo_password']));
 				tfgg_cp_errors()->add('success_update_password',__('Your password was successfully updated'));
-				tfgg_api_sync_password($user,$_POST['tfgg_cp_demo_password']);//tfgg_api_sync_password will call the password hash
+				tfgg_api_sync_password($user,$_POST['tfgg_cp_demo_password']);//tfgg_api_sync_password will call the password hash*/
+				$pass_result = json_decode(tfgg_api_sync_password($client,$_POST['tfgg_cp_demo_password']));
+
+				if(strtoupper($pass_result->results)=='SUCCESS'){
+					tfgg_cp_errors()->add('success_update_pass',__('Your password was successfully updated'));	
+				}else{
+					tfgg_cp_errors()->add('error_cannot_update_comm_pref', __('There was an error updating your password: '.$pass_result->response));
+				}
 			}
 	
 		}

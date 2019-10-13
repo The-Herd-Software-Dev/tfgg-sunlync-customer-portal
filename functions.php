@@ -623,14 +623,7 @@
     add_action('wp_ajax_tfgg_api_get_equip_type_appt_slots', 'tfgg_api_get_equip_type_appt_slots');
     add_action('wp_ajax_nopriv_tfgg_api_get_equip_type_appt_slots', 'tfgg_api_get_equip_type_appt_slots');
     
-    function tfgg_api_sync_password($user, $password){
-        //we should not be using this anymore
-        $clientnumber = get_user_meta($user->ID, 'sunlync_client',true);
-
-        if(!$clientnumber){
-            return true;//exit
-        }
-
+    function tfgg_api_sync_password($clientnumber, $password){
         //TFGG_SyncPassword(sclientNumber, sEmpNo, sNewPass
         $employeenumber = get_option('tfgg_scp_update_employee');
         
@@ -1147,6 +1140,7 @@
 		       
             $result["results"]="success";
             
+            /*2019-10-12 CB V1.1.1.1 - deprecated
             $user = wp_get_current_user();
             $userData=array();
             if($fname<>''){
@@ -1168,7 +1162,7 @@
             if(sizeof($userData)>0){
                 $userData["ID"]=$user->id;
                 wp_update_user($userData);
-            }
+            }*/
             
             return json_encode($result);
 		}
