@@ -58,12 +58,32 @@
         
     }*/
     
-    function tfgg_cp_set_sunlync_client($user_id, $clientNumber){
+    /*function tfgg_cp_set_sunlync_client($user_id, $clientNumber){
         return add_user_meta($user_id, 'sunlync_client', $clientNumber, true);
+    }*/
+
+    function tfgg_cp_hash_password($password){
+        return StrToUpper(MD5(StrToUpper($password)));
     }
-    
+
+    function tfgg_cp_set_sunlync_client($clientnumber){
+        $_SESSION['sunlync_client'] = $clientnumber;
+    }
+
+    function tfgg_cp_unset_sunlync_client(){
+        unset($_SESSION['sunlync_client']);
+    }
+
+    function tfgg_cp_portal_logout(){
+        tfgg_cp_unset_sunlync_client();
+        $result["logout"]=site_url();//possible configurable option
+        exit(json_encode($result));
+    }
+    add_action( 'wp_ajax_tfgg_cp_portal_logout', 'tfgg_cp_portal_logout' );
+    add_action( 'wp_ajax_nopriv_tfgg_cp_portal_logout', 'tfgg_cp_portal_logout' );
+
     function tfgg_cp_get_sunlync_client(){
-       // return 'here';exit;
+        /* 2019-10-12 CB V1.1.1.1 - deprecated code
         if ( ! function_exists( 'wp_get_current_user' ) ) {
             return false;
         }
@@ -74,7 +94,21 @@
             return false;    
         }
         
-        return get_user_meta($user->ID, 'sunlync_client',true);
+        return get_user_meta($user->ID, 'sunlync_client',true);*/
+        if(array_key_exists('sunlync_client',$_SESSION)){
+            return $_SESSION['sunlync_client'];
+        }else{
+            return false;
+        }
+
+    }
+
+    function tfgg_is_sunlync_user_logged_in(){
+        if(!tfgg_cp_get_sunlync_client()){
+            return false;
+        }else{
+            return true;
+        }    
     }
     
     function tfgg_cp_check_sunlync_meta($clientNumber){
@@ -112,6 +146,12 @@
 		    }
 		}
     }
+
+    function tfgg_cp_get_redirect_after_login(){
+        return get_option('tfgg_scp_cplogin_page_success');
+    }
+    add_action( 'wp_ajax_tfgg_cp_get_redirect_after_login', 'tfgg_cp_get_redirect_after_login' );
+    add_action( 'wp_ajax_nopriv_tfgg_cp_get_redirect_after_login', 'tfgg_cp_get_redirect_after_login' );
 
     function log_me($message) {
         if ( WP_DEBUG === true ) {
@@ -180,7 +220,7 @@
         
     }
     add_action( 'wp_ajax_tfgg_get_api_version', 'tfgg_get_api_version' );
-    //add_action( 'wp_ajax_nopriv_tfgg_get_api_version', 'tfgg_get_api_version' );
+    add_action( 'wp_ajax_nopriv_tfgg_get_api_version', 'tfgg_get_api_version' );
     
     function tfgg_set_api_cancel_appointment(){
         $employeenumber = get_option('tfgg_scp_appt_update_employee');
@@ -205,6 +245,7 @@
         exit(json_encode($result));
     }
     add_action( 'wp_ajax_tfgg_set_api_cancel_appointment', 'tfgg_set_api_cancel_appointment' );
+    add_action( 'wp_ajax_nopriv_tfgg_set_api_cancel_appointment', 'tfgg_set_api_cancel_appointment' );
     
     function tfgg_api_get_store_equipment(){
         $url = tfgg_get_api_url();
@@ -226,7 +267,46 @@
         exit(json_encode($result));            
     }
     add_action('wp_ajax_tfgg_api_get_store_equipment','tfgg_api_get_store_equipment');
+    add_action('wp_ajax_nopriv_tfgg_api_get_store_equipment','tfgg_api_get_store_equipment');
     
+    function tfgg_cp_api_client_login($login, $pass){
+        //2019-10-12 CB V1.1.1.1 - new method for logging in via api
+        //CIPLogin(sLoginID, sLoginPass:String; mrktCode:String
+       
+        $url = tfgg_get_api_url();
+        $url.='TSunLyncAPI/CIPLogin/sLoginID/sLoginPass';
+
+        $url=str_replace('sLoginID',$login,$url);
+        $url=str_replace('sLoginPass',tfgg_cp_hash_password($pass),$url);       
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            $result["data"]=array_slice($data,1,-1);
+            return json_encode($result);
+		}
+    }
+    add_action('wp_ajax_tfgg_cp_api_client_login','tfgg_cp_api_client_login');
+    add_action('wp_ajax_nopriv_tfgg_cp_api_client_login','tfgg_cp_api_client_login');
+
     function tfgg_api_get_client_demographics($clientNumber){
         //CIPClientDemographics/clientnumber/market
         if($clientNumber===''){
@@ -466,6 +546,7 @@
         
     }
     add_action( 'wp_ajax_tfgg_api_get_stores', 'tfgg_api_get_stores' );
+    add_action( 'wp_ajax_nopriv_tfgg_api_get_stores', 'tfgg_api_get_stores' );
 
     function tfgg_api_get_stores_for_appts(){
         //2019-10-01 CB V1.0.0.8 - new method added to retrieve stores
@@ -506,6 +587,7 @@
 
     }
     add_action( 'wp_ajax_tfgg_api_get_stores_for_appts', 'tfgg_api_get_stores_for_appts' );
+    add_action( 'wp_ajax_nopriv_tfgg_api_get_stores_for_appts', 'tfgg_api_get_stores_for_appts' );
 
     function tfgg_store_store_by_name($a,$b){
         return strcmp($a->store_loc, $b->store_loc);
@@ -539,15 +621,9 @@
         
     }
     add_action('wp_ajax_tfgg_api_get_equip_type_appt_slots', 'tfgg_api_get_equip_type_appt_slots');
+    add_action('wp_ajax_nopriv_tfgg_api_get_equip_type_appt_slots', 'tfgg_api_get_equip_type_appt_slots');
     
-    function tfgg_api_sync_password($user, $password){
-
-        $clientnumber = get_user_meta($user->ID, 'sunlync_client',true);
-
-        if(!$clientnumber){
-            return true;//exit
-        }
-
+    function tfgg_api_sync_password($clientnumber, $password){
         //TFGG_SyncPassword(sclientNumber, sEmpNo, sNewPass
         $employeenumber = get_option('tfgg_scp_update_employee');
         
@@ -584,6 +660,41 @@
 
     }
     //add_action( 'password_reset', 'tfgg_api_sync_password', 10, 2 );
+
+    function tfgg_scp_api_pass_reset_request($identifier){
+        //CIPPassResetRequest/sClientIdentifier/sUseHash
+
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPPassResetRequest/sClientIdentifier/sUseHash';
+        
+        $url=str_replace('sClientIdentifier',$identifier,$url);
+        $url=str_replace('sUseHash','1',$url);//force use of SunLync hash
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage();
+            $result["cust_support"]=get_option('tfgg_scp_customer_service_email');
+            return(json_encode($result));
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			$result["cust_support"]=get_option('tfgg_scp_customer_service_email');
+			
+		}else{
+            $result["results"]="success";
+		}
+		return(json_encode($result));
+    }
+    /*add_action('wp_ajax_tfgg_scp_api_pass_reset_request', 'tfgg_scp_api_pass_reset_request');
+    add_action('wp_ajax_nopriv_tfgg_scp_api_pass_reset_request', 'tfgg_scp_api_pass_reset_request');*/
 
     function tfgg_api_get_employees($onlyAppts=0){
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetEmpList/sStatus/sEmpNo/sAvailableForAppts/'.
@@ -959,6 +1070,7 @@
 		exit(json_encode($result));
     }
     add_action('wp_ajax_tfgg_api_schedule_appt', 'tfgg_api_schedule_appt');
+    add_action('wp_ajax_nopriv_tfgg_api_schedule_appt', 'tfgg_api_schedule_appt');
     
     function tfgg_scp_register_user($demogrphics, $commPref){
         //$dob=date_create($dob);
@@ -1028,6 +1140,7 @@
 		       
             $result["results"]="success";
             
+            /*2019-10-12 CB V1.1.1.1 - deprecated
             $user = wp_get_current_user();
             $userData=array();
             if($fname<>''){
@@ -1049,7 +1162,7 @@
             if(sizeof($userData)>0){
                 $userData["ID"]=$user->id;
                 wp_update_user($userData);
-            }
+            }*/
             
             return json_encode($result);
 		}
@@ -1225,14 +1338,15 @@
     //2019-09-27 CB V1.0.0.5 - deprecated to show only for admin
     //add_filter('show_admin_bar', '__return_false');//prevents the admin bar from showing after tfgg_sunlync user logs in
 
+    /*2019-10-12 CB V1.1.1.1 - deprecated
     add_action('after_setup_theme', 'remove_admin_bar');
     function remove_admin_bar(){
         if (!current_user_can('administrator') && !is_admin()) {
             show_admin_bar(false);
         }
-    }
+    }*/
 
-    add_action('admin_init', 'blockusers_init');
+    /*add_action('admin_init', 'blockusers_init');
     function blockusers_init() {
         //if the user is logged in and is not an admin, do not give them access to wp-admin
         $file = basename($_SERVER['PHP_SELF']);
@@ -1241,13 +1355,13 @@
             wp_redirect(get_option('tfgg_scp_cplogin_page_success'));
             exit;
         }
-    }
+    }*/
     
     add_filter('wp_nav_menu_items', 'tfgg_add_loginout_link', 10, 2 );
     function tfgg_add_loginout_link($items, $args){
         //add a logout link to the small menu bar (secondary-menu) at the top of the screen
-        if(is_user_logged_in() && $args->theme_location=='secondary-menu'){
-          $items .='<li><a href="'. wp_logout_url() .'">Log Out</a></li>';  
+        if(tfgg_is_sunlync_user_logged_in() && $args->theme_location=='secondary-menu'){
+          $items .='<li><a href="" onclick="endPortalSession();">Log Out</a></li>';  
         }
         return $items;
     }
@@ -1277,12 +1391,13 @@
         return $items;
     }
     
+    /*2019-10-12 CB V1.1.1.1 - deprecated
     add_action('wp_logout','tfgg_auto_redirect_after_logout');
     function tfgg_auto_redirect_after_logout(){
         //self-explanatory - redirect to the home page after logout
         wp_redirect( home_url() );    
         exit();
-    }
+    }*/
 
     remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
 

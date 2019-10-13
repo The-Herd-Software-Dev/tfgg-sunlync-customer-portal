@@ -100,8 +100,9 @@
         add_settings_field("tfgg_scp_appts_fail", "Failed Appointment Booking:", "display_appts_fail", "tfgg-messages-options", "tfgg_messages_section");
         register_setting("tfgg_messages_section", "tfgg_scp_appts_fail");
 
+        /* 2019-10-13 CB V1.1.1.1 - deprecated
         add_settings_field("tfgg_scp_email_pass_reset", "Password Reset Email:", "display_email_pass_rest", "tfgg-messages-options", "tfgg_messages_section");
-        register_setting("tfgg_messages_section", "tfgg_scp_email_pass_reset");
+        register_setting("tfgg_messages_section", "tfgg_scp_email_pass_reset");*/
         
     }
     

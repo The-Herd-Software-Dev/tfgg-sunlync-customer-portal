@@ -1,5 +1,4 @@
 <?php
-
     function login_form_display(){
         
 		ob_start(); 
@@ -198,7 +197,6 @@
 						 */
 						$site_name = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 					}
-
 					if(get_option('tfgg_scp_email_pass_reset')==''){
 				
 						$message = __( 'Someone has requested a password reset for the following account:' ) . "\r\n\r\n";
@@ -214,7 +212,6 @@
 						$message=str_replace('!@#url#@!',network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ),$message);
 						$message=str_replace('!@#sitename#@!',$site_name,$message);
 						$message=str_replace('!@#username#@!',$user_login,$message);
-
 						$headers = array('Content-Type: text/html; charset=UTF-8');
 					}
 				
