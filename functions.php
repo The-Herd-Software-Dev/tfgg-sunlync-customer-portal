@@ -1370,7 +1370,8 @@
     function tfgg_add_acct_overview_link($items, $args){
         //add the account overview link to the nav bar
         $sunlyncuser = tfgg_cp_get_sunlync_client();
-        if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='secondary-menu'){
+        //if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='secondary-menu'){
+        if($sunlyncuser && $args->theme_location=='secondary-menu'){
         //2019-10-09 CB V1.0.1.3 - added full site URL
           $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_acct_overview') .'">Account Overview</a></li>';  
         }
