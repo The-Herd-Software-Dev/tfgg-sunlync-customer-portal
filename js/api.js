@@ -1082,6 +1082,17 @@ function ValidateLoginData(){
     return bResult;
 }
 
+function ValidateLoginResetData(){
+    var bResult=true;
+    
+    if(jQuery('#tfgg_cp_user_login').val()===''){
+        jQuery('#login_alert_email').css('display','block');
+	    jQuery('#login_alert_email').html('Please enter your login ID');
+	    bResult = false;
+    }
+    return bResult;
+}
+
 function portalLogin(){
     ResetRegValidation();//we can use this as we are using the same class
     event.preventDefault();
@@ -1089,6 +1100,15 @@ function portalLogin(){
     if(ValidateLoginData()){
         jQuery('#tfgg_cp_api_login').submit();
     }
+}
+
+function portalLoginReset(){
+    ResetRegValidation();//we can use this as we are using the same class
+    event.preventDefault();
+
+    if(ValidateLoginResetData()){
+        jQuery('#tfgg_cp_api_login_reset').submit();
+    }    
 }
 
 function endPortalSession(){

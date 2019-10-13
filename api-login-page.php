@@ -11,23 +11,24 @@
         	<?php
 		        tfgg_sunlync_cp_show_error_messages();
 		    ?>
-        	<form id="tfgg_sunlync_cp_pass_reset" method="POST" action="">
+        	<form id="tfgg_cp_api_login_reset" method="POST" action="">
         
         
         		<p class="reset-password-message">
-        			Please enter the login used for the site.<br/>You will receive a link to create a new password via email.
+        			Please enter the login used for the site.<br/>You will receive a new password via email.
         		</p>
         		
 			    <div class="login-container">
 					<div class="account-overview-input-single">
-						<label for="tfgg_cp_user_login" class="account-overview-label">Email</label>
+						<label for="tfgg_cp_user_login" class="account-overview-label"><?php _e('Email'); ?></label>
 						<input name="tfgg_cp_user_login" id="tfgg_cp_user_login" class="required account-overview-input" type="text"/>
+						<div style="display:none" id="login_alert_email" class="reg_alert"></div> 
 					</div>
 				</div>
 				
 				<p>
 					<input type="hidden" name="tfgg_sunlync_cp_pass_reset_nonce" id="tfgg_sunlync_cp_pass_reset_nonce" value="<?php echo wp_create_nonce('tfgg-sunlync-cp-pass-reset-nonce'); ?>"/>
-					<button id="tfgg_cp_login_submit" type="submit" class="account-overview-button account-overview-standard-button">Get New Password</button>
+					<button id="tfgg_cp_login_submit" type="submit" class="account-overview-button account-overview-standard-button" onclick="portalLoginReset()"><?php _e('Get New Password'); ?></button>
 					
 				</p>
 				<?php
@@ -36,9 +37,9 @@
 				
 				<br />
 					
-				<a class="registration-link" href="<?php echo(get_option('tfgg_scp_cplogin_page'));?>">Return to login page</a>
+				<a class="registration-link" href="<?php echo(get_option('tfgg_scp_cplogin_page'));?>"><?php _e('Retrun to login page'); ?></a>
 				<br />
-				<a class="registration-link"  href="<?php echo(get_option('tfgg_scp_cpnewuser_page')); ?>">Never used the site before? Register!</a>
+				<a class="registration-link"  href="<?php echo(get_option('tfgg_scp_cpnewuser_page')); ?>"><?php _e('Never used the site before? Register!'); ?></a>
 				
 				<?php } ?>
 			
@@ -131,10 +132,32 @@
                 $errors = tfgg_cp_errors()->get_error_messages();
             }
         }
-        $_POST['tfgg_cp_login_nonce']='';
-        $_POST['tfgg_cp_user_login']='';
-        $_POST['tfgg_cp_user_pass']='';
         
     }
-    add_action('init','tfgg_sunlync_client_login');
+	add_action('init','tfgg_sunlync_client_login');
+	
+	function tfgg_sunlync_client_login_reset(){
+		if(isset($_POST['tfgg_sunlync_cp_pass_reset_nonce']) && 
+    		wp_verify_nonce($_POST['tfgg_sunlync_cp_pass_reset_nonce'],'tfgg-sunlync-cp-pass-reset-nonce')){
+
+				if((!isset($_POST['tfgg_cp_user_login']))||($_POST['tfgg_cp_user_login']==='')){
+					tfgg_cp_errors()->add('error_empty_username', __('Please enter a login'));	
+				}
+				
+				$errors = tfgg_cp_errors()->get_error_messages();
+
+				if(empty($errors)){
+					$user_login = sanitize_text_field($_POST['tfgg_cp_user_login']);
+		
+					$resetResponse = json_decode(tfgg_scp_api_pass_reset_request($user_login));
+					if(strToUpper($resetResponse->results)=='SUCCESS'){
+						tfgg_cp_errors()->add('success_pass_reset', __('An email with a temporary password has been sent to the associated email address'));
+					}else{
+						tfgg_cp_errors()->add('error_no_matching_user', __('We could not match an account to the login/email provided, please try again'));	
+					}
+				}
+
+		}
+	}
+	add_action('init','tfgg_sunlync_client_login_reset');
 ?>

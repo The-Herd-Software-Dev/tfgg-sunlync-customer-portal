@@ -624,7 +624,7 @@
     add_action('wp_ajax_nopriv_tfgg_api_get_equip_type_appt_slots', 'tfgg_api_get_equip_type_appt_slots');
     
     function tfgg_api_sync_password($user, $password){
-
+        //we should not be using this anymore
         $clientnumber = get_user_meta($user->ID, 'sunlync_client',true);
 
         if(!$clientnumber){
@@ -667,6 +667,41 @@
 
     }
     //add_action( 'password_reset', 'tfgg_api_sync_password', 10, 2 );
+
+    function tfgg_scp_api_pass_reset_request($identifier){
+        //CIPPassResetRequest/sClientIdentifier/sUseHash
+
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPPassResetRequest/sClientIdentifier/sUseHash';
+        
+        $url=str_replace('sClientIdentifier',$identifier,$url);
+        $url=str_replace('sUseHash','1',$url);//force use of SunLync hash
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage();
+            $result["cust_support"]=get_option('tfgg_scp_customer_service_email');
+            return(json_encode($result));
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			$result["cust_support"]=get_option('tfgg_scp_customer_service_email');
+			
+		}else{
+            $result["results"]="success";
+		}
+		return(json_encode($result));
+    }
+    /*add_action('wp_ajax_tfgg_scp_api_pass_reset_request', 'tfgg_scp_api_pass_reset_request');
+    add_action('wp_ajax_nopriv_tfgg_scp_api_pass_reset_request', 'tfgg_scp_api_pass_reset_request');*/
 
     function tfgg_api_get_employees($onlyAppts=0){
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetEmpList/sStatus/sEmpNo/sAvailableForAppts/'.
