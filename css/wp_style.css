@@ -309,8 +309,12 @@ tr.account_overview_row > td {
 .account-overview-input-double {
     flex-grow:1;
     margin-right:0px!important;
+
 }
 
+.container {
+    width:100% !important;
+}
 
 }
 
@@ -768,3 +772,4 @@ tr.account_overview_row > td {
     float:right;
     font-weight:400 !important;
 }
+
