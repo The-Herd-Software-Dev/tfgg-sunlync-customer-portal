@@ -497,9 +497,9 @@ tr.account_overview_row > td {
 }
 
 .appts-store-container {       
-    height:-webkit-calc(100% - 260px);
-    height:-moz-calc(100% - 260px);
-    height:calc(100% - 260px);
+    height:-webkit-calc(100% - 110px);
+    height:-moz-calc(100% - 10px);
+    height:calc(100% - 110px);
     overflow-y: scroll;
     padding:10px 0px 10px 0px;
 }
