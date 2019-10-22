@@ -72,6 +72,10 @@
 
         add_settings_field("tfgg_scp_marketing_optin_label", "Marketing Opt In Label:", "display_marketing_optin_label","tfgg-general-options","tfgg_general_options_section");
         register_setting("tfgg_general_options_section","tfgg_scp_marketing_optin_label");
+
+        //2019-10-22 CB V1.1.1.3 - new registration field        
+        add_settings_field("tfgg_scp_registration_source_label", "Registration Source Label:", "display_registration_source_label","tfgg-general-options","tfgg_general_options_section");
+        register_setting("tfgg_general_options_section","tfgg_scp_registration_source_label");
         
         
         //tfgg_appointments_section

@@ -498,7 +498,9 @@
 			'howhear'	=> $_POST['tfgg_cp_how_hear'],
 			'eyecolor'	=> '',
 			'gender'	=> $_POST['tfgg_cp_user_gender'],
-			'skintype'	=> $_POST['tfgg_cp_skin_type']
+			'skintype'	=> $_POST['tfgg_cp_skin_type'],
+			'userdefined1' => get_option('tfgg_scp_registration_source_label'),
+			'userdefined2' => ''
 			);
 
 			if((array_key_exists('tfgg_cp_marketing',$_POST))&&($_POST['tfgg_cp_marketing']=='1')){

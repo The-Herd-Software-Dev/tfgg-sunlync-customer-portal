@@ -965,8 +965,9 @@
         $url=str_replace('sEyeColor',$demographics['eyecolor'],$url);
         $url=str_replace('sGender',$demographics['gender'],$url);
         $url=str_replace('sSkinType',$demographics['skintype'],$url);
-        $url=str_replace('sUserDefined1','',$url);
-        $url=str_replace('sUserDefined2','',$url);
+        //2019-10-22 CB V1.1.1.3 - new fields added
+        $url=str_replace('sUserDefined1',$demographics['userdefined1'],$url);
+        $url=str_replace('sUserDefined2',$demographics['userdefined2'],$url);
         
         if($commPref['doNotSolicit']==='1'){
             $url=str_replace('sDoNotSolicit','1',$url);

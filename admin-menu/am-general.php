@@ -97,5 +97,11 @@
         <input type="text" name="tfgg_scp_marketing_optin_label" value='<?php echo get_option('tfgg_scp_marketing_optin_label'); ?>' size="70" />
         <?php
     }
+
+    function display_registration_source_label(){
+        ?>
+        <input type="text" name="tfgg_scp_registration_source_label" value='<?php echo get_option('tfgg_scp_registration_source_label'); ?>' size="70" />
+        <?php
+    }
     
 ?>
