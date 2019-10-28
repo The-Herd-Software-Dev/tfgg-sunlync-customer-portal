@@ -404,7 +404,7 @@
             return json_encode($result);
 		}    
     }
-    
+
     function tfgg_api_get_client_mems($clientNumber){
         if($clientNumber===''){
             return 0;
@@ -515,7 +515,7 @@
         //$url=tfgg_get_api_url().'TSunLyncAPI/ApptGetStoreSettings/sStoreCode';
         $url= tfgg_get_api_url().'TSunLyncAPI/CIPGetStoreDemoApptInfo/sStoreCode/nInAppts';
         
-        $url=str_replace('sStoreCode','',$url);
+        $url=str_replace('sStoreCode',tfgg_scp_get_stores_selected_for_api(),$url);
         $url=str_replace('nInAppts','',$url);
         
         try{
@@ -555,7 +555,7 @@
         $apptDay = $_GET['data']['apptDay'];
         $url= tfgg_get_api_url().'TSunLyncAPI/TFGG_GetStoresAndHours/sStoreCode/nInAppts/nApptDay';
         
-        $url=str_replace('sStoreCode','',$url);
+        $url=str_replace('sStoreCode',tfgg_scp_get_stores_selected_for_api(),$url);
         $url=str_replace('nInAppts','1',$url);
         $url=str_replace('nApptDay',$apptDay,$url);
 
@@ -1300,6 +1300,17 @@
 
         $lessThanMonths = $diff->y === 0 && $diff->m < 18;//18 is hardcoded
         return $lessThanMonths;
+    }
+
+    //2019-10-23 CB V1.1.2.1 - new function to return the stores selected as a 'useable' string for the API
+    function tfgg_scp_get_stores_selected_for_api(){
+        $stores = get_option('tfgg_scp_store_selection');
+        if($stores<>''){
+            $storesSelected = join('","',$stores);   
+            return '"'.$storesSelected.'"';    
+        }else{
+            return '';
+        }
     }
     
     /*function tfgg_user_menu(){

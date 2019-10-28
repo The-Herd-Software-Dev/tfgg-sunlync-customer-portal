@@ -24,7 +24,7 @@
     		            <span class="warning"><strong>' . __('Warning') . '</strong>: ';    
     		        }else{
     		            $output.='<div class="alert alert-success alert-dismissible fade show">
-    		            <span class="success"><strong>' . __('Success') . '</strong>: ';    
+    		            <span class="success">';    
     		        }
     		        $output.=$message . '</span>
 		                <button type="button" class="close" data-dismiss="alert" aria-label="Close">

@@ -6,6 +6,7 @@
 */
 
 require_once('reg-page.php');
+require_once('instore-reg-page.php');
 //require_once('login-page.php');
 require_once('api-login-page.php');
 
@@ -81,5 +82,10 @@ function tfgg_cp_sunlync_account(){
 }
 
 add_shortcode('cp_sunlync_demographics','tfgg_cp_sunlync_account');
+
+function tfgg_cp_sunlync_register_instore(){
+    return reg_form_display_instore(); 
+}
+add_shortcode('cp_sunlync_registrationform_instore','tfgg_cp_sunlync_register_instore');
 
 ?>

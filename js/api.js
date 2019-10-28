@@ -206,7 +206,7 @@ function ResetRegValidation(){
     });
 }
 
-function ValidateNewReg(){
+function ValidateNewReg(isOnline){
     
     ResetRegValidation();
     event.preventDefault();
@@ -286,14 +286,14 @@ function ValidateNewReg(){
     }
     
     if(jQuery('#tfgg_cp_skin_type_confirm').is(":checked")===false){
-	    jQuery('#new_reg_tandc_confirm').css('display','block');
-	    jQuery('#new_reg_tandc_confirm').html('Terms and Conditions must be accepted');
+        jQuery('#new_reg_skin_type_confirm_alertpnl').css('display','block');
+	    jQuery('#new_reg_skin_type_confirm_alertpnl').html('Please confirm');
 	    bResult = false;
     }
 
 	if(jQuery('#tfgg_cp_user_tandc_agree').is(":checked")===false){
-	    jQuery('#new_reg_skin_type_confirm_alertpnl').css('display','block');
-	    jQuery('#new_reg_skin_type_confirm_alertpnl').html('Please confirm');
+	    jQuery('#new_reg_tandc_confirm').css('display','block');
+        jQuery('#new_reg_tandc_confirm').html('Terms and Conditions must be accepted');	    
 	    bResult = false;
     }
     
@@ -329,7 +329,11 @@ function ValidateNewReg(){
         jQuery('#new_reg_overall_alertpnl').html('We encountered an error with your registration, please fix the highlighted fields');
         return false;
     }else{
-        jQuery('#sunlync_cp_registration_form').submit();
+        if(isOnline){
+            jQuery('#sunlync_cp_registration_form').submit();
+        }else{
+            jQuery('#sunlync_cp_instore_registration_form').submit();
+        }
     }
 }
 
@@ -1122,4 +1126,26 @@ function endPortalSession(){
         window.location.replace(obj["logout"]);
     });
     
+}
+
+function instoreTandCDialog(){
+    var dialog=jQuery('#instore_tandc_dialog').dialog({ autoOpen: false,
+        height: (jQuery(window).height()*0.75),
+        width: (jQuery(window).width()*0.8)
+      });
+
+    dialog.dialog('open');
+}
+
+function instoreMarketingDialog(){
+    var dialog=jQuery('#instore_marketing_dialog').dialog({ autoOpen: false,
+        height: (jQuery(window).height()*0.75),
+        width: (jQuery(window).width()*0.8)
+      });
+
+    dialog.dialog('open');
+}
+
+function secretClick(){
+    jQuery('#tfgg_cp_store').prop('disabled',false);
 }

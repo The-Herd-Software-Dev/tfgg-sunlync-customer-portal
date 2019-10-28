@@ -12,7 +12,7 @@ function display_appts_success(){
     if(wp_is_mobile()){
     ?>
     <div>
-    <?php }else{ ?>}
+    <?php }else{ ?>
     <div style="font-size: small">
     <?php } ?>
         <p>Placeholders: <ul>
@@ -22,6 +22,16 @@ function display_appts_success(){
         </ul></p>
     </div>
     <?php
+}
+
+function display_successful_reg_instore(){
+    $settings = array(
+        'textarea_rows' => 15,
+        'tabindex' => 1,
+        'media_buttons' => false,
+        'wpautop' => false
+    );
+    wp_editor( get_option('tfgg_scp_instore_registration_success'), 'tfgg_scp_instore_registration_success', $settings); 
 }
 
 function display_appts_fail(){
@@ -45,7 +55,7 @@ function display_email_pass_rest(){
     if(wp_is_mobile()){
     ?>
     <div>
-    <?php }else{ ?>}
+    <?php }else{ ?>
     <div style="font-size: small">
     <?php } ?>
         <p>Placeholders: <ul>

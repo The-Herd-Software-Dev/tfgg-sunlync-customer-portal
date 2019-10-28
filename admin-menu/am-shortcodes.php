@@ -9,8 +9,12 @@
                     <td>[cp_sunlync_loginform]</td>
                 </tr>
                 <tr>
-                    <th scope="row">Registration Form (new customers):</th>
+                    <th scope="row">Registration Form (online):</th>
                     <td>[cp_sunlync_registrationform_new]</td>
+                </tr>
+                <tr>
+                    <th scope="row">Registration Form (instore):</th>
+                    <td>[cp_sunlync_registrationform_instore]</td>
                 </tr>
                 <tr>
                     <th scope="row">Demographics:</th>
@@ -39,6 +43,12 @@
     function display_cpnewuser_page(){
         ?>
         <input type="text" name="tfgg_scp_cpnewuser_page" value="<?php echo get_option('tfgg_scp_cpnewuser_page'); ?>" style="width: 60%" />
+        <?php
+    }
+
+    function display_cpnewuser_page_instore(){
+        ?>
+        <input type="text" name="tfgg_scp_cpnewuser_page_instore" value="<?php echo get_option('tfgg_scp_cpnewuser_page_instore'); ?>" style="width: 60%" />
         <?php
     }
     

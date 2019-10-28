@@ -1,6 +1,6 @@
 <?php
 
-    function reg_form_display_new(){
+    function reg_form_display_instore(){
         ob_start(); 
         
         $storeList = json_decode(tfgg_api_get_stores());
@@ -15,27 +15,27 @@
         
         $minBirthDate = new DateTime();
         date_sub($minBirthDate, date_interval_create_from_date_string('18 years'));
-		
-		if((array_key_exists('tfgg_cp_register_nonce',$_POST))&&
-		(wp_verify_nonce($_POST['tfgg_cp_register_nonce'],'tfgg-cp-register-nonce'))){
-			$repopulate = true;
-		}else{
-			$repopulate = false;
-		}
-
-        ?>
         
+        $repopulate=false;
+
+        /*if((array_key_exists('tfgg_cp_register_instore_nonce',$_POST))&&
+		(wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg_cp_register_instore_nonce'))){
+			$repopulateStpre = true;
+		}else{
+			$repopulateStore = false;
+		}*/
+        ?>
         <hr />
-	        <?php
-	            tfgg_sunlync_cp_show_error_messages(); 
-	        ?>
-			<form id="sunlync_cp_registration_form" action="" method="POST">
+        <?php
+            tfgg_sunlync_cp_show_error_messages(); 
+        ?>
+        <form id="sunlync_cp_instore_registration_form" action="" method="POST">
 				
 			<div class="registration-container-main">
 				
 				<div class="account-overview-input-single-left">
 				
-					<h4><?php echo get_option('tfgg_scp_cust_info_reg_title');?></h4>
+					<h4><?php echo get_option('tfgg_scp_cust_info_reg_title_instore');?></h4>
 				
 					<div class="registration-container">
 						<div class="account-overview-input-single">
@@ -100,17 +100,17 @@
 							<!--<input data-alertpnl="new_reg_post_code" name="tfgg_cp_store" id="tfgg_cp_store" class="required account-overview-input" type="text"/>-->
 							
 							<div class="select-container">
-							
-							<select data-alertpnl="new_reg_store_alertpnl" name="tfgg_cp_store" id="tfgg_cp_store" class="js-example-basic-single required account-overview-input">
+                            <?php
+                            if(array_key_exists('tfgg_cp_store',$_POST)){
+                                $selectedStore = $_POST['tfgg_cp_store'];
+                            }else{
+                                $selectedStore = '';
+                            }
+							?>
+							<select data-alertpnl="new_reg_store_alertpnl" name="tfgg_cp_store" id="tfgg_cp_store" class="js-example-basic-single required account-overview-input"
+                            <?php if($selectedStore<>''){echo 'disabled';}?>>
 								<option value="please select">Please Select...</option>
 								<?php
-
-									if(($repopulate)&&(array_key_exists('tfgg_cp_store',$_POST))){
-										$selectedStore = $_POST['tfgg_cp_store'];
-									}else{
-										$selectedStore = '';
-									}
-
 									foreach($storeList as &$details){
 										//2019-07-19 CB - added strpos check to remove 'CLOSED'/'DELETED' stores
 										if((!strpos(StrToUpper($details->store_loc),'CLOSED'))&&
@@ -161,7 +161,7 @@
 							<select data-alertpnl="new_reg_skin_type_alertpnl" name="tfgg_cp_skin_type" id="tfgg_cp_skin_type" class="required account-overview-input">
 								<option value="please select">Please Select...</option>
 								<?php
-									if(($repopulate)&&(array_key_exists('tfgg_cp_store',$_POST))){
+									if(($repopulate)&&(array_key_exists('tfgg_cp_skin_type',$_POST))){
 										$selectedSkin = $_POST['tfgg_cp_skin_type'];
 									}else{
 										$selectedSkin = '';
@@ -184,16 +184,13 @@
 						</div>
 					</div>
 
-
-
-
 				</div>
 	
 				</div>
 				
 				<hr />
 				<div class="account-overview-input-single-left">
-				<h4>Password</h4>
+				<h4 onclick="secretClick();">Password</h4>
 					<div class="registration-container">
 						<div class="account-overview-input-single">
 							<div class="password-hints">
@@ -229,12 +226,12 @@
 
 				<div class='reg-checkbox-container'>
 					<input data-alertpnl="new_reg_tandc_confirm" name="tfgg_cp_user_tandc_agree" id="tfgg_cp_user_tandc_agree" class="required account-overview-survey-input scaled-checkbox" type="checkbox"/>
-					<label onclick="markTandCchecked();" for="tfgg_cp_user_tandc_agree" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label'); ?></label>	
+					<label onclick="instoreTandCDialog();" for="tfgg_cp_user_tandc_agree" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label_instore'); ?></label>	
 				</div>
 				<br style="line-height:0.9"/>		
 				<div class='reg-checkbox-container'>
 					<input data-alertpnl="new_reg_marketing" id="tfgg_cp_marketing" name="tfgg_cp_marketing" class="account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
-					<label onclick="markMarketingChecked();" for="tfgg_cp_marketing" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label') ?></label>		
+					<label onclick="instoreMarketingDialog();" for="tfgg_cp_marketing" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label_instore') ?></label>		
 				</div>
 
 				<br />
@@ -286,22 +283,23 @@
 					}
 				?>
 		
-				<input type="hidden" name="tfgg_cp_register_nonce" id="tfgg_cp_register_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-nonce'); ?>"/>
-				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)" disabled> <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
+				<input type="hidden" name="tfgg_cp_register_instore_nonce" id="tfgg_cp_register_instore_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-instore-nonce'); ?>"/>
+				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(false)" disabled> <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
 					<div id="new_reg_overall_alertpnl" style="display:none;" class="reg_alert"></div>
 				</div>
 			</form>
 		
-			<div id="tfgg_cp_reg_tandc_dialog" name="tfgg_cp_reg_tandc_dialog" title="Terms & Conditions">
-				<div>
-					<?php echo get_option('tfgg_scp_registration_tandc'); ?>
-				
-				<div class="dialog-buttons">
-					<hr />
-					<button type="button" class="account-overview-button account-overview-standard-button dialog-close-button" onclick="closeRegTAndC()">Close</button>
-				</div>
-				</div>
+			<div id="instore_tandc_dialog" name="instore_tandc_dialog" style="display:none">
+				<?php
+                    echo get_post_field('post_content', url_to_postid( site_url(get_option('tfgg_scp_tandc_slug_instore')) ));
+                ?>
+			</div>
+
+            <div id="instore_marketing_dialog" name="instore_marketing_dialog" style="display:none">
+				<?php
+                    echo get_post_field('post_content', url_to_postid( site_url(get_option('tfgg_scp_marketing_slug_instore')) ));
+                ?>
 			</div>
 			<br/><br/>
 			<script>
@@ -337,140 +335,11 @@
 
         <?php
 		return ob_get_clean();
-        //return ob_get_contents();
-    }
-    
-    function tfgg_sunlync_client_registration(){
-		//2019-10-12 CB V1.1.1.1 - DEPRECATED!!
-		return true;//force exit in case we somehow ended up here
-    	if(isset($_POST['tfgg_cp_user_email']) && wp_verify_nonce($_POST['tfgg_cp_register_nonce'],'tfgg-cp-register-nonce')){
-    		
-    		//check for an existing user in wp
-			$user = get_user_by('email', $_POST['tfgg_cp_user_email'] );
-			if(!$user){
-			
-				$address = array(
-				'street'	=> $_POST['tfgg_cp_street_address'],
-				'street_2'	=> '',
-				'city'		=> '',
-				'state'		=> '',
-				'postcode'	=> $_POST['tfgg_cp_post_code']
-				);
-				
-				$numbers = array(
-				'home'		=> '',
-				'work'		=> '',
-				'work_ext'	=> '',
-				'cell'		=> $_POST['tfgg_cp_mobile_phone']
-				);
-				
-				$demographics = array(
-				'firstname'	=> $_POST['tfgg_cp_user_first'],
-				'lastname'	=> $_POST['tfgg_cp_user_last'],
-				'midinit'	=> '',
-				'email'		=> $_POST['tfgg_cp_user_email'],
-				'dob'		=> $_POST['tfgg_cp_user_dob'],
-				'address'	=> $address,
-				'numbers'	=> $numbers,
-				'storecode'	=> $_POST['tfgg_cp_store'],
-				'howhear'	=> $_POST['tfgg_cp_how_hear'],
-				'eyecolor'	=> '',
-				'gender'	=> $_POST['tfgg_cp_user_gender'],
-				'skintype'	=> $_POST['tfgg_cp_skin_type']
-				);
-				
-				/*$commPref = array(
-				'doNotSolicit'	=> '0',
-				'email'			=> (array_key_exists('tfgg_cp_marketing_email',$_POST)?$_POST['tfgg_cp_marketing_email']:'0'),
-				'sms'			=> (array_key_exists('tfgg_cp_user_marketing_sms',$_POST)?$_POST['tfgg_cp_user_marketing_sms']:'0')
-				);
-				
-				$commPref['doNotSolicit']=(($commPref['email']=='1'||$commPref['sms']=='1')?'1':'0');*/
-				if((array_key_exists('tfgg_cp_marketing',$_POST))&&($_POST['tfgg_cp_marketing']=='1')){
-					$commPref = array(
-						'doNotSolicit'	=> '0',
-						'email'			=> '1',
-						'sms'			=> '1',
-					);
-				}else{
-					$commPref = array(
-						'doNotSolicit'	=> '1',
-						'email'			=> '0',
-						'sms'			=> '0',
-					);	
-				}
-				
-				//check if the user exists in SunLync already
-				$alreadyRegistered=json_decode(tfgg_api_check_user_exists($demographics['firstname'],
-        		$demographics['lastname'],$demographics['dob'],$demographics['email']));
-        	
-        		if(StrToUpper($alreadyRegistered->results)==='SUCCESS'){
-        			//double check if the sunlync client number exists
-        			
-        			if(tfgg_cp_check_sunlync_meta($alreadyRegistered->clientnumber)){
-        				tfgg_cp_errors()->add('warning_existing_user', __('An account with these details already exists<br/>Try resetting your password from the login page or contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));		
-        			}else{
-        			
-        				//exists in Sunlync but not on WP
-        				$userdata = array(
-						'user_login'  =>  $_POST['tfgg_cp_user_email'],
-						'user_email'  =>  $_POST['tfgg_cp_user_email'],
-						'user_pass'   =>  $_POST['tfgg_cp_user_pass'],
-						'first_name'  =>  $_POST['tfgg_cp_user_first'],
-						'last_name'   =>  $_POST['tfgg_cp_user_last'],
-						'role'		  =>  'subscriber'//this may need to be an optional setting
-						);
-						
-						$user_id = wp_insert_user( $userdata );
-        				tfgg_cp_set_sunlync_client($user_id, $alreadyRegistered->clientnumber);
-        				wp_signon(array('user_login'=>$_POST['tfgg_cp_user_email'],'user_password'=>$_POST['tfgg_cp_user_pass']));
-						tfgg_cp_redirect_after_login(true);
-        			}
-        			
-        		}else{
-        			//brand new user, whoop whoop!
-        			
-        			$userdata = array(
-					'user_login'  =>  $_POST['tfgg_cp_user_email'],
-					'user_email'  =>  $_POST['tfgg_cp_user_email'],
-					'user_pass'   =>  $_POST['tfgg_cp_user_pass'],
-					'first_name'  =>  $_POST['tfgg_cp_user_first'],
-					'last_name'   =>  $_POST['tfgg_cp_user_last'],
-					'role'		  =>  'subscriber'//this may need to be an optional setting
-					);
-					
-					$user_id = wp_insert_user( $userdata );
-					
-					$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref));
-					
-					if(strtoupper($reg_result->results)=='SUCCESS'){
-				
-						$clientNumber=$reg_result->clientnumber;
-						tfgg_cp_set_sunlync_client($user_id, $clientNumber);
-						wp_signon(array('user_login'=>$_POST['tfgg_cp_user_email'],'user_password'=>$_POST['tfgg_cp_user_pass']));
-						tfgg_cp_redirect_after_login();
-						
-					}else{
-						//error registering, so roll back
-						//include(ABSPATH.'wp-admin/includes/user.php');//so we have access to wp_delete_user
-						wp_delete_user($user_id);
-						tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$reg_result->response.
-						'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));
-					}
-        		}
-				
-			}elseif($user->ID<>0){
-				tfgg_cp_errors()->add('warning_existing_user', __('This email is already linked to an account<br/>Try resetting your password from the login page'));	
-			}
-			$errors = tfgg_cp_errors()->get_error_messages();
+    }//reg_form_display_instore
 
-    	}
-    }
-	//add_action('init','tfgg_sunlync_client_registration');
-	
-	function tfgg_sunlync_client_api_registration(){
-		if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_nonce',$_POST))&&
-        (wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg-cp-register-nonce')))){
+    function tfgg_sunlync_client_instore_api_registration(){
+        if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST))&&
+        (wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg-cp-register-instore-nonce')))){
 			//organize the data
 			$address = array(
 			'street'	=> $_POST['tfgg_cp_street_address'],
@@ -500,7 +369,7 @@
 			'eyecolor'	=> '',
 			'gender'	=> $_POST['tfgg_cp_user_gender'],
 			'skintype'	=> $_POST['tfgg_cp_skin_type'],
-			'userdefined1' => get_option('tfgg_scp_registration_source_label'),
+			'userdefined1' => get_option('tfgg_scp_registration_source_label_instore'),
 			'userdefined2' => ''
 			);
 
@@ -530,11 +399,7 @@
 
 				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref));
 				if(strtoupper($reg_result->results)=='SUCCESS'){
-				
-					$clientNumber=$reg_result->clientnumber;
-					tfgg_cp_set_sunlync_client($clientNumber);
-					tfgg_cp_redirect_after_login();
-					
+                    tfgg_cp_errors()->add('success_reg_complete', __(get_option('tfgg_scp_instore_registration_success')));					
 				}else{
 					tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$reg_result->response.
 					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));
@@ -544,5 +409,6 @@
 
 		}
 	}
-    add_action('init','tfgg_sunlync_client_api_registration');
+    add_action('init','tfgg_sunlync_client_instore_api_registration');
+
 ?>
