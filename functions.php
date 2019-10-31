@@ -922,7 +922,7 @@
 		}    
     }
     
-    function tfgg_api_insert_user_proprietary($demographics,$commPref){
+    function tfgg_api_insert_user_proprietary($demographics,$commPref, $promo, $pkg){
         /*TFGG_ClientPortalRegistration(sFirstName, sLastName, sMidInit, sAddress1, sAddress2,
             sCity, sSTate, sZip, sHomePhone, sWorkPhone, sWorkExt, sCellPhone, sScanNo, sLicenseNo, sEmail,
             sDob, sStoreCode, sHowHear, sEyeColor, sGender, sSkinType, sUserDefined1, sUserDefined2:String;
@@ -938,8 +938,12 @@
             'sPkgExpDate/sPkgUnits/sEmpNo';
             
         $emp = get_option('tfgg_scp_update_employee');
-        $promo = get_option('tfgg_scp_reg_promo');
-        $pkg = '';
+
+        //2019-10-31 CB V1.2.1.1 - these are passed in now
+        //$promo = get_option('tfgg_scp_reg_promo');
+        //$pkg = '';
+
+        if($pkg==''){$pkg='0000000000';}
             
         $url=str_replace('sFirstName',$demographics['firstname'],$url);
         $url=str_replace('sLastName',$demographics['lastname'],$url);
@@ -991,7 +995,7 @@
         
         
         $url=str_replace('sPromoNumber',$promo,$url);
-        $url=str_replace('sPackageNumber','0000000000',$url);
+        $url=str_replace('sPackageNumber',$pkg,$url);
         $url=str_replace('sPkgExpDate','0000-00-00',$url);
         $url=str_replace('sPkgUnits','0',$url);
         $url=str_replace('sEmpNo',$emp,$url);

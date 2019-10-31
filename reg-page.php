@@ -528,7 +528,7 @@
 			}else{
 				//no user in SunLync, insert as a new user
 
-				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref));
+				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref, get_option('tfgg_scp_reg_promo'), ''));
 				if(strtoupper($reg_result->results)=='SUCCESS'){
 				
 					$clientNumber=$reg_result->clientnumber;

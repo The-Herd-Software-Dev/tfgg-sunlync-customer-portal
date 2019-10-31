@@ -397,7 +397,7 @@
 			}else{
 				//no user in SunLync, insert as a new user
 
-				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref));
+				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,get_option('tfgg_scp_reg_promo_instore'), ''));
 				if(strtoupper($reg_result->results)=='SUCCESS'){
                     tfgg_cp_errors()->add('success_reg_complete', __(get_option('tfgg_scp_instore_registration_success')));					
 				}else{
