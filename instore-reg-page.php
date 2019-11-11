@@ -29,7 +29,7 @@
         <?php
             tfgg_sunlync_cp_show_error_messages(); 
         ?>
-        <form id="sunlync_cp_instore_registration_form" action="" method="POST">
+        <form id="sunlync_cp_instore_registration_form" action="" method="POST" autocomplete="OFF">
 				
 			<div class="registration-container-main">
 				
@@ -101,11 +101,12 @@
 							
 							<div class="select-container">
                             <?php
-                            if(array_key_exists('tfgg_cp_store',$_POST)){
+                            /*if(array_key_exists('tfgg_cp_store',$_POST)){
                                 $selectedStore = $_POST['tfgg_cp_store'];
                             }else{
                                 $selectedStore = '';
-                            }
+							}*/
+							$selectedStore = $_COOKIE['instore_reg_store'];
 							?>
 							<select data-alertpnl="new_reg_store_alertpnl" name="tfgg_cp_store" id="tfgg_cp_store" class="js-example-basic-single required account-overview-input"
                             <?php if($selectedStore<>''){echo 'disabled';}?>>
@@ -336,6 +337,63 @@
         <?php
 		return ob_get_clean();
     }//reg_form_display_instore
+
+	function set_storecode_display(){
+		ob_start(); 
+        
+        $storeList = json_decode(tfgg_api_get_stores());
+        if(StrToUpper($storeList->results)==='SUCCESS'){
+        	$storeList = $storeList->stores;	
+		}
+
+		?>
+		<hr />
+        <?php
+            tfgg_sunlync_cp_show_error_messages(); 
+        ?>
+		<form id="sunlync_cp_instore_registration_setstore" action="" method="POST" autocomplete="OFF">
+			<div class="login-container">
+				<div class="account-overview-input-double">
+					<p>Please set the store that this device will be registering customers under</p>
+				</div>
+			</div>
+			<div class="login-container">
+				<div class="account-overview-input-single">
+					<label for="tfgg_cp_user_login"  class="account-overview-label"><?php _e('Store Location'); ?></label>
+					<select name="tfgg_cp_instorereg_store" id="tfgg_cp_instorereg_store" class="js-example-basic-single required account-overview-input">
+						<option value="please select">Please Select...</option>
+						<?php
+							foreach($storeList as &$details){
+								//2019-07-19 CB - added strpos check to remove 'CLOSED'/'DELETED' stores
+								if((!strpos(StrToUpper($details->store_loc),'CLOSED'))&&
+								(!strpos(StrToUpper($details->store_loc),'DELETED'))){
+									echo '<option value="'.$details->store_id.'">'.$details->store_loc.'</option>';	
+								}
+							}
+						?>
+					</select>
+				</div>
+			</div>
+			<div class="login-container">
+				<div class="account-overview-input-double">
+				<input type="hidden" name="tfgg_cp_instore_set_store" id="tfgg_cp_instore_set_store" value="<?php echo wp_create_nonce('tfgg-cp-instore-set-store'); ?>"/>
+					<button id="tfgg_cp_instore_reg_store_submit" type="submit" class="account-overview-button account-overview-standard-button">SET STORE</button>
+				</div>
+			</div>
+		</form>
+		<?php
+		
+		return ob_get_clean();
+	}
+
+	function tfgg_sunlync_client_instore_reg_set_store(){
+		if((isset($_POST['tfgg_cp_instorereg_store'])) && ((array_key_exists('tfgg_cp_instore_set_store',$_POST))&&
+        (wp_verify_nonce($_POST['tfgg_cp_instore_set_store'],'tfgg-cp-instore-set-store')))){	
+			setcookie('instore_reg_store',$_POST['tfgg_cp_instorereg_store'],time()+31556926);
+			wp_redirect($_SERVER['REQUEST_URI']);
+		}
+	}
+	add_action('init','tfgg_sunlync_client_instore_reg_set_store');
 
     function tfgg_sunlync_client_instore_api_registration(){
         if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST))&&

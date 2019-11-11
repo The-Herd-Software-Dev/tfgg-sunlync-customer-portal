@@ -84,7 +84,12 @@ function tfgg_cp_sunlync_account(){
 add_shortcode('cp_sunlync_demographics','tfgg_cp_sunlync_account');
 
 function tfgg_cp_sunlync_register_instore(){
-    return reg_form_display_instore(); 
+
+    if(!isset($_COOKIE['instore_reg_store'])){
+        return set_storecode_display();
+    }else{
+        return reg_form_display_instore(); 
+    }
 }
 add_shortcode('cp_sunlync_registrationform_instore','tfgg_cp_sunlync_register_instore');
 

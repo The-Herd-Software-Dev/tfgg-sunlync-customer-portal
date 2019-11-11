@@ -11,11 +11,11 @@
         	<?php
 		        tfgg_sunlync_cp_show_error_messages();
 		    ?>
-        	<form id="tfgg_sunlync_cp_pass_reset" method="POST" action="">
+        	<form id="tfgg_sunlync_cp_pass_reset" method="POST" action="" autocomplete="OFF">
         
         
         		<p class="reset-password-message">
-        			Please enter the login used for the site.<br/>You will receive a link to create a new password via email.
+        			Please enter the login used for the site.<br/>You will receive a new password via email.
         		</p>
         		
 			    <div class="login-container">
@@ -53,7 +53,7 @@
         ?>
         
       
-        <form id="tfgg_sunlync_cp_login" method="POST" action="">
+        <form id="tfgg_sunlync_cp_login" method="POST" action=""  autocomplete="OFF">
            
             <div class="login-container">
 				<div class="account-overview-input-single">

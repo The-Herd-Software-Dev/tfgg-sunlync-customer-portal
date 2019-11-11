@@ -29,7 +29,7 @@
 	        <?php
 	            tfgg_sunlync_cp_show_error_messages(); 
 	        ?>
-			<form id="sunlync_cp_registration_form" action="" method="POST">
+			<form id="sunlync_cp_registration_form" action="" method="POST" autocomplete="OFF">
 				
 			<div class="registration-container-main">
 				
