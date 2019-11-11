@@ -391,6 +391,7 @@
         (wp_verify_nonce($_POST['tfgg_cp_instore_set_store'],'tfgg-cp-instore-set-store')))){	
 			setcookie('instore_reg_store',$_POST['tfgg_cp_instorereg_store'],time()+31556926);
 			wp_redirect($_SERVER['REQUEST_URI']);
+			exit;
 		}
 	}
 	add_action('init','tfgg_sunlync_client_instore_reg_set_store');
