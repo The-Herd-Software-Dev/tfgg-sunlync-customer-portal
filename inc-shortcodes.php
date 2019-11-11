@@ -90,7 +90,13 @@ function tfgg_cp_sunlync_register_instore(){
     }else{
         return reg_form_display_instore(); 
     }
+
 }
 add_shortcode('cp_sunlync_registrationform_instore','tfgg_cp_sunlync_register_instore');
+
+function tfgg_cp_sunlync_register_instore_setstore(){
+    return set_storecode_display();    
+}
+add_shortcode('cp_sunlync_registrationform_instore_setstore','tfgg_cp_sunlync_register_instore_setstore');
 
 ?>

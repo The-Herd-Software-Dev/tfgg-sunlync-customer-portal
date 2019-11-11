@@ -17,6 +17,10 @@
                     <td>[cp_sunlync_registrationform_instore]</td>
                 </tr>
                 <tr>
+                    <th scope="row">Set Enforced Store (instore):</th>
+                    <td>[cp_sunlync_registrationform_instore_setstore]</td>
+                </tr>
+                <tr>
                     <th scope="row">Demographics:</th>
                     <td>[cp_sunlync_demographics]</td>
                 </tr>
