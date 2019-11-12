@@ -389,7 +389,8 @@
 	function tfgg_sunlync_client_instore_reg_set_store(){
 		if((isset($_POST['tfgg_cp_instorereg_store'])) && ((array_key_exists('tfgg_cp_instore_set_store',$_POST))&&
         (wp_verify_nonce($_POST['tfgg_cp_instore_set_store'],'tfgg-cp-instore-set-store')))){	
-			setcookie('instore_reg_store',$_POST['tfgg_cp_instorereg_store'],time()+31556926);
+			//setcookie('instore_reg_store',$_POST['tfgg_cp_instorereg_store'],time()+31556926);
+			setcookie('instore_reg_store',$_POST['tfgg_cp_instorereg_store'],2147483647);
 			wp_redirect($_SERVER['REQUEST_URI']);
 			exit;
 		}
@@ -414,6 +415,13 @@
 			'work_ext'	=> '',
 			'cell'		=> $_POST['tfgg_cp_mobile_phone']
 			);
+
+			//2019-11-11 CB V1.2.2.3 - if the posted storecode is blank, pull from the cookie
+			if((array_key_exists('tfgg_cp_store',$_POST))&&($_POST['tfgg_cp_store']!='')){
+				$storecode=$_POST['tfgg_cp_store'];				
+			}else{
+				$storecode=$_COOKIE['instore_reg_store'];
+			}
 			
 			$demographics = array(
 			'firstname'	=> $_POST['tfgg_cp_user_first'],
@@ -423,7 +431,7 @@
 			'dob'		=> $_POST['tfgg_cp_user_dob'],
 			'address'	=> $address,
 			'numbers'	=> $numbers,
-			'storecode'	=> $_POST['tfgg_cp_store'],
+			'storecode'	=> $storecode,//2019-11-11 CB
 			'howhear'	=> $_POST['tfgg_cp_how_hear'],
 			'eyecolor'	=> '',
 			'gender'	=> $_POST['tfgg_cp_user_gender'],

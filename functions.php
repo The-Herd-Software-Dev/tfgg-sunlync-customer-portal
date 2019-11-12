@@ -1015,7 +1015,9 @@
 			}else{
 				$result=array("results"=>"FAIL",
 					"response"=>$data[0]->WARNING);
-			}
+            }
+            
+            $result['url']=$url;
 			
 			return json_encode($result);
 		}else{
