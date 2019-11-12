@@ -1318,6 +1318,71 @@
             return '';
         }
     }
+
+    function tfgg_scp_get_packages_from_api($allowedPackageList){
+        /*CIPGetPackages(sPackageList, sStoreCode:String; mrktCode*/
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetPackages/sPackageList/sStoreCode';
+        
+        $url=str_replace('sPackageList',$allowedPackageList,$url);
+        $url=str_replace('sStoreCode','',$url);
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            $result["packages"]=array_slice($data,1,-1);
+            return json_encode($result);
+		}  
+    }
+
+    function tfgg_scp_get_memberships_from_api($allowedMembershipList){
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetMemberships/sMembershipList/sStoreCode';
+        
+        $url=str_replace('sMembershipList',$allowedMembershipList,$url);
+        $url=str_replace('sStoreCode','',$url);
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+        
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            $result["memberships"]=array_slice($data,1,-1);
+            return json_encode($result);
+		}  
+    }
     
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();
