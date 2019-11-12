@@ -1493,7 +1493,7 @@
     }
     add_action('wp_ajax_tfgg_scp_post_cart_item','tfgg_scp_post_cart_item');
     add_action('wp_ajax_nopriv_tfgg_scp_post_cart_item','tfgg_scp_post_cart_item');
-    
+            
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();
         $allowed_roles = array('editor', 'administrator', 'author');
