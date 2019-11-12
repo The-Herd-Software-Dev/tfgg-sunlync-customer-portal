@@ -14,6 +14,7 @@
         add_settings_section("tfgg_appointments_section", '', null, "tfgg-appointments-options");
         add_settings_section("tfgg_messages_section", '', null, "tfgg-messages-options");
         add_settings_section("tfgg_store_selection_section", '', null, "tfgg-store-selection");
+        add_settings_section("tfgg_service_selection_section", '', null, "tfgg-service-selection");
         
         //tfgg_shortcodes
         add_settings_field("tfgg_scp_cplogin_page", "Login Page:", "display_cplogin_page", "tfgg-shortcodes", "tfgg_shortcodes");
@@ -148,6 +149,13 @@
 
         add_settings_field("tfgg_scp_reg_promo_instore", "Promo For Registration:", "display_reg_promo_instore", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
         register_setting("tfgg_registration_options_section_instore", "tfgg_scp_reg_promo_instore");
+
+        //service selection
+        add_settings_field("tfgg_scp_package_selection","Packages For Sale:","display_tfgg_package_selection", "tfgg-service-selection", "tfgg_service_selection_section");
+        register_setting("tfgg_service_selection_section","tfgg_scp_package_selection");
+
+        add_settings_field("tfgg_scp_membership_selection","Memberships For Sale:","display_tfgg_membership_selection", "tfgg-service-selection", "tfgg_service_selection_section");
+        register_setting("tfgg_service_selection_section","tfgg_scp_membership_selection");
         
     }
     
@@ -161,6 +169,7 @@
     include('admin-menu/am-shortcodes.php');
     include('admin-menu/am-messages.php');
     include('admin-menu/am-store-selection.php');
+    include('admin-menu/am-services.php');
 
     function tfgg_sunlync_cp_admin_menu_option(){
         add_menu_page('Sunlync Customer Portal','Sunlync CP','manage_options','tfgg-sunlync-cp-admin-menu','tfgg_sunlync_cp_page','',5);
@@ -224,6 +233,7 @@
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-customer-acct-options" class="nav-tab <?php echo $active_tab == 'tfgg-customer-acct-options' ? 'nav-tab-active' : ''; ?>">Customer Acct</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-appointments-options" class="nav-tab <?php echo $active_tab == 'tfgg-appointments-options' ? 'nav-tab-active' : ''; ?>">Appointments</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-messages-options" class="nav-tab <?php echo $active_tab == 'tfgg-messages-options' ? 'nav-tab-active' : ''; ?>">Message Text</a>
+                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-service-options" class="nav-tab <?php echo $active_tab == 'tfgg-service-options' ? 'nav-tab-active' : ''; ?>">Services For Sale</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-misc-options" class="nav-tab <?php echo $active_tab == 'tfgg-misc-options' ? 'nav-tab-active' : ''; ?>">Misc.</a>
             </div>
             <form method="POST" action="options.php">
@@ -277,6 +287,11 @@
                         tfgg_scp_store_selction_description();
                         settings_fields('tfgg_store_selection_section');
                         do_settings_sections('tfgg-store-selection');
+                    //2019-11-11 CB V2.0.0.1 - new setting section for cart integration
+                    case 'tfgg-service-options':
+                        tfgg_scp_service_selction_description();
+                        settings_fields('tfgg_service_selection_section');
+                        do_settings_sections('tfgg-service-selection');
                 }//switch
             ?>
             <input type="submit" class="button button-primary" value="Save Changes"/>
