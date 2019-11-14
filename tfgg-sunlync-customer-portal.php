@@ -12,7 +12,7 @@
     if($_SERVER['HTTP_HOST']=='localhost:8888'){   
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+        error_reporting(E_ALL); 
     }    
 
     //2019-10-12 CB V1.1.1.1 - if no session exists, start one
