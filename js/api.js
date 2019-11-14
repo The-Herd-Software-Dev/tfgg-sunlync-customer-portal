@@ -245,13 +245,14 @@ function ValidateNewReg(isOnline){
     
     //new mobile number validation
     var mob=jQuery('#tfgg_cp_mobile_phone').val();
-    if((!(Math.floor(mob)==mob))&&(!jQuery.isNumeric(mob))){
+    jQuery('#tfgg_cp_mobile_phone').val(mob.replace(/\s/g,''));
+    /*if((!(Math.floor(mob)==mob))&&(!jQuery.isNumeric(mob))){
         jQuery('#new_reg_mobile_phone').css('display','block');
 	    jQuery('#new_reg_mobile_phone').html('This is not a valid number');
 	    bResult = false; 
-    }
+    }*/
 
-    if (!isValidMobileNumber(mob)) {
+    if (!isValidMobileNumber(jQuery('#tfgg_cp_mobile_phone').val())) {
         jQuery('#new_reg_mobile_phone').css('display','block');
 	    jQuery('#new_reg_mobile_phone').html('This is not a valid number');
 	    bResult = false;     
@@ -338,12 +339,19 @@ function ValidateNewReg(isOnline){
 }
 
 function isValidMobileNumber(mob) {
+    mob.replace(/\s/g,'');
     if((!(Math.floor(mob)==mob))&&(!jQuery.isNumeric(mob))){
         return false;
     }
+    /*2019-11-13 CB V1.2.2.4 - no longer validating uk cell phones
     if ( mob.trim().length != 11 || mob.trim().substring(0,2) !== "07"  )
         return false;
-    else return true;
+    else return true;*/
+
+    //15 characters is the max length the API allows for
+    if( mob.trim().length>15){return false;}
+    
+    return true;
 }
 
 function isEmail(email) {
@@ -422,6 +430,8 @@ function ValidDemoInfo() {
 	});
     
     var mob = jQuery('#tfgg_cp_demo_cellphone').val();
+    mob=mob.replace(/\s/g,'');
+    jQuery('#tfgg_cp_demo_cellphone').val(mob);
     if(mob!=''){
         if (!isValidMobileNumber(mob)) {
             jQuery('#alertpnl_mobile').css('display','inline');
