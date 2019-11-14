@@ -161,7 +161,16 @@
 		    						<table class="account-overview-table">
 										<tr class="account_overview_row account_overview_row_header">
 			    							<td><span class="account-overview-generic-label">Service: </span></td>
-			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span></td>
+			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span>
+											<?php
+			    							if(tfgg_scp_can_service_be_purchased('P',$details->package_number)){
+			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
+											?>
+											<button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="CancelAppt();">BUY AGAIN</button>
+											<?php
+												}//if
+											?>
+											</td>
 			    						</tr>
 			    						<tr class="account_overview_row">
 			    							<td><span class="account-overview-generic-label">Purchased: </span></td>
@@ -198,7 +207,15 @@
 		    						<table class="account-overview-table">
 										<tr class="account_overview_row account_overview_row_header">
 			    							<td><span class="account-overview-generic-label">Service: </span></td>
-			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span></td>
+			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span><?php
+			    							if(($details->is_eft==0)&&(tfgg_scp_can_service_be_purchased('M',$details->membership_number))){
+			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
+											?>
+											<button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="CancelAppt();">BUY AGAIN</button>
+											<?php
+												}//if
+											?>
+											</td>
 			    						</tr>
 			    						<tr class="account_overview_row">
 			    							<td><span class="account-overview-generic-label">Purchased: </span></td>

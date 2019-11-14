@@ -13,8 +13,11 @@
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);    
-    }
-    
+        define('TFGG_SCP_PLUGIN_V','DEV');
+    }else{
+        define('TFGG_SCP_PLUGIN_V','1.2.2.4');//2019-11-14 make sure this matches the plugin version
+    }    
+
     //2019-10-12 CB V1.1.1.1 - if no session exists, start one
     if(session_status() !== PHP_SESSION_ACTIVE) session_start();
 

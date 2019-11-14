@@ -227,7 +227,14 @@
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-customer-acct-options" class="nav-tab <?php echo $active_tab == 'tfgg-customer-acct-options' ? 'nav-tab-active' : ''; ?>">Customer Acct</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-appointments-options" class="nav-tab <?php echo $active_tab == 'tfgg-appointments-options' ? 'nav-tab-active' : ''; ?>">Appointments</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-messages-options" class="nav-tab <?php echo $active_tab == 'tfgg-messages-options' ? 'nav-tab-active' : ''; ?>">Message Text</a>
+                <?php
+                    if(TFGG_SCP_PLUGIN_V=='DEV'){
+                ?>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-service-options" class="nav-tab <?php echo $active_tab == 'tfgg-service-options' ? 'nav-tab-active' : ''; ?>">Services For Sale</a>
+                <?php
+                    }
+                ?>
+                
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-misc-options" class="nav-tab <?php echo $active_tab == 'tfgg-misc-options' ? 'nav-tab-active' : ''; ?>">Misc.</a>
             </div>
             <form method="POST" action="options.php">
