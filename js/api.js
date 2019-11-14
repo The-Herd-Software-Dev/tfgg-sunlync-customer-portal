@@ -245,7 +245,9 @@ function ValidateNewReg(isOnline){
     
     //new mobile number validation
     var mob=jQuery('#tfgg_cp_mobile_phone').val();
-    jQuery('#tfgg_cp_mobile_phone').val(mob.replace(/\s/g,''));
+    mob=mob.replace(/\s/g,'');
+    mob=mob.replace(/\D/g,'');
+    jQuery('#tfgg_cp_mobile_phone').val(mob);
     /*if((!(Math.floor(mob)==mob))&&(!jQuery.isNumeric(mob))){
         jQuery('#new_reg_mobile_phone').css('display','block');
 	    jQuery('#new_reg_mobile_phone').html('This is not a valid number');
@@ -339,7 +341,8 @@ function ValidateNewReg(isOnline){
 }
 
 function isValidMobileNumber(mob) {
-    mob.replace(/\s/g,'');
+    mob=mob.replace(/\s/g,'');
+    mob=mob.replace(/\D/g,'');
     if((!(Math.floor(mob)==mob))&&(!jQuery.isNumeric(mob))){
         return false;
     }
@@ -431,6 +434,7 @@ function ValidDemoInfo() {
     
     var mob = jQuery('#tfgg_cp_demo_cellphone').val();
     mob=mob.replace(/\s/g,'');
+    mob=mob.replace(/\D/g,'');
     jQuery('#tfgg_cp_demo_cellphone').val(mob);
     if(mob!=''){
         if (!isValidMobileNumber(mob)) {
