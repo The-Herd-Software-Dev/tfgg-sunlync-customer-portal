@@ -509,6 +509,31 @@
 		
 		return $result;
     }
+
+    function tfgg_sunlync_post_to_url($postData, $url){
+        $ch = curl_init($url);                                                                      
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);                                                                  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+            'Content-Type: application/json',                                                                                
+            'Content-Length: ' . strlen($postData))                                                                       
+        );                                                                                                                   
+                                                                                                                            
+        $result = curl_exec($ch); 
+        curl_close($ch);
+		
+		if(($result===FALSE)||($result=='')){
+			throw new Exception("ERROR: Invalid URL");
+			exit;
+		}
+		
+		$result=str_replace('{"result":[','',$result);
+		$result=str_replace(']}','',$result);
+        $result=json_decode($result);
+		
+		return $result;   
+    }
     
     function tfgg_api_get_stores(){
         //2019-09-30 CB V1.0.0.6 - changed to use store demo appt info
@@ -591,6 +616,10 @@
 
     function tfgg_store_store_by_name($a,$b){
         return strcmp($a->store_loc, $b->store_loc);
+    }
+
+    function tfgg_order_service_by_name($a,$b){
+        return strcmp($a->description, $b->description);
     }
     
     function tfgg_api_get_equip_type_appt_slots(){
@@ -1244,7 +1273,7 @@
     
     function tfgg_format_number_for_display($number){
 
-        switch (substr($number,0,2)){
+        /*switch (substr($number,0,2)){
             case '02':
                 $number=substr($number,0,3)." ".substr($number,3,4)." ".substr($number,8,4);
                 break;
@@ -1254,7 +1283,7 @@
             default:
                 $number=substr($number,0,4)." ".substr($number,4,12);
                 break;
-        }
+        }*/
     
         return $number;
     }
@@ -1319,6 +1348,26 @@
         }
     }
 
+    function tfgg_scp_get_packages_selected_for_api(){
+        $packages = get_option('tfgg_scp_package_selection');
+        if($packages<>''){
+            $packagesSelected = join('","',$packages);   
+            return '"'.$packagesSelected.'"';    
+        }else{
+            return '';
+        }    
+    }
+
+    function tfgg_scp_get_memberships_selected_for_api(){
+        $memberships = get_option('tfgg_scp_membership_selection');
+        if($memberships<>''){
+            $membershipsSelected = join('","',$memberships);   
+            return '"'.$membershipsSelected.'"';    
+        }else{
+            return '';
+        }    
+    }
+
     function tfgg_scp_get_packages_from_api($allowedPackageList){
         /*CIPGetPackages(sPackageList, sStoreCode:String; mrktCode*/
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetPackages/sPackageList/sStoreCode';
@@ -1348,6 +1397,7 @@
 		       
             $result["results"]="success";
             $result["packages"]=array_slice($data,1,-1);
+            usort($result["packages"],'tfgg_order_service_by_name');
             return json_encode($result);
 		}  
     }
@@ -1380,9 +1430,69 @@
 		       
             $result["results"]="success";
             $result["memberships"]=array_slice($data,1,-1);
+            usort($result["memberships"],'tfgg_order_service_by_name');
             return json_encode($result);
 		}  
     }
+
+    function tfgg_scp_can_service_be_purchased($serviceType, $serviceNumber){
+        if($serviceType=='P'){
+            $allowedServices=tfgg_scp_get_packages_selected_for_api();
+        }elseif($serviceType=='M'){
+            $allowedServices=tfgg_scp_get_memberships_selected_for_api();
+        }else{
+            //nothing should get here
+            return false;
+        }
+        if($allowedServices==''){return true;}
+        $pos = strpos($allowedServices,$serviceNumber);
+
+        if(($pos!='')&&($pos>=0)){return true;}
+
+        return false;//default
+
+    }
+
+    function tfgg_scp_post_cart_item(){
+        /*
+        the API is expecting the following JSON format
+        {
+        "clientNumber": "",
+        "storeCode": "",
+        "cartID": "",
+        "itemType": "",
+        "keyValue": "",
+        "qty": "",
+        "mrkt": ""
+        }
+        */
+
+        $url=tfgg_get_api_url().'TAPICart/CartItems';
+
+        $postBody = array();
+        $postBody["clientNumber"] = tfgg_cp_set_sunlync_client();
+        $postBody["storeCode"] = '';
+        $postBody["cartID"] = '';
+        $postBody["itemType"] = $_POST['data']['itemType'];
+        $postBody["keyValue"] = $_POST['data']['keyValue'];
+        $postBody["qty"] = $_POST['data']['qty'];
+        $postBody["mrkt"] = get_option('tfgg_scp_api_mrkt');
+
+        $postBody = json_encode($postBody);
+
+        try{
+            $data = tfgg_sunlync_post_to_url($postData, $url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        return json_encode($data);
+
+    }
+    add_action('wp_ajax_tfgg_scp_post_cart_item','tfgg_scp_post_cart_item');
+    add_action('wp_ajax_nopriv_tfgg_scp_post_cart_item','tfgg_scp_post_cart_item');
     
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();
