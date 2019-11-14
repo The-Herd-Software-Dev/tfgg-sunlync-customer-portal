@@ -82,6 +82,9 @@
         add_settings_field("tfgg_scp_instore_registration_success", "Successful Instore Registration:", "display_successful_reg_instore", "tfgg-messages-options", "tfgg_messages_section");
         register_setting("tfgg_messages_section", "tfgg_scp_instore_registration_success");
 
+        add_settings_field("tfgg_scp_instore_registration_validation_fail", "Instore Validation Fail:", "display_fail_validation_reg_instore", "tfgg-messages-options", "tfgg_messages_section");
+        register_setting("tfgg_messages_section", "tfgg_scp_instore_registration_validation_fail");
+
         /* 2019-10-13 CB V1.1.1.1 - deprecated
         add_settings_field("tfgg_scp_email_pass_reset", "Password Reset Email:", "display_email_pass_rest", "tfgg-messages-options", "tfgg_messages_section");
         register_setting("tfgg_messages_section", "tfgg_scp_email_pass_reset");*/
@@ -136,6 +139,9 @@
 
         add_settings_field("tfgg_scp_marketing_slug_instore", "Marketing Slug:", "display_marketing_slug_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
         register_setting("tfgg_registration_options_section_instore","tfgg_scp_marketing_slug_instore");
+
+        add_settings_field("tfgg_scp_skin_type_info_slug_instore", "Skintype Info Slug:", "display_skin_type_info_slug", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
+        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_skin_type_info_slug_instore");
         
         add_settings_field("tfgg_scp_registration_source_label_instore", "Registration Source:", "display_registration_source_label_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
         register_setting("tfgg_registration_options_section_instore","tfgg_scp_registration_source_label_instore");

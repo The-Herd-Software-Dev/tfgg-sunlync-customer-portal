@@ -32,6 +32,29 @@ function display_successful_reg_instore(){
         'wpautop' => false
     );
     wp_editor( get_option('tfgg_scp_instore_registration_success'), 'tfgg_scp_instore_registration_success', $settings); 
+    if(wp_is_mobile()){
+    ?>
+    <div>
+    <?php }else{ ?>
+    <div style="font-size: small">
+    <?php } ?>
+        <p>Placeholders: <ul>
+        <li>!@#firstname#@! -> First Name</li>
+        <li>!@#lastname#@! -> Last Name</li>
+        <li>!@#clientnumber#@! -> Client Number</li>
+        </ul></p>
+    </div>
+    <?php
+}
+
+function display_fail_validation_reg_instore(){
+    $settings = array(
+        'textarea_rows' => 15,
+        'tabindex' => 1,
+        'media_buttons' => false,
+        'wpautop' => false
+    );
+    wp_editor( get_option('tfgg_scp_instore_registration_validation_fail'), 'tfgg_scp_instore_registration_validation_fail', $settings);    
 }
 
 function display_appts_fail(){

@@ -95,6 +95,13 @@
         <?php  
     }
 
+    //2019-11-14 CB V1.2.3.1 - new field
+    function display_skin_type_info_slug(){
+        ?>
+        <input type="text" name="tfgg_scp_skin_type_info_slug_instore" value='<?php echo get_option('tfgg_scp_skin_type_info_slug_instore'); ?>' size="70" />
+        <?php  
+    }
+
     function display_registration_source_label_instore(){
         display_registration_source_label(false);
     }

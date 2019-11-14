@@ -179,6 +179,16 @@
 							</select>
 							<div style="display:none" id="new_reg_skin_type_alertpnl" class="reg_alert"></div>
 						</div>
+						<?php
+						$infoSlug=get_option('tfgg_scp_marketing_slug_instore');
+						if(trim($infoSlug)!=''){
+						?>
+						<div class="account-overview-input-single">
+						<span onclick="instoreSKinTypeInfoDialog();" style="cursor: pointer">Click here for more information on skin types</span>
+						</div>
+						<?php
+						}
+						?>
 					</div>
 
 				</div>
@@ -223,24 +233,22 @@
 
 				<div class='reg-checkbox-container'>
 					<input data-alertpnl="new_reg_tandc_confirm" name="tfgg_cp_user_tandc_agree" id="tfgg_cp_user_tandc_agree" class="required account-overview-survey-input scaled-checkbox" type="checkbox"/>
-					<label onclick="instoreTandCDialog();" for="tfgg_cp_user_tandc_agree" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label_instore'); ?></label>	
+					<label onclick="instoreTandCDialog();" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label_instore'); ?></label>	
 					<div style="display:none" id="new_reg_tandc_confirm" class="reg_alert"></div>
 				</div>
 				<br style="line-height:0.9"/>		
 				<div class='reg-checkbox-container'>
 					<input data-alertpnl="new_reg_marketing" id="tfgg_cp_marketing" name="tfgg_cp_marketing" class="account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
-					<label onclick="instoreMarketingDialog();" for="tfgg_cp_marketing" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label_instore') ?></label>	
+					<label onclick="instoreMarketingDialog();" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label_instore') ?></label>	
 					<div style="display:none" id="new_reg_marketing" class="reg_alert"></div>	
 				</div>
 				<br style="line-height:0.9"/>
 				<div class='reg-checkbox-container'>
 					<input data-alertpnl="new_reg_skin_type_confirm_alertpnl" id="tfgg_cp_skin_type_confirm" name="tfgg_cp_skin_type_confirm" class="required account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
-					<label for="tfgg_cp_skin_type_confirm"  style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php _e('I hereby certify that the skin type selected is accurate'); ?></label>
+					<label style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php _e('I hereby certify that the skin type selected is accurate'); ?></label>
 					<div style="display:none" id="new_reg_skin_type_confirm_alertpnl" class="reg_alert"></div>
 				</div>
-
 				<br />
-
 				<div class="registration-container">
 							<div class="account-overview-input-double">
 								<label for="tfgg_cp_how_hear" class="account-overview-label"><?php _e('How did you hear about us?'); ?></label>
@@ -303,6 +311,16 @@
 				<?php
                     echo get_post_field('post_content', url_to_postid( site_url(get_option('tfgg_scp_marketing_slug_instore')) ));
                 ?>
+			</div>
+			<div id="instore_skin_type_info_dialog" name="instore_skin_type_info_dialog" style="display:none">
+				<?php
+                    echo get_post_field('post_content', url_to_postid( site_url(get_option('tfgg_scp_skin_type_info_slug_instore')) ));
+                ?>
+			</div>
+			<div id="instore_reg_validation_fail_warning" name="instore_reg_validation_fail_warning" style="display:none">
+				<?php
+				echo get_option('tfgg_scp_instore_registration_validation_fail');
+				?>
 			</div>
 			<br/><br/>
 			<script>
@@ -468,7 +486,12 @@
 
 				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,get_option('tfgg_scp_reg_promo_instore'), ''));
 				if(strtoupper($reg_result->results)=='SUCCESS'){
-                    tfgg_cp_errors()->add('success_reg_complete', __(get_option('tfgg_scp_instore_registration_success')));					
+					//2019-11-14 CB V1.2.3.1 - added palceholders to replace data
+					$successMessage=get_option('tfgg_scp_instore_registration_success');
+					$successMessage=str_replace('!@#firstname#@!',$_POST['tfgg_cp_user_first'],$successMessage);
+					$successMessage=str_replace('!@#lastname#@!',$_POST['tfgg_cp_user_last'],$successMessage);
+					$successMessage=str_replace('!@#clientnumber#@!',$reg_result->clientnumber,$successMessage);
+                    tfgg_cp_errors()->add('success_reg_complete', __($successMessage));					
 				}else{
 					tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$reg_result->response.
 					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));

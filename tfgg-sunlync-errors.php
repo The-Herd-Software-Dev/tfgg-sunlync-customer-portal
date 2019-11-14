@@ -32,7 +32,19 @@
                         </button>
 		            </div>'; 
     		    }
-    		$output.= '</div>';
+			$output.= '</div>';
+			
+			//2019-11-14 CB V1.2.3.1
+			$script='';
+			if($code=='success_reg_complete'){
+				$script="<script type=\"text/javascript\">";
+				$script.='setTimeout(function() {';
+				$script.='jQuery(".alert-dismissible").remove();';
+				$script.='}, 10000);';
+				$script.="</script>";
+			}
+			$output.=$script;
+
     		echo $output;
     	}    
     }//tfgg_sunlync_cp_show_error_messages

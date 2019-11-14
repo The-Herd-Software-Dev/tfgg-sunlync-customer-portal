@@ -330,6 +330,7 @@ function ValidateNewReg(isOnline){
         jQuery('#registrationSubmitButton').attr('disabled','true');
         jQuery('#new_reg_overall_alertpnl').css('display','block');
         jQuery('#new_reg_overall_alertpnl').html('We encountered an error with your registration, please fix the highlighted fields');
+        genModalDialog('instore_reg_validation_fail_warning');
         return false;
     }else{
         if(isOnline){
@@ -1143,23 +1144,31 @@ function endPortalSession(){
 }
 
 function instoreTandCDialog(){
-    var dialog=jQuery('#instore_tandc_dialog').dialog({ autoOpen: false,
-        height: (jQuery(window).height()*0.75),
-        width: (jQuery(window).width()*0.8)
-      });
-
-    dialog.dialog('open');
+    genModalDialog('instore_tandc_dialog');
 }
 
 function instoreMarketingDialog(){
-    var dialog=jQuery('#instore_marketing_dialog').dialog({ autoOpen: false,
-        height: (jQuery(window).height()*0.75),
-        width: (jQuery(window).width()*0.8)
-      });
-
-    dialog.dialog('open');
+    genModalDialog('instore_marketing_dialog');
 }
 
 function secretClick(){
     jQuery('#tfgg_cp_store').prop('disabled',false);
+}
+
+function instoreSKinTypeInfoDialog(){
+    genModalDialog('instore_skin_type_info_dialog');
+}
+
+function genModalDialog($modalID){
+    var dialog=jQuery('#'+$modalID).dialog({ autoOpen: false,
+        height: (jQuery(window).height()*0.75),
+        width: (jQuery(window).width()*0.8),
+        modal: true,
+        open:function(){
+            jQuery('#main-header').css('z-index',0);   
+            jQuery('#'+$modalID).css('z-index','100000 !important');
+        }
+      });    
+
+    dialog.dialog('open');
 }
