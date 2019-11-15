@@ -756,25 +756,27 @@ function LoadEquipTimeSlots(){
 
            var earliestAppt = (new Date(earliestDate[0], earliestDate[1]-1, earliestDate[2], earliestTime[0], earliestTime[1], earliestTime[2]));
            jQuery.each(returnData["availableSlots"], function(key,details){
-                i++;
-                var aTime = details['start_time'].split(':');//2019-10-08 CB V1.0.1.1
-                //if(new Date(details['start_time'],apptdate) < new Date(returnData["earlistAppt"])){
+                if(details['roomnumber']!=0){
+                    i++;
+                    var aTime = details['start_time'].split(':');//2019-10-08 CB V1.0.1.1
+                    //if(new Date(details['start_time'],apptdate) < new Date(returnData["earlistAppt"])){
+                        
+                    if(new Date(aDate[0], aDate[1]-1, aDate[2], aTime[0], aTime[1], aTime[2]) < earliestAppt){
+                            //month is adate[1]-1 because months are 0 index for js                        
+                        return;//continue to next iteration
+                    }
+                    if (ApptDoesNotConflict(details['start_time'],apptdate)){
+                        var pnlName="'timePnl"+i+"'";
                     
-                if(new Date(aDate[0], aDate[1]-1, aDate[2], aTime[0], aTime[1], aTime[2]) < earliestAppt){
-                        //month is adate[1]-1 because months are 0 index for js                        
-                    return;//continue to next iteration
-                }
-                if (ApptDoesNotConflict(details['start_time'],apptdate)){
-                    var pnlName="'timePnl"+i+"'";
-                
-                    var pnl='<div class="appts-timeslot-selector timeSlotPnl" name="timePnl'+i+'" id="timePnl'+i+'" onclick="highlightTimeSlot('+pnlName+')" style="cursor: pointer;" '+
-                    'data-roomnumber="'+details['roomnumber']+'" data-starttime="'+details['start_time']+'"> '+ //DO NOT FORMAT THIS TIME!!!
-                                '<span class="appts-timeslot">Start Time: '+FormatTimeToUK(details['start_time'])+'</span><br/> '+
-                                '<span class="appts-timeslot">End Time: '+FormatTimeToUK(details['end_time'])+'</span> '+
-                            '</div>';
-                    
-                    jQuery('#appts-timeslot-container').append(pnl);
-                }
+                        var pnl='<div class="appts-timeslot-selector timeSlotPnl" name="timePnl'+i+'" id="timePnl'+i+'" onclick="highlightTimeSlot('+pnlName+')" style="cursor: pointer;" '+
+                        'data-roomnumber="'+details['roomnumber']+'" data-starttime="'+details['start_time']+'"> '+ //DO NOT FORMAT THIS TIME!!!
+                                    '<span class="appts-timeslot">Start Time: '+FormatTimeToUK(details['start_time'])+'</span><br/> '+
+                                    '<span class="appts-timeslot">End Time: '+FormatTimeToUK(details['end_time'])+'</span> '+
+                                '</div>';
+                        
+                        jQuery('#appts-timeslot-container').append(pnl);
+                    }
+                }//roomnumebr>0
                 
            });//jquery.each
             
