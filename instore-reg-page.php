@@ -179,17 +179,19 @@
 							</select>
 							<div style="display:none" id="new_reg_skin_type_alertpnl" class="reg_alert"></div>
 						</div>
+					</div>
 						<?php
 						$infoSlug=get_option('tfgg_scp_marketing_slug_instore');
 						if(trim($infoSlug)!=''){
 						?>
-						<div class="account-overview-input-single">
-						<span onclick="instoreSKinTypeInfoDialog();" style="cursor: pointer">Click here for more information on skin types</span>
+						<div class="registration-container">
+							<div class="account-overview-input-single" style="padding-top:10px">
+							<span onclick="instoreSKinTypeInfoDialog();" style="cursor: pointer; color:#F16631; text-decoration:underline;"><strong>Click here for more information on skin types</strong></span>
+							</div>						
 						</div>
 						<?php
 						}
 						?>
-					</div>
 
 				</div>
 	
@@ -335,7 +337,7 @@
 						onSelect: function(dateText) {
 							jQuery('#new_reg_dob').hide();
 							jQuery('#new_reg_dob').html('');
-							tfgg_cp_user_dob
+							//tfgg_cp_user_dob
 							dateselected = jQuery("#tfgg_cp_user_dob_value").datepicker('getDate');
 							jQuery('#tfgg_cp_user_dob').val(jQuery.datepicker.formatDate('yy-mm-dd',dateselected));
 							jQuery('#new_reg_dob').html('');
@@ -344,7 +346,25 @@
 								jQuery('#new_reg_dob').show();
 								jQuery('#new_reg_dob').html('Under 18s may only use Spray Tanning services');
 							}//if
-  						}//onselect
+						  },//onselect
+						onChangeMonthYear:function(yearText, monthText){
+							//get the currently selected date
+							jQuery('#new_reg_dob').hide();
+							jQuery('#new_reg_dob').html('');
+							dateselected = jQuery("#tfgg_cp_user_dob_value").datepicker('getDate');
+							if(dateselected.getFullYear()!=yearText){
+								dateselected.setFullYear(yearText)
+								jQuery("#tfgg_cp_user_dob_value").datepicker("setDate",dateselected);
+							}
+							dateselected = jQuery("#tfgg_cp_user_dob_value").datepicker('getDate');
+							jQuery('#tfgg_cp_user_dob').val(jQuery.datepicker.formatDate('yy-mm-dd',dateselected));
+							jQuery('#new_reg_dob').html('');
+							var age = getAgeYears(jQuery.datepicker.formatDate('yy-mm-dd',dateselected));
+							if(age<18){
+								jQuery('#new_reg_dob').show();
+								jQuery('#new_reg_dob').html('Under 18s may only use Spray Tanning services');
+							}//if
+						  }
     				});
 				  } );
 
