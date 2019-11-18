@@ -307,6 +307,10 @@
             $result["results"]="success";
             $result["data"]=array_slice($data,1,-1);
 
+            if(!isset($_SESSION['tfgg_scp_cartid'])){
+                unset($_SESSION['tfgg_scp_cartid']);
+            }
+
             tfgg_scp_get_cart_contents();//after login, verify cart contents
 
             return json_encode($result);
@@ -1578,28 +1582,31 @@
             return json_encode($result);
         }
 
-        $returned=$data->result[0][0];   
+        $returned=$data->result[0][0]; 
+        
         if((array_key_exists('WARNING',$returned))||(array_key_exists('ERROR',$returned))){
             if(array_key_exists('ERROR',$returned)){
 				$result=array("results"=>"FAIL",
 					"response"=>$returned->ERROR);
 			}else{
 				$result=array("results"=>"FAIL",
-					"response"=>$returned->WARNING);
-            }    
+                    "response"=>$returned->WARNING);
 
-            if(StrToupper($returned->WARNING)=='NO CART ITEMS AVAILABLE'){
-                if(isset($_SESSION['tfgg_scp_cartid'])){
-                    unset($_SESSION['tfgg_scp_cartid']);
+                if(StrToupper($returned->WARNING)=='NO CART ITEMS AVAILABLE'){
+                    if(isset($_SESSION['tfgg_scp_cartid'])){
+                        unset($_SESSION['tfgg_scp_cartid']);
+                    }
                 }
-            }
+            }                
 
             return json_encode($result);
         }
 
         $cartHeader = $data->result[0][0][0];
         $cartHeader = $cartHeader->header[0];//there is only ever 1 header record
-        
+
+        $_SESSION['tfgg_scp_cart_qty'] = $cartHeader->qty;
+
         $cartItems= $data->result[0][0][1];
         $cartItems = $cartItems->lineitems;//this could be an array of items
 
@@ -1669,6 +1676,15 @@
             $cartID=$data->result[0][1];
             $return["cartID"]=$cartID->cartID;
             $_SESSION['tfgg_scp_cartid']=$return["cartID"];
+
+            if(isset($_SESSION['tfgg_scp_cart_qty'])){
+                $_SESSION['tfgg_scp_cart_qty']=$_SESSION['tfgg_scp_cart_qty']+$_POST['data']['qty'];
+            }else{
+                $_SESSION['tfgg_scp_cart_qty']=$_POST['data']['qty'];
+            }
+            
+            $return['cartQty']=$_SESSION['tfgg_scp_cart_qty'];
+
             exit(json_encode($return));
 		} 
 
@@ -1712,7 +1728,7 @@
 
     }
     add_action('wp_ajax_tfgg_scp_delete_cart_item','tfgg_scp_delete_cart_item');
-    add_action('wp_ajax_nopriv_tfgg_scp_delete_cart_item','tfgg_scp_delete_cart_item');
+    add_action('wp_ajax_nopriv_tfgg_scp_delete_cart_item','tfgg_scp_delete_cart_item');    
 
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();
@@ -1795,9 +1811,14 @@
     function tfgg_add_cart_link($items, $args){
         //add the account overview link to the nav bar
         $sunlyncuser = tfgg_cp_get_sunlync_client();
-        
+        $link='Cart';
+
+        if((isset($_SESSION['tfgg_scp_cart_qty']))&&($_SESSION['tfgg_scp_cart_qty']>0)){
+            $link.=' ('.$_SESSION['tfgg_scp_cart_qty'].')';
+        }
+
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
-            $items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url('/cart/'))) .'">Cart</a></li>'; 
+            $items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url('/cart/'))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
         }
         return $items;
     }

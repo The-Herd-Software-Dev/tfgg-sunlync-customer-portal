@@ -15,8 +15,19 @@
             echo '<br/><hr/><br/>';
             tfgg_scp_cart_header_display($cartContents->header);
             echo '<br/><br/>';
+            
+            ?>
+            <script>
+                tfggSetCartLinkQty(<?php echo $cartContents->header->qty; ?>);
+            </script>
+            <?php
         }else{
             tfgg_scp_empty_cart_display();
+            ?>
+            <script>
+                tfggSetCartLinkQty(0);
+            </script>
+            <?php
         }
         
         return ob_get_clean();
