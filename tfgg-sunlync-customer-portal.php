@@ -22,6 +22,7 @@
     require_once('functions.php');
     require_once('api-class.php');
     /*require_once('api-comm.php');*/
+    require_once('tfgg-sunlync-cart.php');
     require_once('demographics-account-overview.php');
     require_once('appt-control.php');
     require_once('admin-menu.php');

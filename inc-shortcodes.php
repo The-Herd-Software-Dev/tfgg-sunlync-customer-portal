@@ -50,19 +50,16 @@ function tfgg_cp_sunlync_register_new(){
     }*/
     return reg_form_display_new(); 
 }
-
 add_shortcode('cp_sunlync_registrationform_new','tfgg_cp_sunlync_register_new');
 
 function tfgg_cp_sunlync_register_existing(){
     //return reg_form_display();
 }
-
 add_shortcode('cp_sunlync_registrationform_existing','tfgg_cp_sunlync_register_existing');
 
 function tfgg_cp_sunlync_appointments(){
     return appt_booking();
 }
-
 add_shortcode('cp_sunlync_appts','tfgg_cp_sunlync_appointments');
 
 function tfgg_cp_sunlync_account(){
@@ -80,7 +77,6 @@ function tfgg_cp_sunlync_account(){
     }*/
     return account_overview();
 }
-
 add_shortcode('cp_sunlync_demographics','tfgg_cp_sunlync_account');
 
 function tfgg_cp_sunlync_register_instore(){
@@ -98,5 +94,16 @@ function tfgg_cp_sunlync_register_instore_setstore(){
     return set_storecode_display();    
 }
 add_shortcode('cp_sunlync_registrationform_instore_setstore','tfgg_cp_sunlync_register_instore_setstore');
+
+function tfgg_cp_sunlync_cart(){
+    $viewCart= get_query_var('viewcart');
+    
+    if($viewCart=='cart'){
+        return tfgg_scp_display_cart();
+    }else{
+        return tfgg_scp_display_services_for_sale();
+    }
+}
+add_shortcode('cp_sunlync_cart','tfgg_cp_sunlync_cart');
 
 ?>

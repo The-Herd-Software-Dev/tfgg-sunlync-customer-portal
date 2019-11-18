@@ -76,6 +76,11 @@
 
     function tfgg_cp_portal_logout(){
         tfgg_cp_unset_sunlync_client();
+
+        if(isset($_SESSION['tfgg_scp_cartid'])){
+            unset($_SESSION['tfgg_scp_cartid']);
+        }
+
         $result["logout"]=site_url();//possible configurable option
         exit(json_encode($result));
     }
@@ -301,6 +306,9 @@
 		       
             $result["results"]="success";
             $result["data"]=array_slice($data,1,-1);
+
+            tfgg_scp_get_cart_contents();//after login, verify cart contents
+
             return json_encode($result);
 		}
     }
@@ -497,20 +505,116 @@
 		curl_setopt_array($ch,$ch_options);
 		$result=curl_exec($ch);
 		curl_close($ch);
-		
 		if(($result===FALSE)||($result=='')){
 			throw new Exception("ERROR: Invalid URL");
 			exit;
 		}
 		
-		$result=str_replace('{"result":[','',$result);
-		$result=str_replace(']}','',$result);
+        $result=str_replace('{"result":[','',$result);
+        $result=str_replace(']}','',$result);
         $result=json_decode($result);
-		
 		return $result;
     }
 
+    function tfgg_sunlync_cart_execute_url($url){
+        // WE DO NOT STRIP ANYTHING FROM THIS RETURN DATA!!!!!
+        $url.='/'.get_option('tfgg_scp_api_mrkt'); 
+        
+        $ch = curl_init($url);
+		$ch_options=array(
+			CURLOPT_RETURNTRANSFER=> true,
+			CURLOPT_USERPWD=>get_option('tfgg_scp_api_user').":".get_option('tfgg_scp_api_pass'),
+			CURLOPT_HTTPHEADER=>array('Content-type: application/json')
+		);
+
+		curl_setopt_array($ch,$ch_options);
+		$result=curl_exec($ch);
+		curl_close($ch);
+		if(($result===FALSE)||($result=='')){
+			throw new Exception("ERROR: Invalid URL");
+			exit;
+        }
+        
+        $result=json_decode($result);
+		return $result;
+    }
+
+    function tfgg_execute_api_request($method, $url, $data){
+        if(!strpos($url,'GenericGetAPIVersion')){
+            $url.='/'.get_option('tfgg_scp_api_mrkt'); 
+        }
+        
+        $ch = curl_init($url);
+        //set all common options first
+        curl_setopt($ch, CURLOPT_USERPWD,get_option('tfgg_scp_api_user').":".get_option('tfgg_scp_api_pass'));                                                                                                                  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        switch (StrToUpper($method)){
+            case "GET":
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json'
+                ));
+                break;
+            case "POST":
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                    
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data); 
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+                    'Content-Type: application/json',                                                                                
+                    'Content-Length: ' . strlen($data))                                                                       
+                ); 
+                break; 
+            case "DELETE":
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE"); 
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json'
+                ));
+                break;
+            case "PUT":
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT"); 
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json'
+                ));
+                break;                
+        }//switch
+        
+        $result = curl_exec($ch);
+        curl_close($ch); 
+		
+		if(($result===FALSE)||($result=='')){
+			throw new Exception("ERROR: Invalid URL");
+			exit;
+        }
+
+        //strip data from non-cart items
+        if(strpos($url,'TSunLyncAPI')){
+            $result=str_replace('{"result":[','',$result);
+            $result=str_replace(']}','',$result);   
+        }
+
+        return json_decode($result);
+    }
+
     function tfgg_sunlync_post_to_url($postData, $url){
+        /*
+        {
+        "result": [
+            [
+            {
+                "success": "item successfully added to cart"
+            },
+            {
+                "cartID": "{848EF55B-714C-4751-AF62-0766BA722B5E}"
+            },
+            {
+                "request_id": "95000701C9C5DCD83C4272752A10F1A263B86"
+            }
+            ]
+        ]
+        }
+
+        */
+
         $ch = curl_init($url);                                                                      
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);                                                                  
@@ -518,7 +622,8 @@
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
             'Content-Type: application/json',                                                                                
             'Content-Length: ' . strlen($postData))                                                                       
-        );                                                                                                                   
+        ); 
+        curl_setopt($ch, CURLOPT_USERPWD,get_option('tfgg_scp_api_user').":".get_option('tfgg_scp_api_pass'));                                                                                                                  
                                                                                                                             
         $result = curl_exec($ch); 
         curl_close($ch);
@@ -526,8 +631,8 @@
 		if(($result===FALSE)||($result=='')){
 			throw new Exception("ERROR: Invalid URL");
 			exit;
-		}
-		
+        }
+        
 		$result=str_replace('{"result":[','',$result);
 		$result=str_replace(']}','',$result);
         $result=json_decode($result);
@@ -1376,7 +1481,7 @@
         $url=str_replace('sStoreCode','',$url);
 
         try{
-            $data = tfgg_sunlync_execute_url($url);
+            $data = tfgg_execute_api_request('GET',$url,'');
         }catch(Exception $e){
             $result["results"]="error";
             $result["error_message"]=$e->getMessage(); 
@@ -1409,7 +1514,7 @@
         $url=str_replace('sStoreCode','',$url);
 
         try{
-            $data = tfgg_sunlync_execute_url($url);
+            $data = tfgg_execute_api_request('GET',$url,'');
         }catch(Exception $e){
             $result["results"]="error";
             $result["error_message"]=$e->getMessage(); 
@@ -1453,6 +1558,62 @@
 
     }
 
+    function tfgg_scp_get_cart_contents(){
+        if(isset($_SESSION['tfgg_scp_cartid'])){
+            $cartid=$_SESSION['tfgg_scp_cartid'];
+        }else{
+            $cartid='';
+        }
+
+        $url=tfgg_get_api_url().'TAPICart/CartDetails/sCartID/sclientnumber';
+        
+        $url=str_replace('sCartID',$cartid,$url);
+        $url=str_replace('sclientnumber',tfgg_cp_get_sunlync_client(),$url);
+
+        try{
+            $data = tfgg_execute_api_request('GET',$url,'');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        $returned=$data->result[0][0];   
+        if((array_key_exists('WARNING',$returned))||(array_key_exists('ERROR',$returned))){
+            if(array_key_exists('ERROR',$returned)){
+				$result=array("results"=>"FAIL",
+					"response"=>$returned->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$returned->WARNING);
+            }    
+
+            if(StrToupper($returned->WARNING)=='NO CART ITEMS AVAILABLE'){
+                if(isset($_SESSION['tfgg_scp_cartid'])){
+                    unset($_SESSION['tfgg_scp_cartid']);
+                }
+            }
+
+            return json_encode($result);
+        }
+
+        $cartHeader = $data->result[0][0][0];
+        $cartHeader = $cartHeader->header[0];//there is only ever 1 header record
+        
+        $cartItems= $data->result[0][0][1];
+        $cartItems = $cartItems->lineitems;//this could be an array of items
+
+        $result["results"]="success";
+        $result["header"]=$cartHeader;
+        $result["lineItems"]=$cartItems;
+        
+        if(!isset($_SESSION['tfgg_scp_cartid'])){
+            $_SESSION['tfgg_scp_cartid']=$result["header"]->cartID;
+        }
+
+        return json_encode($result);
+    }
+
     function tfgg_scp_post_cart_item(){
         /*
         the API is expecting the following JSON format
@@ -1466,34 +1627,93 @@
         "mrkt": ""
         }
         */
-
         $url=tfgg_get_api_url().'TAPICart/CartItems';
 
+        if(isset($_SESSION['tfgg_scp_cartid'])){
+            $cartid=$_SESSION['tfgg_scp_cartid'];
+        }else{
+            $cartid='';
+        }
+
         $postBody = array();
-        $postBody["clientNumber"] = tfgg_cp_set_sunlync_client();
-        $postBody["storeCode"] = '';
-        $postBody["cartID"] = '';
+        $postBody["clientNumber"] = tfgg_cp_get_sunlync_client();
+        $postBody["storeCode"] = '0000000001';
+        $postBody["cartID"] = $cartid;
         $postBody["itemType"] = $_POST['data']['itemType'];
         $postBody["keyValue"] = $_POST['data']['keyValue'];
         $postBody["qty"] = $_POST['data']['qty'];
         $postBody["mrkt"] = get_option('tfgg_scp_api_mrkt');
 
         $postBody = json_encode($postBody);
-
+        
         try{
-            $data = tfgg_sunlync_post_to_url($postData, $url);
+            $data = tfgg_execute_api_request('POST', $url, $postBody);
         }catch(Exception $e){
             $result["results"]="error";
             $result["error_message"]=$e->getMessage(); 
-            return json_encode($result);
+            exit(json_encode($result));
         }
+        $result=$data->result[0][0];
 
-        return json_encode($data);
+        if((array_key_exists('ERROR',$result))||(array_key_exists('WARNING',$result))){
+			if(array_key_exists('ERROR',$result)){
+				$result=array("results"=>"FAIL",
+					"response"=>$result->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$result->WARNING);
+			}			
+			exit(json_encode($result));
+		}else{
+            $return["results"]="success";
+            $cartID=$data->result[0][1];
+            $return["cartID"]=$cartID->cartID;
+            $_SESSION['tfgg_scp_cartid']=$return["cartID"];
+            exit(json_encode($return));
+		} 
 
     }
     add_action('wp_ajax_tfgg_scp_post_cart_item','tfgg_scp_post_cart_item');
     add_action('wp_ajax_nopriv_tfgg_scp_post_cart_item','tfgg_scp_post_cart_item');
     
+    function tfgg_scp_delete_cart_item(){
+        $url=tfgg_get_api_url().'TAPICart/CartItems/sCartItemID';
+
+        $url=str_replace('sCartItemID',$_POST['data']['itemID'],$url);
+        
+        try{
+            $data = tfgg_execute_api_request("DELETE",$url,'');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            exit(json_encode($result));
+        }
+        
+        $returned=$data->result[0][0];
+
+        if((array_key_exists('ERROR',$returned))||(array_key_exists('WARNING',$returned))){
+			if(array_key_exists('ERROR',$returned)){
+				$result=array("results"=>"FAIL",
+					"response"=>$returned->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$returned->WARNING);
+            }
+            
+            if(StrToUpper($returned->WARNING)=='ITEM ID DOES NOT EXIST'){
+                $result=array("results"=>"SUCCESS");//item does not exist, allow it to be removed    
+            }
+			
+			exit(json_encode($result));
+		}else{		       
+            $result["results"]="success";
+            exit(json_encode($result));
+		} 
+
+    }
+    add_action('wp_ajax_tfgg_scp_delete_cart_item','tfgg_scp_delete_cart_item');
+    add_action('wp_ajax_nopriv_tfgg_scp_delete_cart_item','tfgg_scp_delete_cart_item');
+
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();
         $allowed_roles = array('editor', 'administrator', 'author');
@@ -1571,6 +1791,17 @@
         return $items;
     }
 
+    add_filter('wp_nav_menu_items', 'tfgg_add_cart_link', 8, 2 );
+    function tfgg_add_cart_link($items, $args){
+        //add the account overview link to the nav bar
+        $sunlyncuser = tfgg_cp_get_sunlync_client();
+        
+        if($sunlyncuser && $args->theme_location=='secondary-menu'){
+            $items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url('/cart/'))) .'">Cart</a></li>'; 
+        }
+        return $items;
+    }
+
     //2019-09-30 CB V1.0.0.6 - new menu item
     //add_filter('wp_nav_menu_items', 'tfgg_add_mobile_appt_link', 9, 2 );
     function tfgg_add_mobile_appt_link($items, $args){
@@ -1584,6 +1815,12 @@
         }
         return $items;
     }
+
+    function tfgg_add_custom_query_var( $vars ){
+        $vars[] = "viewcart";
+        return $vars;
+    }
+    add_filter( 'query_vars', 'tfgg_add_custom_query_var' );
     
     /*2019-10-12 CB V1.1.1.1 - deprecated
     add_action('wp_logout','tfgg_auto_redirect_after_logout');

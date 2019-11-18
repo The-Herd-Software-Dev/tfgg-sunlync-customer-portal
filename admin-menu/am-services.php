@@ -65,4 +65,28 @@ function display_tfgg_membership_selection(){
     }
 }
 
+function display_tfgg_membership_header_label(){
+    ?>
+        <input type="text" name="tfgg_scp_membership_header_label" value="<?php echo get_option('tfgg_scp_membership_header_label'); ?>" style="width: 60%" />
+    <?php  
+}
+
+function display_tfgg_package_header_label(){
+    ?>
+        <input type="text" name="tfgg_scp_package_header_label" value="<?php echo get_option('tfgg_scp_package_header_label'); ?>" style="width: 60%" />
+    <?php    
+}
+
+function display_tfgg_package_allow_search(){
+    ?>
+        <input type="checkbox" name="tfgg_scp_package_allow_search" value="1" <?php if(get_option('tfgg_scp_package_allow_search')==1){echo 'checked';} ?>/>
+    <?php
+}
+
+function display_tfgg_membership_allow_search(){
+    ?>
+        <input type="checkbox" name="tfgg_scp_membership_allow_search" value="1" <?php if(get_option('tfgg_scp_membership_allow_search')==1){echo 'checked';} ?>/>
+    <?php
+}
+
 ?>
