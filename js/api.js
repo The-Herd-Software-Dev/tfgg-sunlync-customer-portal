@@ -82,50 +82,6 @@ jQuery(function(){
             jQuery('#tfgg_storeselect_warning').show();        
         }
     });
-
-    jQuery('#tfgg_cart_package_filter').on('input',function(){
-        jQuery('#tfgg_package_search_warning').hide();
-        var filter =  jQuery('#tfgg_cart_package_filter').val().toLowerCase();
-        jQuery('.pack-sale-container').each(function(){
-            jQuery(this).show();
-        });
-        if(filter===''){
-            
-        }else{
-            jQuery('.pack-sale-container').each(function(){
-                var loc = jQuery(this).data('packagename');
-                if (loc.toLowerCase().indexOf(filter) < 0){
-                    jQuery(this).hide();
-                }
-            });//each
-        }
-        
-        if(jQuery('.pack-sale-container:visible').length==0){
-            jQuery('#tfgg_package_search_warning').show();        
-        }
-    });
-
-    jQuery('#tfgg_cart_membership_filter').on('input',function(){
-        jQuery('#tfgg_membership_search_warning').hide();
-        var filter =  jQuery('#tfgg_cart_membership_filter').val().toLowerCase();
-        jQuery('.mems-sale-container').each(function(){
-            jQuery(this).show();
-        });
-        if(filter===''){
-            
-        }else{
-            jQuery('.mems-sale-container').each(function(){
-                var loc = jQuery(this).data('membershipname');
-                if (loc.toLowerCase().indexOf(filter) < 0){
-                    jQuery(this).hide();
-                }
-            });//each
-        }
-        
-        if(jQuery('.mems-sale-container:visible').length==0){
-            jQuery('#tfgg_membership_search_warning').show();        
-        }
-    });
 });
 
 var selectedStorePanel = "";
@@ -350,10 +306,12 @@ function ValidateNewReg(isOnline){
 	    bResult = false;    
     }
 
-    if(!isValidPass(jQuery('#tfgg_cp_user_pass').val())){
-        jQuery('#new_reg_pass').css('display','block');
-	    jQuery('#new_reg_pass').html('Password does not meet requirements');
-	    bResult = false;    
+    if(isOnline){//2019-11-18 CB V1.2.3.6 - password requirements only required online
+        if(!isValidPass(jQuery('#tfgg_cp_user_pass').val())){
+            jQuery('#new_reg_pass').css('display','block');
+            jQuery('#new_reg_pass').html('Password does not meet requirements');
+            bResult = false;    
+        }
     }
 
     if(jQuery('#tfgg_cp_user_pass_confirm').val()===""){
@@ -1217,56 +1175,4 @@ function genModalDialog($modalID){
       });    
 
     dialog.dialog('open');
-}
-
-function tfggPostCartItem(addItemType, addItemNumnber, addItemQty){
-    var pathname = window.location.pathname;
-
-    jQuery.post(localAccess.adminAjaxURL,{
-        'action'    : 'tfgg_scp_post_cart_item',
-        'data'      : {itemType: addItemType, 
-            keyValue: addItemNumnber, 
-            qty: addItemQty},
-		'dataType'  : 'json',
-		'pathname'  : pathname
-    },function(data){
-        var obj = jQuery.parseJSON(data);
-        
-        if(obj["results"].toUpperCase()=='SUCCESS'){
-            jQuery('#tfgg_scp_cart_add_message').html('Your item was successfully added to your cart');
-            jQuery('#tfgg_scp_cart_add').modal('toggle');
-            tfggSetCartLinkQty(obj["cartQty"]);
-        }else{
-            jQuery('#tfgg_scp_cart_add_message').html('There was an error adding your item to the cart');
-            jQuery('#tfgg_scp_cart_add').modal('toggle');  
-        }
-    });    
-}
-
-function tfggRemoveCartItem(cartItemID, removeItemID){
-    var pathname = window.location.pathname;
-
-    jQuery.post(localAccess.adminAjaxURL,{
-        'action'    : 'tfgg_scp_delete_cart_item',
-        'data'      : {itemID: cartItemID},
-		'dataType'  : 'json',
-		'pathname'  : pathname
-    },function(data){
-        var obj = jQuery.parseJSON(data);
-        if(obj["results"].toUpperCase()=='SUCCESS'){
-            jQuery('#'+removeItemID).remove();
-            location.reload();
-        }else{
-            
-        }
-
-    });    
-}
-
-function tfggSetCartLinkQty(qty){
-    if(qty>0){
-        jQuery('#tfgg_scp_cart_link').text('Cart ('+qty+')');
-    }else{
-        jQuery('#tfgg_scp_cart_link').text('Cart');
-    }
 }
