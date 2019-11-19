@@ -469,7 +469,7 @@ function ValidDemoInfo() {
             result=false;
         }
     }
-    console.log(result);
+    
     if(!result){
         event.preventDefault();
         return false;
