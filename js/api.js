@@ -306,10 +306,12 @@ function ValidateNewReg(isOnline){
 	    bResult = false;    
     }
 
-    if(!isValidPass(jQuery('#tfgg_cp_user_pass').val())){
-        jQuery('#new_reg_pass').css('display','block');
-	    jQuery('#new_reg_pass').html('Password does not meet requirements');
-	    bResult = false;    
+    if(isOnline){//2019-11-18 CB V1.2.3.6 - password requirements only required online
+        if(!isValidPass(jQuery('#tfgg_cp_user_pass').val())){
+            jQuery('#new_reg_pass').css('display','block');
+            jQuery('#new_reg_pass').html('Password does not meet requirements');
+            bResult = false;    
+        }
     }
 
     if(jQuery('#tfgg_cp_user_pass_confirm').val()===""){
