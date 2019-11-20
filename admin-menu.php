@@ -123,6 +123,9 @@
 
         add_settings_field("tfgg_scp_reg_promo", "Promo For Registration:", "display_reg_promo_online", "tfgg-registration-options", "tfgg_registration_options_section");
         register_setting("tfgg_registration_options_section", "tfgg_scp_reg_promo");
+        
+        add_settings_field("tfgg_scp_online_reg_recaptcha_req", "Google Recaptcha Required:", "display_reg_online_recaptcha_req", "tfgg-registration-options", "tfgg_registration_options_section");
+        register_setting("tfgg_registration_options_section", "tfgg_scp_online_reg_recaptcha_req");
 
         //instore
         add_settings_field("tfgg_scp_cust_info_reg_title_instore", "Registration Title:", "display_reg_title_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
@@ -148,6 +151,13 @@
 
         add_settings_field("tfgg_scp_reg_promo_instore", "Promo For Registration:", "display_reg_promo_instore", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
         register_setting("tfgg_registration_options_section_instore", "tfgg_scp_reg_promo_instore");
+
+        add_settings_field("tfgg_scp_instore_reg_recaptcha_req", "Google Recaptcha Required:", "display_reg_instore_recaptcha_req", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
+        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_instore_reg_recaptcha_req");
+
+        //2019-11-19 CB V1.2.4.2 - added
+        add_settings_field("tfgg_scp_instore_reg_password_hint", "Instore Password Hint:", "display_password_hint_reg_instore", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
+        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_instore_reg_password_hint");
         
     }
     

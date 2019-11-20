@@ -312,23 +312,26 @@ function ValidateNewReg(isOnline){
             jQuery('#new_reg_pass').html('Password does not meet requirements');
             bResult = false;    
         }
-    }
 
-    if(jQuery('#tfgg_cp_user_pass_confirm').val()===""){
-        jQuery('#new_reg_pass_confirm').css('display','block');
-	    jQuery('#new_reg_pass_confirm').html('A confirmation of your password must be set');
-	    bResult = false;    
-    }
-
-    if(jQuery('#tfgg_cp_user_pass').val()!=jQuery('#tfgg_cp_user_pass_confirm').val()){
-        jQuery('#new_reg_pass_confirm').css('display','block');
-	    jQuery('#new_reg_pass_confirm').html('Confirmation password does not match');
-	    bResult = false;    
+        //2019-11-19 CB V1.2.4.1 - no more password confirmation
+        if(jQuery('#tfgg_cp_user_pass_confirm').val()===""){
+            jQuery('#new_reg_pass_confirm').css('display','block');
+            jQuery('#new_reg_pass_confirm').html('A confirmation of your password must be set');
+            bResult = false;    
+        }
+    
+        if(jQuery('#tfgg_cp_user_pass').val()!=jQuery('#tfgg_cp_user_pass_confirm').val()){
+            jQuery('#new_reg_pass_confirm').css('display','block');
+            jQuery('#new_reg_pass_confirm').html('Confirmation password does not match');
+            bResult = false;    
+        }
     }
 
     if(!bResult){
         event.preventDefault();
-        grecaptcha.reset();//reset the reCaptcha
+        if(jQuery('#tfgg_scp_reg_recaptcha').length){
+            grecaptcha.reset();//reset the reCaptcha
+        }
         jQuery('#registrationSubmitButton').attr('disabled','true');
         jQuery('#new_reg_overall_alertpnl').css('display','block');
         jQuery('#new_reg_overall_alertpnl').html('We encountered an error with your registration, please fix the highlighted fields');
@@ -1175,4 +1178,14 @@ function genModalDialog($modalID){
       });    
 
     dialog.dialog('open');
+}
+
+function tfggSCPTogglePassword(){
+    var attrType = jQuery('#tfgg_cp_user_pass').attr('type');
+
+    if( attrType === 'password' ){
+        jQuery('#tfgg_cp_user_pass').attr("type", "text");
+    }else{
+        jQuery('#tfgg_cp_user_pass').attr("type", "password");
+    } 
 }

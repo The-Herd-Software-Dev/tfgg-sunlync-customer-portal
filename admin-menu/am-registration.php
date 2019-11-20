@@ -150,4 +150,16 @@
             <?php
         }
     }
+
+    function display_reg_online_recaptcha_req(){
+        ?>
+        <input type="checkbox" name="tfgg_scp_online_reg_recaptcha_req" value="1" <?php if(get_option('tfgg_scp_online_reg_recaptcha_req','1')==1){echo 'checked';} ?>/>
+        <?php
+    }
+
+    function display_reg_instore_recaptcha_req(){
+        ?>
+        <input type="checkbox" name="tfgg_scp_instore_reg_recaptcha_req" value="1" <?php if(get_option('tfgg_scp_instore_reg_recaptcha_req','1')==1){echo 'checked';} ?>/>
+        <?php
+    }
 ?>
