@@ -205,6 +205,7 @@
 						<div class="account-overview-input-single">
 							<label for="tfgg_cp_user_pass" class="account-overview-label"><?php _e('Password'); ?></label>
 							<input data-alertpnl="new_reg_pass" id="tfgg_cp_user_pass" name="tfgg_cp_user_pass" class="required account-overview-input" type="password"/>
+							<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" style="float:right;" onclick="tfggSCPTogglePassword();"><?php _e('Show'); ?></button>
 							<div style="display:none" id="new_reg_pass" class="reg_alert"></div> 
 						</div>
 					</div>
@@ -282,14 +283,23 @@
 				</div>
 				<?php
 					//check to see if reCaptcha is active and if so, display it
-					include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-					if(is_plugin_active('google-captcha/google-captcha.php')){
-						 echo  do_shortcode("[bws_google_captcha]");
+					if(get_option('tfgg_scp_online_reg_recaptcha_req','1')=='1'){
+						include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+						if(is_plugin_active('google-captcha/google-captcha.php')){
+						?>
+							<div id="tfgg_scp_reg_recaptcha">
+						<?php
+							echo  do_shortcode("[bws_google_captcha]");
+						?>
+							</div>
+						<?php
+						}
 					}
 				?>
 		
 				<input type="hidden" name="tfgg_cp_register_nonce" id="tfgg_cp_register_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-nonce'); ?>"/>
-				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)" disabled> <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
+				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)" 
+				<?php if(get_option('tfgg_scp_online_reg_recaptcha_req','1')=='1'){echo 'disabled';}?>> <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
 					<div id="new_reg_overall_alertpnl" style="display:none;" class="reg_alert"></div>
 				</div>

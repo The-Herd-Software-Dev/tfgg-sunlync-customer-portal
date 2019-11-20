@@ -1176,3 +1176,13 @@ function genModalDialog($modalID){
 
     dialog.dialog('open');
 }
+
+function tfggSCPTogglePassword(){
+    var attrType = jQuery('#tfgg_cp_user_pass').attr('type');
+
+    if( attrType === 'password' ){
+        jQuery('#tfgg_cp_user_pass').attr("type", "text");
+    }else{
+        jQuery('#tfgg_cp_user_pass').attr("type", "password");
+    } 
+}

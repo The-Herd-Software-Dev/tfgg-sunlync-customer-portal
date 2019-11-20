@@ -57,6 +57,16 @@ function display_fail_validation_reg_instore(){
     wp_editor( get_option('tfgg_scp_instore_registration_validation_fail'), 'tfgg_scp_instore_registration_validation_fail', $settings);    
 }
 
+function display_password_hint_reg_instore(){
+    $settings = array(
+        'textarea_rows' => 15,
+        'tabindex' => 1,
+        'media_buttons' => false,
+        'wpautop' => false
+    );
+    wp_editor( get_option('tfgg_scp_instore_reg_password_hint'), 'tfgg_scp_instore_reg_password_hint', $settings);    
+}
+
 function display_appts_fail(){
     $settings = array(
         'textarea_rows' => 15,

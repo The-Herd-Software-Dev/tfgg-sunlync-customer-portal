@@ -1,5 +1,4 @@
 <?php
-
     function reg_form_display_instore(){
         ob_start(); 
         
@@ -16,8 +15,8 @@
         $minBirthDate = new DateTime();
         date_sub($minBirthDate, date_interval_create_from_date_string('18 years'));
         
-        $repopulate=false;
-
+		$repopulate=false;
+		
         /*if((array_key_exists('tfgg_cp_register_instore_nonce',$_POST))&&
 		(wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg_cp_register_instore_nonce'))){
 			$repopulateStpre = true;
@@ -198,59 +197,71 @@
 				</div>
 				
 				<hr />
-				<div class="account-overview-input-single-left">
-				<h4 onclick="secretClick();">Password</h4>
-					<div class="registration-container">
+				<div class="registration-container-main">
+					<div class="account-overview-input-single-left">
+					<h4 onclick="secretClick();">Set Password</h4>
+						<?php
+							if(get_option('tfgg_scp_instore_reg_password_hint')!=''){
+							?>
 						<div class="account-overview-input-single">
 							<div class="password-hints">
-								<span>Passwords must meet the following requirements:</span><br/>
-								<ul style="line-height:0.9;">
-								<li>Contain at least 1 lower and 1 upper case letter</li>
-								<li>Contain at least 1 number</li>
-								<li>Be at least 8 characters long</li></ul>
+								<?php
+								echo get_option('tfgg_scp_instore_reg_password_hint');
+								?>
+							</div>
+						</div>
+							<?php
+							}
+						?>
+						<div class="registration-container">
+							<div class="account-overview-input-single">
+								<label for="tfgg_cp_user_pass" class="account-overview-label"><?php _e('Password'); ?></label>
+								<input data-alertpnl="new_reg_pass" id="tfgg_cp_user_pass" name="tfgg_cp_user_pass" class="required account-overview-input" type="password"/>
+								<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" style="float:right;" onclick="tfggSCPTogglePassword();"><?php _e('Show'); ?></button>
+								<div style="display:none" id="new_reg_pass" class="reg_alert"></div> 
+							</div>
+						</div>
+						<?php
+						/*2019-11-19 CB V1.2.4.1 - removed confirmation
+						<div class="registration-container">
+							<div class="account-overview-input-single">
+								<label for="tfgg_cp_user_pass_confirm" class="account-overview-label"><?php _e('Password Confirm'); ?></label>
+								<input data-alertpnl="new_reg_pass_confirm" name="tfgg_cp_user_pass_confirm" id="tfgg_cp_user_pass_confirm" class="required account-overview-input" type="password"/>
+								<div style="display:none" id="new_reg_pass_confirm" class="reg_alert"></div>
+							</div>
+						</div>*/
+						?>
+					</div>
+
+					<div class="account-overview-input-single demo2-continer">
+						<h4>Please Read Carefully</h4>
+						<div class="account-overview-input-single">
+							<div class='reg-checkbox-container'>
+								<input data-alertpnl="new_reg_tandc_confirm" name="tfgg_cp_user_tandc_agree" id="tfgg_cp_user_tandc_agree" class="required account-overview-survey-input scaled-checkbox" type="checkbox"/>
+								<label onclick="instoreTandCDialog();" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label_instore'); ?></label>	
+								<div style="display:none" id="new_reg_tandc_confirm" class="reg_alert"></div>
+							</div>
+						</div>
+						<br style="line-height:0.9"/>
+						<div class="account-overview-input-single">		
+							<div class='reg-checkbox-container'>
+								<input data-alertpnl="new_reg_marketing" id="tfgg_cp_marketing" name="tfgg_cp_marketing" class="account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
+								<label onclick="instoreMarketingDialog();" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label_instore') ?></label>	
+								<div style="display:none" id="new_reg_marketing" class="reg_alert"></div>	
+							</div>
+						</div>
+						<br style="line-height:0.9"/>
+						<div class="account-overview-input-single">
+							<div class='reg-checkbox-container'>
+								<input data-alertpnl="new_reg_skin_type_confirm_alertpnl" id="tfgg_cp_skin_type_confirm" name="tfgg_cp_skin_type_confirm" class="required account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
+								<label style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php _e('I hereby certify that the skin type selected is accurate'); ?></label>
+								<div style="display:none" id="new_reg_skin_type_confirm_alertpnl" class="reg_alert"></div>
 							</div>
 						</div>
 					</div>
-					<div class="registration-container">
-						<div class="account-overview-input-single">
-							<label for="tfgg_cp_user_pass" class="account-overview-label"><?php _e('Password'); ?></label>
-							<input data-alertpnl="new_reg_pass" id="tfgg_cp_user_pass" name="tfgg_cp_user_pass" class="required account-overview-input" type="password"/>
-							<div style="display:none" id="new_reg_pass" class="reg_alert"></div> 
-						</div>
-					</div>
-					<div class="registration-container">
-						<div class="account-overview-input-single">
-							<label for="tfgg_cp_user_pass_confirm" class="account-overview-label"><?php _e('Password Confirm'); ?></label>
-							<input data-alertpnl="new_reg_pass_confirm" name="tfgg_cp_user_pass_confirm" id="tfgg_cp_user_pass_confirm" class="required account-overview-input" type="password"/>
-							<div style="display:none" id="new_reg_pass_confirm" class="reg_alert"></div>
-						</div>
-					</div>
-
-				</div>
-				
+				</div>			
 		
 				<hr />
-				
-				<h4>Please read carefully</h4>
-
-				<div class='reg-checkbox-container'>
-					<input data-alertpnl="new_reg_tandc_confirm" name="tfgg_cp_user_tandc_agree" id="tfgg_cp_user_tandc_agree" class="required account-overview-survey-input scaled-checkbox" type="checkbox"/>
-					<label onclick="instoreTandCDialog();" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label_instore'); ?></label>	
-					<div style="display:none" id="new_reg_tandc_confirm" class="reg_alert"></div>
-				</div>
-				<br style="line-height:0.9"/>		
-				<div class='reg-checkbox-container'>
-					<input data-alertpnl="new_reg_marketing" id="tfgg_cp_marketing" name="tfgg_cp_marketing" class="account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
-					<label onclick="instoreMarketingDialog();" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label_instore') ?></label>	
-					<div style="display:none" id="new_reg_marketing" class="reg_alert"></div>	
-				</div>
-				<br style="line-height:0.9"/>
-				<div class='reg-checkbox-container'>
-					<input data-alertpnl="new_reg_skin_type_confirm_alertpnl" id="tfgg_cp_skin_type_confirm" name="tfgg_cp_skin_type_confirm" class="required account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
-					<label style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php _e('I hereby certify that the skin type selected is accurate'); ?></label>
-					<div style="display:none" id="new_reg_skin_type_confirm_alertpnl" class="reg_alert"></div>
-				</div>
-				<br />
 				<div class="registration-container">
 							<div class="account-overview-input-double">
 								<label for="tfgg_cp_how_hear" class="account-overview-label"><?php _e('How did you hear about us?'); ?></label>
@@ -290,14 +301,23 @@
 				</div>
 				<?php
 					//check to see if reCaptcha is active and if so, display it
-					include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-					if(is_plugin_active('google-captcha/google-captcha.php')){
-						 echo  do_shortcode("[bws_google_captcha]");
+					if(get_option('tfgg_scp_instore_reg_recaptcha_req','1')=='1'){
+						include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+						if(is_plugin_active('google-captcha/google-captcha.php')){
+						?>
+							<div id="tfgg_scp_reg_recaptcha">
+						<?php
+							echo  do_shortcode("[bws_google_captcha]");
+						?>
+							</div>
+						<?php
+						}
 					}
 				?>
 		
 				<input type="hidden" name="tfgg_cp_register_instore_nonce" id="tfgg_cp_register_instore_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-instore-nonce'); ?>"/>
-				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(false)" disabled> <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
+				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(false)" 
+				<?php if(get_option('tfgg_scp_instore_reg_recaptcha_req','1')=='1'){echo 'disabled';}?>> <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
 					<div id="new_reg_overall_alertpnl" style="display:none;" class="reg_alert"></div>
 				</div>
@@ -367,21 +387,18 @@
 									jQuery('#new_reg_dob').html('Under 18s may only use Spray Tanning services');
 								}//if
 							}
-						}
-						  
+						  }
     				});
 				  } );
-
 				
     			jQuery('.js-example-basic-single').select2();
-
 				  		
 			</script>
 
         <?php
 		return ob_get_clean();
-    }//reg_form_display_instore
-
+	}//reg_form_display_instore
+	
 	function set_storecode_display(){
 		ob_start(); 
         
@@ -521,10 +538,9 @@
 					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));
 				}
 			}
-
-
 		}
 	}
-    add_action('init','tfgg_sunlync_client_instore_api_registration');
 
+	add_action('init','tfgg_sunlync_client_instore_api_registration');
+	
 ?>
