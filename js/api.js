@@ -232,7 +232,7 @@ function ValidateNewReg(isOnline){
     if(jQuery('#tfgg_cp_user_gender option:selected').val()==='please select'){
 	    jQuery('#new_reg_gender').css('display','block');
 	    jQuery('#new_reg_gender').html('Please select an option');
-	    bResult = false;
+        bResult = false;
     }
 
     //new postcode validation
@@ -240,7 +240,7 @@ function ValidateNewReg(isOnline){
     if(!isValidPostcode(postcode)){
         jQuery('#new_reg_post_code_alertpnl').css('display','block');
         jQuery('#new_reg_post_code_alertpnl').html('This is not a valid post code');
-	    bResult = false; 
+        bResult = false; 
     }
     
     //new mobile number validation
@@ -257,53 +257,53 @@ function ValidateNewReg(isOnline){
     if (!isValidMobileNumber(jQuery('#tfgg_cp_mobile_phone').val())) {
         jQuery('#new_reg_mobile_phone').css('display','block');
 	    jQuery('#new_reg_mobile_phone').html('This is not a valid number');
-	    bResult = false;     
+        bResult = false; 
     }
 
     if(jQuery('#tfgg_cp_store option:selected').val()==='please select'){
 	    jQuery('#new_reg_store_alertpnl').css('display','block');
 	    jQuery('#new_reg_store_alertpnl').html('Please select an option');
-	    bResult = false;
+        bResult = false;
     }
     
     if(jQuery('#tfgg_cp_skin_type').val()==='please select'){
         jQuery('#new_reg_skin_type_alertpnl').css('display','block');
 	    jQuery('#new_reg_skin_type_alertpnl').html('Please select an option');
-	    bResult = false;
+        bResult = false;
     }else if(jQuery('#tfgg_cp_skin_type_confirm').is(":checked")===false){
         jQuery('#new_reg_skin_type_confirm_alertpnl').css('display','block');
 	    jQuery('#new_reg_skin_type_confirm_alertpnl').html('Please confirm your selection');
-	    bResult = false;
+        bResult = false;
     }
 
     if(jQuery('#tfgg_cp_eye_color').val()==='please select'){
         jQuery('#new_reg_eye_color_alertpnl').css('display','block');
 	    jQuery('#new_reg_eye_color_alertpnl').html('Please select an option');
-	    bResult = false;
+        bResult = false;
     }
 
 	if(jQuery('#tfgg_cp_how_hear option:selected').val()==='please select'){
 	    jQuery('#new_reg_how_hear_alert').css('display','block');
 	    jQuery('#new_reg_how_hear_alert').html('Please select an option');
-	    bResult = false;
+        bResult = false;
     }
     
     if(jQuery('#tfgg_cp_skin_type_confirm').is(":checked")===false){
         jQuery('#new_reg_skin_type_confirm_alertpnl').css('display','block');
 	    jQuery('#new_reg_skin_type_confirm_alertpnl').html('Please confirm');
-	    bResult = false;
+        bResult = false;
     }
 
 	if(jQuery('#tfgg_cp_user_tandc_agree').is(":checked")===false){
 	    jQuery('#new_reg_tandc_confirm').css('display','block');
         jQuery('#new_reg_tandc_confirm').html('Terms and Conditions must be accepted');	    
-	    bResult = false;
+        bResult = false;
     }
     
     if(jQuery('#tfgg_cp_user_pass').val()===""){
         jQuery('#new_reg_pass').css('display','block');
 	    jQuery('#new_reg_pass').html('A password must be set');
-	    bResult = false;    
+        bResult = false;   
     }
 
     if(isOnline){//2019-11-18 CB V1.2.3.6 - password requirements only required online
@@ -472,7 +472,7 @@ function ValidDemoInfo() {
             result=false;
         }
     }
-    console.log(result);
+    
     if(!result){
         event.preventDefault();
         return false;
