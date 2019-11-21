@@ -199,43 +199,43 @@
 				<hr />
 				<div class="registration-container-main">
 					<div class="account-overview-input-single-left">
-					<h4 onclick="secretClick();">Set Password</h4>
-						<?php
+						<h4 onclick="secretClick();">Set Password</h4>
+						<div class="registration-container">
+							<div class="account-overview-input-double">
+							<?php
 							if(get_option('tfgg_scp_instore_reg_password_hint')!=''){
 							?>
-						<div class="account-overview-input-single">
-							<div class="password-hints">
-								<?php
-								echo get_option('tfgg_scp_instore_reg_password_hint');
-								?>
-							</div>
-						</div>
+								<div class="password-hints">
+									<?php
+									echo get_option('tfgg_scp_instore_reg_password_hint');
+									?>
+								</div>
 							<?php
 							}
-						?>
-						<div class="registration-container">
+							?>
+							</div>
 							<div class="account-overview-input-single">
-								<label for="tfgg_cp_user_pass" class="account-overview-label"><?php _e('Password'); ?></label>
-								<input data-alertpnl="new_reg_pass" id="tfgg_cp_user_pass" name="tfgg_cp_user_pass" class="required account-overview-input" type="password"/>
-								<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" style="float:right;" onclick="tfggSCPTogglePassword();"><?php _e('Show'); ?></button>
-								<div style="display:none" id="new_reg_pass" class="reg_alert"></div> 
+							&nbsp;
 							</div>
 						</div>
-						<?php
-						/*2019-11-19 CB V1.2.4.1 - removed confirmation
+
 						<div class="registration-container">
-							<div class="account-overview-input-single">
-								<label for="tfgg_cp_user_pass_confirm" class="account-overview-label"><?php _e('Password Confirm'); ?></label>
-								<input data-alertpnl="new_reg_pass_confirm" name="tfgg_cp_user_pass_confirm" id="tfgg_cp_user_pass_confirm" class="required account-overview-input" type="password"/>
-								<div style="display:none" id="new_reg_pass_confirm" class="reg_alert"></div>
+							<div class="account-overview-input-double">
+								<label for="tfgg_cp_user_pass" class="account-overview-label"><?php _e('Password'); ?></label>
+								<input data-alertpnl="new_reg_pass" id="tfgg_cp_user_pass" name="tfgg_cp_user_pass" class="required account-overview-input" type="password"/>
+								<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" style="float:left;" onclick="tfggSCPTogglePassword();"><?php _e('Show'); ?></button>
+								<div style="display:none" id="new_reg_pass" class="reg_alert"></div> 
 							</div>
-						</div>*/
-						?>
+							<div class="account-overview-input-single">
+							&nbsp;
+							</div>
+						</div>
 					</div>
 
 					<div class="account-overview-input-single demo2-continer">
 						<h4>Please Read Carefully</h4>
-						<div class="account-overview-input-single">
+						<br style="line-height:0.9"/>
+						<div class="account-overview-input-single" style="padding-left:10px">
 							<div class='reg-checkbox-container'>
 								<input data-alertpnl="new_reg_tandc_confirm" name="tfgg_cp_user_tandc_agree" id="tfgg_cp_user_tandc_agree" class="required account-overview-survey-input scaled-checkbox" type="checkbox"/>
 								<label onclick="instoreTandCDialog();" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label_instore'); ?></label>	
@@ -243,7 +243,7 @@
 							</div>
 						</div>
 						<br style="line-height:0.9"/>
-						<div class="account-overview-input-single">		
+						<div class="account-overview-input-single" style="padding-left:10px">		
 							<div class='reg-checkbox-container'>
 								<input data-alertpnl="new_reg_marketing" id="tfgg_cp_marketing" name="tfgg_cp_marketing" class="account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
 								<label onclick="instoreMarketingDialog();" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label_instore') ?></label>	
@@ -251,7 +251,7 @@
 							</div>
 						</div>
 						<br style="line-height:0.9"/>
-						<div class="account-overview-input-single">
+						<div class="account-overview-input-single" style="padding-left:10px">
 							<div class='reg-checkbox-container'>
 								<input data-alertpnl="new_reg_skin_type_confirm_alertpnl" id="tfgg_cp_skin_type_confirm" name="tfgg_cp_skin_type_confirm" class="required account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
 								<label style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php _e('I hereby certify that the skin type selected is accurate'); ?></label>
@@ -259,7 +259,7 @@
 							</div>
 						</div>
 					</div>
-				</div>			
+				</div><!--main-->			
 		
 				<hr />
 				<div class="registration-container">
