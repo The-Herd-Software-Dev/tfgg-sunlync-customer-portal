@@ -773,3 +773,230 @@ tr.account_overview_row > td {
     font-weight:400 !important;
 }
 
+
+
+/* CART CLASSES */
+
+.overlay{
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 375px;
+    height: 100%;
+    z-index: 99999;
+    background-color: rgba(37, 37, 37, 0.973); 
+  }
+
+  #overlay-totals-container {
+    width: 100%;
+    box-sizing: border-box;
+    height:220px;
+    position:fixed;
+    bottom:0;
+    padding:10px;
+  }
+
+  #overlay-totals-content {
+      width:100%;
+      height:100%;
+      box-sizing: border-box;
+      background-color: #fff;
+      -moz-border-radius:3px;
+      -webkit-border-radius:3px;
+      border-radius:3px;     
+  }
+
+  #overlay-totals-content-labels-container {
+    width:100%;
+    height:130px;
+    padding:20px 10px 10px 10px;    
+  }
+
+  .overlay-totals-content-label {
+      font-size:1.3em;
+      font-weight: 700;
+      line-height:30px;
+  }
+
+  .overlay-totals-content-value {
+      font-size:1.3em;
+      float:right;
+      font-weight: 700;
+      line-height:30px;
+  }
+
+  .overlay-totals-content-total-line {
+      color:#000 !important;
+  }
+
+  .overlay-button-container{
+      width:100%;
+      padding-left:10px;
+      padding-right:10px;
+  }
+
+  .overlay-checkout-button {
+      width:100%;
+      height:50px;  
+      font-size:1.4em !important;
+      font-weight: 700;
+  }
+
+  #overlay-items-container {
+      width:100%;
+      margin-top:20px;
+      padding: 50 10 10 10;
+      height: -webkit-calc(100% - 260px);
+      height:    -moz-calc(100% - 260px);
+      height:         calc(100% - 260px);
+  }
+
+  .overlay-items-item-container {
+      width:100%;
+      height:100px;
+      padding:0px 10px 10px 10px;
+  }
+
+  .overlay-items-item{
+      background-color: #fff;
+      width:100%;
+      height:100%;
+      -moz-border-radius:3px;
+      -webkit-border-radius:3px;
+      border-radius:3px; 
+      padding:10px;
+}
+
+.overlay-items-item-description{
+    font-size:1.1em;
+    font-weight: 700;
+}
+
+.overlay-items-item-price{
+    font-size:1.1em;
+    font-weight: 700;
+    float:right;
+}
+
+.overlay-items-item-quantity-label {
+    font-size:0.8em;
+}
+
+.overlay-items-item-quantity-value {
+    font-size: 0.8em;
+    font-weight: 700;
+}
+
+.overlay-items-item-buttongroup {
+    float:right;
+}
+
+.overlay-items-item-link {
+    color:#F16431;
+    font-size:1em;
+    font-weight: 700;
+}
+
+#cart-items-left {
+    
+    height:500px;
+}
+
+#cart-items-right {
+    border-left: solid 1px rgb(194, 194, 194);
+    height:100%; 
+    
+}
+
+.cart-items-item{
+    background-color: #fff;
+    width:100%;
+    height:100%;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px; 
+    padding:10px;
+    border: solid 1px rgb(194, 194, 194);
+}
+
+#cart-totals-content-labels-container {
+    width:100%;
+    height:80px;
+    padding:0px 10px 10px 10px;   
+    margin-top:0px !important; 
+  }
+
+  .cart-items-header {
+      padding-left:10px;
+  }
+
+  .cart-totals-content-label {
+    font-size:1.1em;
+    font-weight: 700;
+    line-height:25px;
+}
+
+.cart-totals-content-value {
+    font-size:1.1em;
+    float:right;
+    font-weight: 700;
+    line-height:25px;
+}
+
+#cart-totals-container {
+    width: 100%;
+    box-sizing: border-box;
+    height:220px;
+    position:fixed;
+    bottom:0;
+    padding:0px;
+  }
+
+#cart_payment_container {
+    margin-top:10px;
+    border-top: solid 1px #ebebeb;
+    padding:10px;
+    height:60px;
+}
+
+.cart-payment-label {
+
+}
+
+.cart-payment-value {
+    font-weight: 700;
+}
+
+
+.cart-parment-detail {
+    float:right;
+}
+
+.pick-services-description {
+ font-size:0.8em;
+
+}
+
+.services-items-item{
+    background-color: #fff;  
+    height:115px;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px; 
+    padding:10px;
+    border: solid 1px rgb(194, 194, 194);
+   box-sizing: border-box;
+   margin:5px;
+}
+
+.services-items-membership{
+    background-color: #fff;  
+    height:90px;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    border-radius:3px; 
+    padding:10px;
+    border: solid 1px rgb(194, 194, 194);
+   box-sizing: border-box;
+   margin:5px;
+}
