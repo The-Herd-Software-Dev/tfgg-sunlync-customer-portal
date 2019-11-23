@@ -81,6 +81,20 @@
                 <td><span class="account-overview-generic-label">Total: </span></td>
                 <td><span class="account-overview-generic-value">&#163;<?php echo $header->total; ?></span></td>
             </tr>
+            <?php
+                include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+                if(is_plugin_active('google-captcha/google-captcha.php')){
+                ?>
+                <tr class="account_overview_row">
+                    <td colspan="2"><?php
+                        $shortcode='[wp_paypal button="paynow" amount="$AMT$"]';
+                        $shortcode=str_replace('$AMT$',$header->total,$shortcode);
+                        echo  do_shortcode($shortcode);
+                    ?></td>
+                </tr>
+                <?php
+                }
+            ?>
         </table>    
         </div>
         <?php

@@ -722,7 +722,7 @@ tr.account_overview_row > td {
 .password-hints {
     color: #979797; 
     font-size: x-small;
-    padding-left:10px;
+    /*padding-left:10px;*/
     margin-bottom:-10px;
 }
 
