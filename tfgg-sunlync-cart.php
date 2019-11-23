@@ -7,13 +7,17 @@
         
         if(StrToUpper($cartContents->results) === 'SUCCESS'){
             tfgg_scp_display_cart_banner();
-            echo '<br/>';
-            tfgg_scp_cart_continue_shopping();
-            echo '<br/>';
-            tfgg_scp_cart_items_display($cartContents->lineItems);
-            echo '<br/>'.tfgg_scp_cart_continue_shopping().'<br/>';
+
+            echo '<br/><br/><br/> <br/>';
+
+            echo'<div class="row">';
+                tfgg_scp_cart_items_display($cartContents->lineItems);
+                tfgg_scp_cart_header_display($cartContents->header);
+            echo '</div>';//row
+
+                //echo '<br/>'.tfgg_scp_cart_continue_shopping().'<br/>';
             echo '<br/><hr/><br/>';
-            tfgg_scp_cart_header_display($cartContents->header);
+            //tfgg_scp_cart_header_display($cartContents->header);
             echo '<br/><br/>';
             
             ?>
@@ -35,61 +39,100 @@
 
     function tfgg_scp_cart_items_display($lineItems){
         ?>
-        <div style="float:left; padding:10px" class="container">
-            <table class="account-overview-table">
+
+        <div id="cart-items-left" class="col-lg-4">
+
+            <div class="cart-items-header"><h4>ITEMS</h4></div>
+
             <?php
-            $i=0;
-            foreach($lineItems as &$details){
-                $i++;
+                $i=0;
+                foreach($lineItems as &$details){
+                    $i++;
             ?>
-                <tr class="account_overview_row" id="tfgg_cart_item_row_<?php echo $i;?>">
-                <td><span class="account-overview-generic-value"><strong><?php echo $details->Description; ?></strong></span></td>
-                <td><span class="account-overview-generic-value">Qty: <?php echo $details->Qty; ?> @ &#163;<?php echo $details->PPU; ?></span></td>
-                <td><span class="account-overview-generic-value"><strong>Total: &#163;<?php echo ($details->Qty*$details->PPU); ?><strong></span><br/><br/>
-                <button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" 
-                style="float:right;" onclick="tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')">REMOVE</button></td>
-                </tr>
-            <?php
-            }//foreach
+
+                <div class="overlay-items-item-container" id="tfgg_cart_item_row_<?php echo $i;?>">
+                    <div class="cart-items-item">
+                        <span class="overlay-items-item-description"><?php echo $details->Description; ?></span>
+                        <span class="overlay-items-item-price">&#163;<?php echo ($details->Qty*$details->PPU);?></span>
+                        <br />
+                        <span class="overlay-items-item-quantity-label">Quantity:</span>
+                        <span class="overlay-items-item-quantity-value"><?php echo $details->Qty; ?> @ &#163;<?php echo $details->PPU; ?></span>
+                        <br />
+                        <div class="overlay-items-item-buttongroup">
+                            <a href="javascript:  tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')" class="overlay-items-item-link">REMOVE</a>
+                        </div>             
+                    </div>
+                </div>
+
+
+            <?php 
+                }
             ?>
-            </table>
+
         </div>
-        <br/><br/><br/>
+
+
         <?php
     }
 
     function tfgg_scp_cart_header_display($header){
         ?>
-        <div style="float:right; padding:10px" class="container">
-        <table class="account-overview-table">
-            <tr class="account_overview_row account_overview_row_header">
-                <td colspan="2"><span class="account-overview-generic-label">Order Summary</span></td>
-            </tr>
-            <tr class="account_overview_row">
-                <td><span class="account-overview-generic-label">Items: </span></td>
-                <td><span class="account-overview-generic-value"><?php echo $header->qty; ?></span></td>
-            </tr>
-            <tr class="account_overview_row">
-                <td><span class="account-overview-generic-label">Sub-Total: </span></td>
-                <td><span class="account-overview-generic-value">&#163;<?php echo $header->subtotal; ?></span></td>
-            </tr>
-            <tr class="account_overview_row">
-                <td><span class="account-overview-generic-label">Tax Total: </span></td>
-                <td><span class="account-overview-generic-value">&#163;<?php echo $header->taxtotal; ?></span></td>
-            </tr>
-            <tr class="account_overview_row">
-                <td><span class="account-overview-generic-label">Total: </span></td>
-                <td><span class="account-overview-generic-value">&#163;<?php echo $header->total; ?></span></td>
-            </tr>
-        </table>    
+
+
+        <div id="cart-items-right" class="col-lg-4">
+
+            <div class="cart-items-header"><h4>ORDER SUMMARY</h4></div>
+
+                <div id="cart-totals-content">
+
+                    <div id="cart-totals-content-labels-container">
+
+                        <span class="cart-totals-content-label">Items</span>
+                        <span class="cart-totals-content-value"><?php echo $header->qty; ?></span>
+
+                        <br />
+
+                        <span class="cart-totals-content-label">Sub-total</span>
+                        <span class="cart-totals-content-value">&#163;<?php echo $header->subtotal; ?></span>
+
+                        <br />
+
+                        <span class="cart-totals-content-label">Tax total</span>
+                        <span class="cart-totals-content-value">&#163;<?php echo $header->taxtotal; ?></span>
+
+                        <br />
+
+                        <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
+                        <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo $header->total; ?></span>
+                
+                    </div>
+
+                    <div id="cart_payment_container">
+
+                        <span class="cart-payment-label">Amount Paid: </span>
+                        <span class="cart-payment-value">&#163;<?php echo $header->total; ?></span>
+
+                        <span class="cart-parment-detail cart-payment-value">123456</span>
+                        <span class="cart-parment-detail">PayPal:&nbsp;</span>
+
+                    </div>
+
+                    <div class="overlay-button-container">
+                        <button type="button" class="account-overview-button account-overview-standard-button overlay-checkout-button">CHECKOUT</button>
+                    </div>
+                </div>
+
+            </div>
         </div>
+
         <?php
     }
 
     function tfgg_scp_display_cart_banner(){
         ?>
-        <div style="background-color:rgba(203, 193, 193, 0.34); padding: 10px;">
-        <h2>SHOPPING CART</h2>
+        <div class="cart-banner">
+        <h3>SHOPPING CART</h3>
+        <div id="cart_banner_button_container"><?php tfgg_scp_cart_continue_shopping(); ?></div>
         </div>
         <?php  
     }
@@ -111,12 +154,10 @@
     }
 
     function tfgg_scp_cart_continue_shopping(){
-    ?>
-        <div style="float:right; margin:10px;">
+    ?>      
         <form action="<?php echo site_url();?>/cart">
-            <button type="submit" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button">CONTINUE SHOPPING</button>
-        </form>
-        </div>
+            <button type="submit" class="account-overview-button account-overview-standard-button">CONTINUE SHOPPING</button>
+        </form>     
     <?php
     }
 
@@ -124,7 +165,7 @@
         tfgg_scp_display_cart_banner();
         ?>
         
-        <br/>
+        <br/<br/><br/><br/>
         <div id="tfgg_package_search_warning" class="alert alert-warning" >
                 <p> 
                     No items currently in your shopping cart
