@@ -85,6 +85,7 @@ jQuery(function(){
 
     jQuery('#tfgg_cart_package_filter').on('input',function(){
         jQuery('#tfgg_package_search_warning').hide();
+        
         var filter =  jQuery('#tfgg_cart_package_filter').val().toLowerCase();
         jQuery('.pack-sale-container').each(function(){
             jQuery(this).show();

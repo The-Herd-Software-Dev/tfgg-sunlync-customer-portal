@@ -166,6 +166,15 @@
         add_settings_field("tfgg_scp_package_allow_search","Allow Package Search:","display_tfgg_package_allow_search", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_package_allow_search");
 
+        add_settings_field("tfgg_scp_package_unit_minutes","Rename 'Minutes':","display_tfgg_package_units_minutes", "tfgg-service-selection", "tfgg_service_selection_section");
+        register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_minutes");
+
+        add_settings_field("tfgg_scp_package_unit_sessions","Rename 'Sessions':","display_tfgg_package_units_sessions", "tfgg-service-selection", "tfgg_service_selection_section");
+        register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_sessions");
+
+        add_settings_field("tfgg_scp_package_unit_credits","Rename 'Credits':","display_tfgg_package_units_credits", "tfgg-service-selection", "tfgg_service_selection_section");
+        register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_credits");
+
         add_settings_field("tfgg_scp_package_selection","Packages For Sale:","display_tfgg_package_selection", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_package_selection");
 

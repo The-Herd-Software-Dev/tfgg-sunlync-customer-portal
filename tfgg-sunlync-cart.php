@@ -77,44 +77,6 @@
 
     function tfgg_scp_cart_header_display($header){
         ?>
-<<<<<<< HEAD
-        <div style="float:right; padding:10px" class="container">
-        <table class="account-overview-table">
-            <tr class="account_overview_row account_overview_row_header">
-                <td colspan="2"><span class="account-overview-generic-label">Order Summary</span></td>
-            </tr>
-            <tr class="account_overview_row">
-                <td><span class="account-overview-generic-label">Items: </span></td>
-                <td><span class="account-overview-generic-value"><?php echo $header->qty; ?></span></td>
-            </tr>
-            <tr class="account_overview_row">
-                <td><span class="account-overview-generic-label">Sub-Total: </span></td>
-                <td><span class="account-overview-generic-value">&#163;<?php echo $header->subtotal; ?></span></td>
-            </tr>
-            <tr class="account_overview_row">
-                <td><span class="account-overview-generic-label">Tax Total: </span></td>
-                <td><span class="account-overview-generic-value">&#163;<?php echo $header->taxtotal; ?></span></td>
-            </tr>
-            <tr class="account_overview_row">
-                <td><span class="account-overview-generic-label">Total: </span></td>
-                <td><span class="account-overview-generic-value">&#163;<?php echo $header->total; ?></span></td>
-            </tr>
-            <?php
-                include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-                if(is_plugin_active('google-captcha/google-captcha.php')){
-                ?>
-                <tr class="account_overview_row">
-                    <td colspan="2"><?php
-                        $shortcode='[wp_paypal button="paynow" amount="$AMT$"]';
-                        $shortcode=str_replace('$AMT$',$header->total,$shortcode);
-                        echo  do_shortcode($shortcode);
-                    ?></td>
-                </tr>
-                <?php
-                }
-            ?>
-        </table>    
-=======
 
 
         <div id="cart-items-right" class="col-lg-4">
@@ -148,11 +110,19 @@
                     <div id="cart_payment_container">
 
                         <span class="cart-payment-label">Amount Paid: </span>
-                        <span class="cart-payment-value">&#163;<?php echo $header->total; ?></span>
-
-                        <span class="cart-parment-detail cart-payment-value">123456</span>
-                        <span class="cart-parment-detail">PayPal:&nbsp;</span>
-
+                        <span class="cart-payment-value">&#163;0.00</span>
+                        <?php
+                        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+                        if(is_plugin_active('wp-paypal/main.php')){
+                        ?>
+                        <span class="cart-parment-detail"><?php
+                        $shortcode='[wp_paypal button="paynow" amount="$AMT$"]';
+                        $shortcode=str_replace('$AMT$',$header->total,$shortcode);
+                        echo  do_shortcode($shortcode);
+                        ?></span>
+                        <?php
+                            }
+                        ?>
                     </div>
 
                     <div class="overlay-button-container">
@@ -161,7 +131,6 @@
                 </div>
 
             </div>
->>>>>>> d17366f8ef108e028391a80b7792ac4b74ab6d4d
         </div>
 
         <?php
@@ -205,7 +174,7 @@
         ?>
         
         <br/<br/><br/><br/>
-        <div id="tfgg_package_search_warning" class="alert alert-warning" >
+        <div id="" class="alert alert-warning" >
                 <p> 
                     No items currently in your shopping cart
                 </p>
@@ -276,10 +245,16 @@
             echo '<div id="tfgg_scp_package_for_sale_list" class="row" style="padding: 10px">';
 
             foreach($packageList as &$packageDetails){
-        
+                
+                switch(StrToUpper($packageDetails->unit_type)){
+                    case 'M':$unitType = get_option('tfgg_scp_package_unit_minutes');
+                    case 'S':$unitType = get_option('tfgg_scp_package_unit_sessions');
+                    case 'C':$unitType = get_option('tfgg_scp_package_unit_credits');
+                }
+
                 ?>
 
-                <div class="col-lg-3 services-items-item" id="tfgg_scp_pack_sale_<?php echo $packageDetails->package_id;?>"
+                <div class="col-lg-3 services-items-item pack-sale-container" id="tfgg_scp_pack_sale_<?php echo $packageDetails->package_id;?>"
                     data-packagenumber="<?php echo $packageDetails->package_id;?>"
                     data-packagename="<?php echo $packageDetails->description;?>">
 
@@ -341,9 +316,9 @@
 
                 ?>
 
-                <div class="col-lg-3 services-items-membership" id="tfgg_scp_pack_sale_<?php echo $membershipDetails->membership_id;?>"
-                    data-packagenumber="<?php echo $membershipDetails->membership_id;?>"
-                    data-packagename="<?php echo $membershipDetails->description;?>">
+                <div class="col-lg-3 services-items-membership mems-sale-container" id="tfgg_scp_pack_sale_<?php echo $membershipDetails->membership_id;?>"
+                    data-membershipnumber="<?php echo $membershipDetails->membership_id;?>"
+                    data-membershipname="<?php echo $membershipDetails->description;?>">
 
                     <span class="overlay-items-item-description"><?php echo $membershipDetails->description;?></span>
                     <span class="overlay-items-item-price">&#163;<?php echo $membershipDetails->price; ?></span>

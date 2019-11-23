@@ -2,8 +2,7 @@
 
 function tfgg_scp_service_selction_description(){
     echo '<br/>';
-    echo '<p>Please select the services you wish users to be able to purchase through this portal</p>';
-    echo '<p>If no services are selected, all services returned from the API will be used</p>';
+    echo '<p>Please select the services you wish users to be able to purchase through this portal, if no services are selected, all services returned from the API will be used</p>';
     echo '<p>Prices displayed to the user will be those pulled from the API</p>';
 }
 
@@ -87,6 +86,25 @@ function display_tfgg_membership_allow_search(){
     ?>
         <input type="checkbox" name="tfgg_scp_membership_allow_search" value="1" <?php if(get_option('tfgg_scp_membership_allow_search')==1){echo 'checked';} ?>/>
     <?php
+}
+
+
+function display_tfgg_package_units_minutes(){ 
+    ?>
+    <input type="text" name="tfgg_scp_package_unit_minutes" value="<?php echo get_option('tfgg_scp_package_unit_minutes');?>" style="width: 60%"/>
+    <?php
+}
+
+function display_tfgg_package_units_sessions(){
+    ?>
+    <input type="text" name="tfgg_scp_package_unit_sessions" value="<?php echo get_option('tfgg_scp_package_unit_sessions');?>" style="width: 60%"/>
+    <?php   
+}
+
+function display_tfgg_package_units_credits(){
+    ?>
+    <input type="text" name="tfgg_scp_package_unit_credits" value="<?php echo get_option('tfgg_scp_package_unit_credits');?>" style="width: 60%"/>
+    <?php    
 }
 
 ?>
