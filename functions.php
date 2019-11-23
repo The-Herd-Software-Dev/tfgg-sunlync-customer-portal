@@ -1728,7 +1728,44 @@
 
     }
     add_action('wp_ajax_tfgg_scp_delete_cart_item','tfgg_scp_delete_cart_item');
-    add_action('wp_ajax_nopriv_tfgg_scp_delete_cart_item','tfgg_scp_delete_cart_item');    
+    add_action('wp_ajax_nopriv_tfgg_scp_delete_cart_item','tfgg_scp_delete_cart_item'); 
+    
+    function tfgg_api_get_payment_types(){
+        //CIPGetPaymentID(sPaymentNumber, sDesc, sDeleted, sStoreCode, mrktCode
+
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetPaymentID/sPaymentNumber/sDesc/sDeleted/sStoreCode';
+
+        $url=str_replace('sPaymentNumber','',$url);
+        $url=str_replace('sDesc','',$url);
+        $url=str_replace('sDeleted','',$url);
+        $url=str_replace('sStoreCode','',$url);
+
+        try{
+            $data = tfgg_execute_api_request("GET",$url,'');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            exit(json_encode($result));
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            $result["payment_types"]=array_slice($data,1,-1);
+            return json_encode($result);
+		}
+        
+    }
 
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();

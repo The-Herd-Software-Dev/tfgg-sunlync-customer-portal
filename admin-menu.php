@@ -191,6 +191,12 @@
         //cart options
         add_settings_field("tfgg_scp_cart_slug","Cart & Services Slug:","display_tfgg_cart_slug", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_slug");
+
+        add_settings_field("tfgg_scp_cart_employee","Process Transactions As:","display_tfgg_cart_employee", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_employee");
+
+        add_settings_field("tfgg_scp_cart_paypal_payment","Process Paypal Payments As:","display_tfgg_paypal_payment", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_payment");
         
     }
     
@@ -330,7 +336,6 @@
                         settings_fields('tfgg_service_selection_section');
                         do_settings_sections('tfgg-service-selection');
                     case 'tfgg-cart-options':
-                        tfgg_scp_cart_description();
                         settings_fields('tfgg_cart_section');
                         do_settings_sections('tfgg-cart-options');
                 }//switch
