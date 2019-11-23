@@ -7,13 +7,17 @@
         
         if(StrToUpper($cartContents->results) === 'SUCCESS'){
             tfgg_scp_display_cart_banner();
-            echo '<br/>';
-            tfgg_scp_cart_continue_shopping();
-            echo '<br/>';
-            tfgg_scp_cart_items_display($cartContents->lineItems);
-            echo '<br/>'.tfgg_scp_cart_continue_shopping().'<br/>';
+
+            echo '<br/><br/><br/> <br/>';
+
+            echo'<div class="row">';
+                tfgg_scp_cart_items_display($cartContents->lineItems);
+                tfgg_scp_cart_header_display($cartContents->header);
+            echo '</div>';//row
+
+                //echo '<br/>'.tfgg_scp_cart_continue_shopping().'<br/>';
             echo '<br/><hr/><br/>';
-            tfgg_scp_cart_header_display($cartContents->header);
+            //tfgg_scp_cart_header_display($cartContents->header);
             echo '<br/><br/>';
             
             ?>
@@ -35,31 +39,45 @@
 
     function tfgg_scp_cart_items_display($lineItems){
         ?>
-        <div style="float:left; padding:10px" class="container">
-            <table class="account-overview-table">
+
+        <div id="cart-items-left" class="col-lg-4">
+
+            <div class="cart-items-header"><h4>ITEMS</h4></div>
+
             <?php
-            $i=0;
-            foreach($lineItems as &$details){
-                $i++;
+                $i=0;
+                foreach($lineItems as &$details){
+                    $i++;
             ?>
-                <tr class="account_overview_row" id="tfgg_cart_item_row_<?php echo $i;?>">
-                <td><span class="account-overview-generic-value"><strong><?php echo $details->Description; ?></strong></span></td>
-                <td><span class="account-overview-generic-value">Qty: <?php echo $details->Qty; ?> @ &#163;<?php echo $details->PPU; ?></span></td>
-                <td><span class="account-overview-generic-value"><strong>Total: &#163;<?php echo ($details->Qty*$details->PPU); ?><strong></span><br/><br/>
-                <button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" 
-                style="float:right;" onclick="tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')">REMOVE</button></td>
-                </tr>
-            <?php
-            }//foreach
+
+                <div class="overlay-items-item-container" id="tfgg_cart_item_row_<?php echo $i;?>">
+                    <div class="cart-items-item">
+                        <span class="overlay-items-item-description"><?php echo $details->Description; ?></span>
+                        <span class="overlay-items-item-price">&#163;<?php echo ($details->Qty*$details->PPU);?></span>
+                        <br />
+                        <span class="overlay-items-item-quantity-label">Quantity:</span>
+                        <span class="overlay-items-item-quantity-value"><?php echo $details->Qty; ?> @ &#163;<?php echo $details->PPU; ?></span>
+                        <br />
+                        <div class="overlay-items-item-buttongroup">
+                            <a href="javascript:  tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')" class="overlay-items-item-link">REMOVE</a>
+                        </div>             
+                    </div>
+                </div>
+
+
+            <?php 
+                }
             ?>
-            </table>
+
         </div>
-        <br/><br/><br/>
+
+
         <?php
     }
 
     function tfgg_scp_cart_header_display($header){
         ?>
+<<<<<<< HEAD
         <div style="float:right; padding:10px" class="container">
         <table class="account-overview-table">
             <tr class="account_overview_row account_overview_row_header">
@@ -96,14 +114,64 @@
                 }
             ?>
         </table>    
+=======
+
+
+        <div id="cart-items-right" class="col-lg-4">
+
+            <div class="cart-items-header"><h4>ORDER SUMMARY</h4></div>
+
+                <div id="cart-totals-content">
+
+                    <div id="cart-totals-content-labels-container">
+
+                        <span class="cart-totals-content-label">Items</span>
+                        <span class="cart-totals-content-value"><?php echo $header->qty; ?></span>
+
+                        <br />
+
+                        <span class="cart-totals-content-label">Sub-total</span>
+                        <span class="cart-totals-content-value">&#163;<?php echo $header->subtotal; ?></span>
+
+                        <br />
+
+                        <span class="cart-totals-content-label">Tax total</span>
+                        <span class="cart-totals-content-value">&#163;<?php echo $header->taxtotal; ?></span>
+
+                        <br />
+
+                        <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
+                        <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo $header->total; ?></span>
+                
+                    </div>
+
+                    <div id="cart_payment_container">
+
+                        <span class="cart-payment-label">Amount Paid: </span>
+                        <span class="cart-payment-value">&#163;<?php echo $header->total; ?></span>
+
+                        <span class="cart-parment-detail cart-payment-value">123456</span>
+                        <span class="cart-parment-detail">PayPal:&nbsp;</span>
+
+                    </div>
+
+                    <div class="overlay-button-container">
+                        <button type="button" class="account-overview-button account-overview-standard-button overlay-checkout-button">CHECKOUT</button>
+                    </div>
+                </div>
+
+            </div>
+>>>>>>> d17366f8ef108e028391a80b7792ac4b74ab6d4d
         </div>
+
         <?php
     }
 
     function tfgg_scp_display_cart_banner(){
         ?>
-        <div style="background-color:rgba(203, 193, 193, 0.34); padding: 10px;">
-        <h2>SHOPPING CART</h2>
+        <div class="cart-banner">
+        <h3>SHOPPING CART</h3>
+        <div id="cart_banner_button_container"><?php tfgg_scp_cart_continue_shopping(); ?></div>
         </div>
         <?php  
     }
@@ -125,12 +193,10 @@
     }
 
     function tfgg_scp_cart_continue_shopping(){
-    ?>
-        <div style="float:right; margin:10px;">
+    ?>      
         <form action="<?php echo site_url();?>/cart">
-            <button type="submit" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button">CONTINUE SHOPPING</button>
-        </form>
-        </div>
+            <button type="submit" class="account-overview-button account-overview-standard-button">CONTINUE SHOPPING</button>
+        </form>     
     <?php
     }
 
@@ -138,7 +204,7 @@
         tfgg_scp_display_cart_banner();
         ?>
         
-        <br/>
+        <br/<br/><br/><br/>
         <div id="tfgg_package_search_warning" class="alert alert-warning" >
                 <p> 
                     No items currently in your shopping cart
@@ -207,45 +273,38 @@
 
             //loop through the allowed services and output
             $rowCounter = 1;
-            echo '<div id="tfgg_scp_package_for_sale_list" style="padding: 10px">';
+            echo '<div id="tfgg_scp_package_for_sale_list" class="row" style="padding: 10px">';
+
             foreach($packageList as &$packageDetails){
-                if($rowCounter==1){echo "<div class=\"row\" style=\"padding: 5px;\">";}
-                    
+        
                 ?>
-                <div class="col-sm pack-sale-container" id="tfgg_scp_pack_sale_<?php echo $packageDetails->package_id;?>" 
-                data-packagenumber="<?php echo $packageDetails->package_id;?>"
-                data-packagename="<?php echo $packageDetails->description;?>">
-                <table class="account-overview-table">
-                    <tr class="account_overview_row account_overview_row_header">
-                        <td><span class="account-overview-generic-label">Name: </span></td>
-                        <td><span class="account-overview-generic-label"><?php echo $packageDetails->description;?></span></td>
-                    </tr>
-                    <tr class="account_overview_row">
-                        <td><span class="account-overview-generic-label">Units: </span></td>
-                        <td><span class="account-overview-generic-value"><?php echo $packageDetails->num_units.' ('.$packageDetails->unit_type.')'; ?></span></td>
-                    </tr>
-                    <tr class="account_overview_row">
-                        <td><span class="account-overview-generic-label">Expiration: </span></td>
-                        <td><span class="account-overview-generic-value"><?php echo tfgg_scp_service_exp_date($packageDetails->exp_days, $packageDetails->exp_date, $packageDetails->open_ended); ?></span></td>
-                    </tr>
-                    <tr class="account_overview_row">
-                        <td><span class="account-overview-generic-label">Price: </span></td>
-                        <td><span class="account-overview-generic-value">&#163;<?php echo $packageDetails->price; ?></span></td>
-                    </tr>
-                    <tr class="account_overview_row">
-                        <td colspan="2"><button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" 
-                        style="float:right;" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')">Add to Cart</button></td>
-                    </tr>
-                </table>
-                </div>	
-                <?php
-                $rowCounter++;
-                if($rowCounter>3){
-                    $rowCounter=1;
-                    echo "</div>";//close the row
-                }
+
+                <div class="col-lg-3 services-items-item" id="tfgg_scp_pack_sale_<?php echo $packageDetails->package_id;?>"
+                    data-packagenumber="<?php echo $packageDetails->package_id;?>"
+                    data-packagename="<?php echo $packageDetails->description;?>">
+
+                    <span class="overlay-items-item-description"><?php echo $packageDetails->description;?></span>
+                    <span class="overlay-items-item-price">&#163;<?php echo $packageDetails->price; ?></span>
+                    <br />
+                    <span class="overlay-items-item-quantity-label">Units:</span>
+                    <span class="overlay-items-item-quantity-value"><?php echo $packageDetails->num_units.' ('.$packageDetails->unit_type.')'; ?></span>
+                    <br />
+                    <span class="overlay-items-item-quantity-label"> Expiration:</span>
+
+                    <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($packageDetails->exp_days, $packageDetails->exp_date, $packageDetails->open_ended); ?></span>
+
+                    <br />
+                    <div class="overlay-items-item-buttongroup">
+                        <a href="javascript:tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class="overlay-items-item-link">ADD TO CART</a>         
+                    </div>
+                </div>
+
+
+            <?php
+
+
             }//foreach
-            echo '</div>';
+            echo '</div></div>';
             //before anything else, we will add some padding here
             echo '<br/><br/>';        
         }//packageList<>''
@@ -275,41 +334,39 @@
 
                 //loop through the allowed services and output
             $rowCounter = 1;
-            echo '<div id="tfgg_membership_for_sale_list" style="padding: 10px">';
+            echo '<div id="tfgg_membership_for_sale_list" class="row" style="padding: 10px">';
+
+
             foreach($membershipList as &$membershipDetails){
-                if($rowCounter==1){echo "<div class=\"row\" style=\"padding: 5px;\">";}
-                    
+
                 ?>
-                <div class="col-sm mems-sale-container" id="tfgg_scp_mems_sale_<?php echo $membershipDetails->membership_id;?>" 
-                data-membershipnumber="<?php echo $membershipDetails->membership_id;?>"
-                data-membershipname="<?php echo $membershipDetails->description;?>">
-                <table class="account-overview-table">
-                    <tr class="account_overview_row account_overview_row_header">
-                        <td><span class="account-overview-generic-label">Name: </span></td>
-                        <td><span class="account-overview-generic-label"><?php echo $membershipDetails->description;?></span></td>
-                    </tr>
-                    <tr class="account_overview_row">
-                        <td><span class="account-overview-generic-label">Expiration: </span></td>
-                        <td><span class="account-overview-generic-value"><?php echo tfgg_scp_service_exp_date($membershipDetails->exp_days, $membershipDetails->exp_date, $membershipDetails->open_ended); ?></span></td>
-                    </tr>
-                    <tr class="account_overview_row">
-                        <td><span class="account-overview-generic-label">Price: </span></td>
-                        <td><span class="account-overview-generic-value">&#163;<?php echo $membershipDetails->price; ?></span></td>
-                    </tr>
-                    <tr class="account_overview_row">
-                        <td colspan="2"><button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" 
-                        style="float:right;" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')">Add to Cart</button></td>
-                    </tr>
-                </table>
-                </div>	
-                <?php
-                $rowCounter++;
-                if($rowCounter>3){
-                    $rowCounter=1;
-                    echo "</div>";//close the row
-                }
+
+                <div class="col-lg-3 services-items-membership" id="tfgg_scp_pack_sale_<?php echo $membershipDetails->membership_id;?>"
+                    data-packagenumber="<?php echo $membershipDetails->membership_id;?>"
+                    data-packagename="<?php echo $membershipDetails->description;?>">
+
+                    <span class="overlay-items-item-description"><?php echo $membershipDetails->description;?></span>
+                    <span class="overlay-items-item-price">&#163;<?php echo $membershipDetails->price; ?></span>
+                    <br />
+
+                    <span class="overlay-items-item-quantity-label"> Expiration:</span>
+
+                    <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($membershipDetails->exp_days, $membershipDetails->exp_date, $membershipDetails->open_ended); ?></span>
+
+                    <br />
+                    <div class="overlay-items-item-buttongroup">
+                        <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class="overlay-items-item-link">ADD TO CART</a>         
+                    </div>
+                </div>
+
+
+            <?php
+
+
+
+               
             }//foreach
-            echo '</div>';
+            echo '</div></div>';
             
         }//membershipList<>''
         
