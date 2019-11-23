@@ -1818,7 +1818,7 @@
         }
 
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
-            $items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url('/cart/'))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
+            $items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
         }
         return $items;
     }

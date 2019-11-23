@@ -163,7 +163,7 @@
 
     function tfgg_scp_cart_continue_shopping(){
     ?>      
-        <form action="<?php echo site_url();?>/cart">
+        <form action="<?php echo site_url(get_option('tfgg_scp_cart_slug'));?>">
             <button type="submit" class="account-overview-button account-overview-standard-button">CONTINUE SHOPPING</button>
         </form>     
     <?php
