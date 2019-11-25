@@ -58,7 +58,9 @@
         wp_register_script( 'select2-script', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/js/select2.min.js', array( 'jquery' ) );
         wp_enqueue_script( 'select2-script' );
         
-
+        //2019-11-24 CB
+        wp_register_script('paypal-script','https://www.paypal.com/sdk/js?currency=GBP&client-id=AUsZY2C4lPwiCRmqcB5OCXKZAMrHO0GZiJm31s-E6DGaCNE6grUpg2lJNOOHVM_c7XUORZDf6hr1kTR9','',null);
+        wp_enqueue_script('paypal-script');
         
              
     }

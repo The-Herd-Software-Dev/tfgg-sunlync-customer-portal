@@ -952,7 +952,8 @@ tr.account_overview_row > td {
     padding:0px;
   }
 
-#cart_payment_container {
+#cart_payment_container,
+#cart_payment_items_container  {
     margin-top:10px;
     border-top: solid 1px #ebebeb;
     padding:10px;

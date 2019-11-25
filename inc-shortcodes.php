@@ -100,6 +100,8 @@ function tfgg_cp_sunlync_cart(){
     
     if($viewCart=='cart'){
         return tfgg_scp_display_cart();
+    }elseif($viewCart=='success-paypal'){
+        
     }else{
         return tfgg_scp_display_services_for_sale();
     }

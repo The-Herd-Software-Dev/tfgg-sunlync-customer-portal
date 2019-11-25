@@ -80,6 +80,9 @@
         if(isset($_SESSION['tfgg_scp_cartid'])){
             unset($_SESSION['tfgg_scp_cartid']);
         }
+        if(isset($_SESSION['tfgg_scp_cart_qty'])){
+            unset($_SESSION['tfgg_scp_cart_qty']);
+        }
 
         $result["logout"]=site_url();//possible configurable option
         exit(json_encode($result));
@@ -179,6 +182,7 @@
         $apptBooking = get_option('tfgg_scp_cpappt_page');
         $login = get_option('tfgg_scp_cplogin_page');
         $registration=get_option('tfgg_scp_cpnewuser_page');
+        $cart = get_option('tfgg_scp_cart_slug');
 
         //I am purposely leaving this broken out to make management easier
         if($sunlyncUser){
@@ -190,7 +194,7 @@
             }
         }else{
             log_me('not a sunlync user');
-            if(is_page(array($acctOverview,$apptBooking))){
+            if(is_page(array($acctOverview,$apptBooking,$cart))){
                 log_me('page exists in array - redirecting to login');
                 wp_redirect( $login ); 
                 exit;
@@ -1596,6 +1600,9 @@
                     if(isset($_SESSION['tfgg_scp_cartid'])){
                         unset($_SESSION['tfgg_scp_cartid']);
                     }
+                    if(isset($_SESSION['tfgg_scp_cart_qty'])){
+                        unset($_SESSION['tfgg_scp_cart_qty']);
+                    }
                 }
             }                
 
@@ -1610,9 +1617,13 @@
         $cartItems= $data->result[0][0][1];
         $cartItems = $cartItems->lineitems;//this could be an array of items
 
+        $paymentItems= $data->result[0][0][2];
+        $paymentItems = $paymentItems->paymentitems;//this could be an array of items
+
         $result["results"]="success";
         $result["header"]=$cartHeader;
         $result["lineItems"]=$cartItems;
+        $result["paymentItems"]=$paymentItems;
         
         if(!isset($_SESSION['tfgg_scp_cartid'])){
             $_SESSION['tfgg_scp_cartid']=$result["header"]->cartID;
@@ -1632,6 +1643,7 @@
         "keyValue": "",
         "qty": "",
         "mrkt": ""
+        "processingEmployee":""
         }
         */
         $url=tfgg_get_api_url().'TAPICart/CartItems';
@@ -1650,6 +1662,7 @@
         $postBody["keyValue"] = $_POST['data']['keyValue'];
         $postBody["qty"] = $_POST['data']['qty'];
         $postBody["mrkt"] = get_option('tfgg_scp_api_mrkt');
+        $postBody["processingEmployee"] = get_option('tfgg_scp_cart_employee');
 
         $postBody = json_encode($postBody);
         
@@ -1766,6 +1779,90 @@
 		}
         
     }
+
+    function tfgg_scp_post_payment_item(){
+        $url=tfgg_get_api_url().'TAPICart/CartPayments';
+
+        $postBody = array();
+        $postBody["cartID"] = $_SESSION['tfgg_scp_cartid'];
+        //$postBody["keyValue"] = $_POST['data']['keyValue'];
+        $postBody["amt"] = $_POST['data']['amt'];
+        $postBody["mrkt"] = get_option('tfgg_scp_api_mrkt');
+        $postBody["externalID"] = $_POST['data']['externalID'];
+        $postBody["externalDesc"] = $_POST['data']['externalDesc'];
+
+        switch(StrToUpper($postBody["externalDesc"])){
+            case 'PAYPAL':$postBody['keyValue'] = get_option('tfgg_scp_cart_paypal_payment','0000000001');
+        }
+
+        $postBody = json_encode($postBody);
+       
+        try{
+            $data = tfgg_execute_api_request('POST', $url, $postBody);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            exit(json_encode($result));
+        }
+
+        $result=$data->result[0][0];
+
+        if((array_key_exists('ERROR',$result))||(array_key_exists('WARNING',$result))){
+			if(array_key_exists('ERROR',$result)){
+				$result=array("results"=>"FAIL",
+					"response"=>$result->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$result->WARNING);
+			}			
+			exit(json_encode($result));
+		}else{
+            $return["results"]="success";
+
+            exit(json_encode($return));
+		} 
+    }
+    add_action('wp_ajax_tfgg_scp_post_payment_item','tfgg_scp_post_payment_item');
+    add_action('wp_ajax_nopriv_tfgg_scp_post_payment_item','tfgg_scp_post_payment_item');
+
+    function tfgg_api_finalize_cart(){
+        $url=tfgg_get_api_url().'TAPICart/Cart/sCartID';
+        $url=str_replace('sCartID',$_SESSION['tfgg_scp_cartid'],$url);
+
+        try{
+            $data = tfgg_execute_api_request('PUT', $url, '');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            exit(json_encode($result));
+        }
+        $result=$data->result[0][0];
+        $receipt=$data->result[0][1];
+
+        if((array_key_exists('ERROR',$result))||(array_key_exists('WARNING',$result))){
+			if(array_key_exists('ERROR',$result)){
+				$result=array("results"=>"FAIL",
+					"response"=>$result->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$result->WARNING);
+			}			
+			exit(json_encode($result));
+		}else{
+            $return["results"]="success";
+
+            unset($_SESSION['tfgg_scp_cartid']);
+            unset($_SESSION['tfgg_scp_cart_qty']);
+
+            $return["receipt"]=$receipt->recipt;
+
+
+            exit(json_encode($return));
+		} 
+        
+    }
+    add_action('wp_ajax_tfgg_api_finalize_cart','tfgg_api_finalize_cart');
+    add_action('wp_ajax_nopriv_tfgg_api_finalize_cart','tfgg_api_finalize_cart');
 
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();

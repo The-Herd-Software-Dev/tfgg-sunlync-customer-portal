@@ -335,9 +335,11 @@
                         tfgg_scp_service_selction_description();
                         settings_fields('tfgg_service_selection_section');
                         do_settings_sections('tfgg-service-selection');
+                        break;
                     case 'tfgg-cart-options':
                         settings_fields('tfgg_cart_section');
                         do_settings_sections('tfgg-cart-options');
+                        break;
                 }//switch
             ?>
             <input type="submit" class="button button-primary" value="Save Changes"/>

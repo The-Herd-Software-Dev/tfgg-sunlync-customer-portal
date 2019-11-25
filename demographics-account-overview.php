@@ -166,7 +166,7 @@
 			    							if(tfgg_scp_can_service_be_purchased('P',$details->package_number)){
 			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
 											?>
-											<button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="CancelAppt();">BUY AGAIN</button>
+											<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="tfggPostCartItem('P','<?php echo $details->package_number;?>','1');">BUY AGAIN</button>
 											<?php
 												}//if
 											?>
@@ -211,7 +211,7 @@
 			    							if(($details->is_eft==0)&&(tfgg_scp_can_service_be_purchased('M',$details->membership_number))){
 			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
 											?>
-											<button class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="CancelAppt();">BUY AGAIN</button>
+											<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" >BUY AGAIN</button>
 											<?php
 												}//if
 											?>
@@ -444,7 +444,8 @@
             //this is a backup for the code in inc-shortcodes.php
             //echo '<script>location.href="'.get_option('tfgg_scp_cplogin_page').'"</script>';
 
-        }
+		}
+		tfgg_scp_display_cart_successful_add();
 		return ob_get_clean();
         //return ob_get_contents();
     }

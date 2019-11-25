@@ -1276,3 +1276,7 @@ function tfggRemoveCartItem(cartItemID, removeItemID){
 
     });    
 } 
+
+function tfggSetCartLinkQty(qty){
+    
+}

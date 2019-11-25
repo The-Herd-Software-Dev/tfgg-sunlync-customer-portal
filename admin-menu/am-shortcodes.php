@@ -28,6 +28,10 @@
                     <th scope="row">Appointments:</th>
                     <td>[cp_sunlync_appts]</td>
                 </tr>
+                <tr>
+                    <th scope="row">Cart: </th>
+                    <td>[cp_sunlync_cart]</td>
+                </tr>
             </tbody>
         </table>
         <?php

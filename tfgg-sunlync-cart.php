@@ -4,15 +4,15 @@
         ob_start();
 
         $cartContents = json_decode(tfgg_scp_get_cart_contents());
-        
+        //var_dump($cartContents);
         if(StrToUpper($cartContents->results) === 'SUCCESS'){
             tfgg_scp_display_cart_banner();
 
             echo '<br/><br/><br/> <br/>';
 
-            echo'<div class="row">';
+            echo'<div class="row" id="tfgg_scp_cart_contents" >';
                 tfgg_scp_cart_items_display($cartContents->lineItems);
-                tfgg_scp_cart_header_display($cartContents->header);
+                tfgg_scp_cart_header_display($cartContents->header, $cartContents->paymentItems);
             echo '</div>';//row
 
                 //echo '<br/>'.tfgg_scp_cart_continue_shopping().'<br/>';
@@ -75,7 +75,7 @@
         <?php
     }
 
-    function tfgg_scp_cart_header_display($header){
+    function tfgg_scp_cart_header_display($header, $paymentItems){
         ?>
 
 
@@ -96,44 +96,107 @@
                         <span class="cart-totals-content-value">&#163;<?php echo $header->subtotal; ?></span>
 
                         <br />
-
-                        <span class="cart-totals-content-label">Tax total</span>
-                        <span class="cart-totals-content-value">&#163;<?php echo $header->taxtotal; ?></span>
-
+                        <?php
+                        if ($header->payments>0){
+                        ?>
+                        <span class="cart-totals-content-label">Payments</span>
+                        <span class="cart-totals-content-value">&#163;<?php echo $header->totalPayments; ?></span>
                         <br />
+                        <?php
+                        }
+                        ?>
 
                         <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
-                        <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo $header->total; ?></span>
+                        <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo ($header->total - $header->totalPayments); ?></span>
                 
                     </div>
-
-                    <div id="cart_payment_container">
-
-                        <span class="cart-payment-label">Amount Paid: </span>
-                        <span class="cart-payment-value">&#163;0.00</span>
+                    <?php
+                    if($header->payments < -1){
+                    ?>
+                    <div id="cart_payment_items_container">
+                        <h4>Payments</h4>
                         <?php
-                        include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-                        if(is_plugin_active('wp-paypal/main.php')){
+                        foreach($paymentItems as &$details){
                         ?>
-                        <span class="cart-parment-detail"><?php
-                        $shortcode='[wp_paypal button="paynow" amount="$AMT$"]';
-                        $shortcode=str_replace('$AMT$',$header->total,$shortcode);
-                        echo  do_shortcode($shortcode);
-                        ?></span>
+                            <span class="cart-totals-content-label overlay-totals-content-total-line"><?php echo $details->ExternalDesc;?>: </span>
+                            <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo $details->Amt?></span>
+
+                            <br />    
                         <?php
-                            }
+                        }
                         ?>
                     </div>
-
+                    <?php
+                    }
+                    ?>
+                    <div id="cart_payment_container">&nbsp;
+                    </div>
                     <div class="overlay-button-container">
-                        <button type="button" class="account-overview-button account-overview-standard-button overlay-checkout-button">CHECKOUT</button>
+                        <div id="paypal-button-container">
+                        </div>
+                        <button type="button" class="account-overview-button account-overview-standard-button overlay-checkout-button" id="tfgg_scp_cart_complete" <?php if($header->allowToFinalize==0){echo "disabled";} ?>>COMPLETE</button>
                     </div>
                 </div>
 
             </div>
         </div>
+        <div id="tfgg_scp_cart_finalized" class="alert alert-success" style="display:none">
+            <span>Your order has processed successfully</span><br/>
+            <span>An e-mail receipt has been sent to the e-mail address on file</span><br/>
+            <span>For your records, your receipt number is <span id="tfgg_scp_cart_finalized_receipt"></span></span>
+        </div>
+        <?php 
+        if(($header->total - $header->totalPayments)>0){
+        ?>
+        <script type="text/javascript">
 
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                // This function sets up the details of the transaction, including the amount and line item details.
+                return actions.order.create({
+                    purchase_units: [{
+                    amount: {
+                        "custom_id": "<?php echo $_SESSION['tfgg_scp_cartid']; ?>",
+                        "value": "<?php echo ($header->total-$header->totalPayments); ?>"
+                    }
+                    }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                // This function captures the funds from the transaction.
+                return actions.order.capture().then(function(details) {
+
+                    jQuery.post('<?php echo admin_url( 'admin-ajax.php' );?>',{
+                    'action'    : 'tfgg_scp_post_payment_item',
+                    'data'      : {amt: details.purchase_units[0].amount.value,
+                        externalID: details.id,
+                        externalDesc:'PayPal'},
+                    'dataType'  : 'json',
+                    'pathname'  : window.location.pathname
+                    },function(data){
+                        jQuery('#tfgg_scp_cart_complete').prop('disabled', false);
+                        
+                        jQuery.get('<?php echo admin_url( 'admin-ajax.php' );?>',{
+                            'action'    : 'tfgg_api_finalize_cart',
+                            'dataType'  : 'json',
+                            'pathname'  : window.location.pathname
+                        },function(data){
+                            var obj = jQuery.parseJSON(data);
+
+                            jQuery('#tfgg_scp_cart_contents').hide();
+                            jQuery('#tfgg_scp_cart_finalized_receipt').text(obj["receipt"]);
+                            jQuery('#tfgg_scp_cart_finalized').css('display','block');
+
+                        });
+
+                    }); 
+                });
+                }
+            }).render('#paypal-button-container');
+
+        </script>
         <?php
+        }
     }
 
     function tfgg_scp_display_cart_banner(){
@@ -330,15 +393,14 @@
 
                     <br />
                     <div class="overlay-items-item-buttongroup">
-                        <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class="overlay-items-item-link">ADD TO CART</a>         
+                        <?php
+                        /*<a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class="overlay-items-item-link">ADD TO CART</a>*/
+                        ?>         
                     </div>
                 </div>
 
 
             <?php
-
-
-
                
             }//foreach
             echo '</div></div>';
