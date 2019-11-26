@@ -319,11 +319,13 @@
 			<script>
 				jQuery( function() {
 					var now = new Date();
+					var maxDateAllowed = new Date();
+					maxDateAllowed.setFullYear(maxDateAllowed.getFullYear() - 14);
     				jQuery( "#tfgg_cp_user_dob_value" ).datepicker({
       					changeMonth: true,
 						changeYear: true,
 						yearRange: "-100:+0",
-						maxDate: now,
+						maxDate: maxDateAllowed,
 						dateFormat: 'dd-mm-yy',
 						onSelect: function(dateText) {
 							jQuery('#new_reg_dob').hide();
