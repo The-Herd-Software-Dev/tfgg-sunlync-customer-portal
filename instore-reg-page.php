@@ -353,6 +353,7 @@
     				jQuery( "#tfgg_cp_user_dob_value" ).datepicker({
       					changeMonth: true,
 						changeYear: true,
+						showMonthAfterYear:true,
 						yearRange: "-100:+0",
 						maxDate: maxDateAllowed,
 						dateFormat: 'dd-mm-yy',

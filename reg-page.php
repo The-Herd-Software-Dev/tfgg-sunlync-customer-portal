@@ -326,6 +326,7 @@
 						changeYear: true,
 						yearRange: "-100:+0",
 						maxDate: maxDateAllowed,
+						showMonthAfterYear:true,
 						dateFormat: 'dd-mm-yy',
 						onSelect: function(dateText) {
 							jQuery('#new_reg_dob').hide();
