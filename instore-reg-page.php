@@ -354,6 +354,7 @@
       					changeMonth: true,
 						changeYear: true,
 						yearRange: "-100:+0",
+						showMonthAfterYear:true,
 						maxDate: maxDateAllowed,
 						dateFormat: 'dd-mm-yy',
 						onSelect: function(dateText) {
