@@ -1409,6 +1409,17 @@
         }
         return $items;
     }
+
+    //2019-11-28 CB V2.1.4.7
+    function tfgg_scp_set_meta_equiv(){
+        global $post;
+        $post_slug = $post->post_name;
+        if(($post_slug==get_option('tfgg_scp_cpnewuser_page_instore'))||
+        (strpos(get_option('tfgg_scp_cpnewuser_page_instore'),$post_slug)>0)){
+            echo '<meta http-equiv="refresh" content="36000"/>';
+        }
+    }
+    add_action('wp_head','tfgg_scp_set_meta_equiv');
     
     /*2019-10-12 CB V1.1.1.1 - deprecated
     add_action('wp_logout','tfgg_auto_redirect_after_logout');
