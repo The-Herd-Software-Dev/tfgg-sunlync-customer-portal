@@ -1410,7 +1410,7 @@
         return $items;
     }
 
-    //2019-11-28 CB V2.1.4.7
+    //2019-11-28 CB V1.2.4.7
     function tfgg_scp_set_meta_equiv(){
         global $post;
         $post_slug = $post->post_name;
