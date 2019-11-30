@@ -242,6 +242,25 @@ tr.account_overview_row > td {
     border:1px solid #ccc;
 }
 
+.cart-paynow-font-color {
+    color:#56DB39;    
+}
+
+.cart-paynow-font-color:hover {
+    color:#3E9C2A;    
+}
+
+.cart-standard-button-paynow {
+    background-color:#56DB39;
+    border:1px solid #56DB39;
+}
+
+.cart-standard-button-paynow:hover {
+    background-color:#3E9C2A;
+    border:1px solid #3E9C2A;
+    color:#fff;
+}
+
 .account-overview-table {
     width:auto !important;
     min-width: 70%;
@@ -892,7 +911,7 @@ tr.account_overview_row > td {
 }
 
 .overlay-items-item-link {
-    color:#F16431;
+    /*color:#F16431;*/
     font-size:1em;
     font-weight: 700;
 }

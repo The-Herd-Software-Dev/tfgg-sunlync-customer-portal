@@ -141,61 +141,15 @@
             </div>
         </div>
         <div id="tfgg_scp_cart_finalized" class="alert alert-success" style="display:none">
-            <span>Your order has processed successfully</span><br/>
-            <span>An e-mail receipt has been sent to the e-mail address on file</span><br/>
-            <span>For your records, your receipt number is <span id="tfgg_scp_cart_finalized_receipt"></span></span>
+            <?php
+            $message=get_option('tfgg_scp_cart_success_message');
+            $message=str_replace('!@#receiptnumber#@!','<span id="tfgg_scp_cart_finalized_receipt"></span>',$message);
+            echo $message;
+            ?>
         </div>
         <?php 
         if(($header->total - $header->totalPayments)>0){
-        ?>
-        <script type="text/javascript">
-
-            paypal.Buttons({
-                createOrder: function(data, actions) {
-                // This function sets up the details of the transaction, including the amount and line item details.
-                return actions.order.create({
-                    purchase_units: [{
-                    amount: {
-                        "custom_id": "<?php echo $_SESSION['tfgg_scp_cartid']; ?>",
-                        "value": "<?php echo ($header->total-$header->totalPayments); ?>"
-                    }
-                    }]
-                    });
-                },
-                onApprove: function(data, actions) {
-                // This function captures the funds from the transaction.
-                return actions.order.capture().then(function(details) {
-
-                    jQuery.post('<?php echo admin_url( 'admin-ajax.php' );?>',{
-                    'action'    : 'tfgg_scp_post_payment_item',
-                    'data'      : {amt: details.purchase_units[0].amount.value,
-                        externalID: details.id,
-                        externalDesc:'PayPal'},
-                    'dataType'  : 'json',
-                    'pathname'  : window.location.pathname
-                    },function(data){
-                        jQuery('#tfgg_scp_cart_complete').prop('disabled', false);
-                        
-                        jQuery.get('<?php echo admin_url( 'admin-ajax.php' );?>',{
-                            'action'    : 'tfgg_api_finalize_cart',
-                            'dataType'  : 'json',
-                            'pathname'  : window.location.pathname
-                        },function(data){
-                            var obj = jQuery.parseJSON(data);
-
-                            jQuery('#tfgg_scp_cart_contents').hide();
-                            jQuery('#tfgg_scp_cart_finalized_receipt').text(obj["receipt"]);
-                            jQuery('#tfgg_scp_cart_finalized').css('display','block');
-
-                        });
-
-                    }); 
-                });
-                }
-            }).render('#paypal-button-container');
-
-        </script>
-        <?php
+            tfgg_scp_cart_display_paypal_buttons($header);
         }
     }
 
@@ -209,6 +163,9 @@
     }
 
     function tfgg_scp_display_cart_successful_add(){
+
+        $viewCartURL=esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug'))));
+
         ?>
         <div class="modal fade" id="tfgg_scp_cart_add" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_cart_add" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -216,6 +173,7 @@
                 <div class="modal-body" id="tfgg_scp_cart_add_message">
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfgg_scp_changePage('<?php echo $viewCartURL; ?>');">Pay Now</button>
                     <button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" data-dismiss="modal">CONTINUE SHOPPING</button>
                 </div>
                 </div>
@@ -230,6 +188,64 @@
             <button type="submit" class="account-overview-button account-overview-standard-button">CONTINUE SHOPPING</button>
         </form>     
     <?php
+    }
+
+    function tfgg_scp_cart_display_paypal_buttons($header){
+        if((get_option('tfgg_scp_cart_allow_paypal_payment','0')=='0')||
+        (get_option('tfgg_scp_cart_paypal_clientid')=='')){
+            return false;
+        }
+        ?>
+        <script type="text/javascript">
+
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+            // This function sets up the details of the transaction, including the amount and line item details.
+            return actions.order.create({
+                purchase_units: [{
+                amount: {
+                    "custom_id": "<?php echo $_SESSION['tfgg_scp_cartid']; ?>",
+                    "value": "<?php echo ($header->total-$header->totalPayments); ?>"
+                }
+                }]
+                });
+            },
+            onApprove: function(data, actions) {
+            // This function captures the funds from the transaction.
+            return actions.order.capture().then(function(details) {
+
+                jQuery.post('<?php echo admin_url( 'admin-ajax.php' );?>',{
+                'action'    : 'tfgg_scp_post_payment_item',
+                'data'      : {amt: details.purchase_units[0].amount.value,
+                    externalID: details.id,
+                    externalDesc:'PayPal'},
+                'dataType'  : 'json',
+                'pathname'  : window.location.pathname
+                },function(data){
+                    jQuery('#tfgg_scp_cart_complete').prop('disabled', false);
+                    
+                    jQuery.get('<?php echo admin_url( 'admin-ajax.php' );?>',{
+                        'action'    : 'tfgg_api_finalize_cart',
+                        'dataType'  : 'json',
+                        'pathname'  : window.location.pathname
+                    },function(data){
+                        var obj = jQuery.parseJSON(data);
+
+                        jQuery('#tfgg_scp_cart_contents').hide();
+                        jQuery('#tfgg_scp_cart_finalized_receipt').text(obj["receipt"]);
+                        jQuery('#tfgg_scp_cart_finalized').css('display','block');
+
+                        tfggSetCartLinkQty(0);
+
+                    });
+
+                }); 
+            });
+            }
+        }).render('#paypal-button-container');
+
+        </script>
+        <?php
     }
 
     function tfgg_scp_empty_cart_display(){
@@ -333,7 +349,7 @@
 
                     <br />
                     <div class="overlay-items-item-buttongroup">
-                        <a href="javascript:tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class="overlay-items-item-link">ADD TO CART</a>         
+                        <a href="javascript:tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">ADD TO CART</a>         
                     </div>
                 </div>
 

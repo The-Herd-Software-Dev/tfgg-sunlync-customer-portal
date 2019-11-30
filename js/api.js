@@ -1249,8 +1249,17 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty){
         if(obj["results"].toUpperCase()=='SUCCESS'){
             jQuery('#tfgg_scp_cart_add_message').html('Your item was successfully added to your cart');
             jQuery('#tfgg_scp_cart_add').modal('toggle');
+            
+            var currentQty = jQuery('#tfgg_scp_cart_qty').text();
+            currentQty = currentQty.trim().replace(/\(|\)/g, '');
+
+            if(currentQty!=''){
+                addItemQty=parseInt(addItemQty)+parseInt(currentQty);
+            }
+            
+            tfggSetCartLinkQty(addItemQty);
         }else{
-            console.log(obj);
+            //console.log(obj);
             jQuery('#tfgg_scp_cart_add_message').html('There was an error adding your item to the cart');
             jQuery('#tfgg_scp_cart_add').modal('toggle');  
         }
@@ -1278,5 +1287,17 @@ function tfggRemoveCartItem(cartItemID, removeItemID){
 } 
 
 function tfggSetCartLinkQty(qty){
-    
+    if(parseInt(qty)==0){
+        jQuery('#tfgg_scp_cart_qty').text(''); 
+    }else{
+        jQuery('#tfgg_scp_cart_qty').text('('+qty+')'); 
+    }       
+}
+
+function tfgg_scp_changePage(newPage){
+    if(newPage==''){
+        return true;
+    }else{
+        window.location.href=newPage;
+    }
 }
