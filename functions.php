@@ -1997,7 +1997,7 @@
     function tfgg_scp_process_sage_pay_cart(){
         if(isset($_POST['tfgg_cp_cart_sage_nonce']) && wp_verify_nonce($_POST['tfgg_cp_cart_sage_nonce'],'tfgg-cp-cart-sage-nonce')){
             log_me('processing cart ('.$_POST['cartid'].') payment via sage identifier '.$_POST['card-identifier']);
-
+            unset($_POST['tfgg_cp_cart_sage_nonce']);
             /*$_POST array(10) { ["tfgg_cp_user_email"]=> 
                 ["tfgg_cp_user_first"]=> 
                 ["tfgg_cp_user_last"]=>
@@ -2020,8 +2020,12 @@
 
             $tranDate = new DateTime();
 
-            $vendorCode = $cartHeader->processingStoreName.time();
-            
+            //$vendorCode = $cartHeader->processingStoreName.time();
+            //$vendorCode = $_POST['cartid'];
+            $vendorCode = uniqid($_SESSION['sunlync_client'],true);
+
+            log_me('POSTING to SagePay as '.$vendorCode.' for '.$_POST['cartid']);
+
             $curl = curl_init();
             curl_setopt_array($curl, array(
             CURLOPT_URL => "https://pi-test.sagepay.com/api/v1/transactions",
@@ -2064,7 +2068,8 @@
             log_me($response);
             curl_close($curl);
             $response = json_decode($response);
-
+            
+            //var_dump($response);
             if($response->statusCode=='0000'){
                 //the transaction processed with no errors
 
@@ -2081,7 +2086,9 @@
 
                     tfgg_cp_errors()->add('success', __($msg));
                 }else{
-                    tfgg_cp_errors()->add('error_processing_card', __('There was an error processing your card<br/><br/>'.$postPayment->response));    
+                    tfgg_scp_process_sage_pay_refund($vendorCode, (($cartHeader->total)*100), 
+                    $response->transactionId, $cartHeader->processingStoreName.' Services');
+                    tfgg_cp_errors()->add('error_processing_card', __('There was an error processing your card<br/><br/>'.$postPayment->response.'<br/><br/>You have not been charged for this transaction'));    
                 }
 
             }else{
@@ -2093,6 +2100,41 @@
         }
     }
     add_action('init','tfgg_scp_process_sage_pay_cart');
+
+    function tfgg_scp_process_sage_pay_refund($vendorCode, $amt, $transactionId, $description){
+
+        $newVendorCode = uniqid($_SESSION['sunlync_client'],true);
+        log_me('refunding '.$vendorCode.' as '.$newVendorCode);
+
+        $description='rfnd '.$description;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://pi-test.sagepay.com/api/v1/transactions",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => '{' .
+                                '"transactionType": "Refund",' .
+                                '"referenceTransactionId": "'.$transactionId.'",' .
+                                '"vendorTxCode": "'.$newVendorCode.'",' .
+                                '"amount": '.$amt.',' .
+                                '"currency": "GBP",' .
+                                '"description": "'.$description.'"' .
+                                '}',
+        CURLOPT_USERPWD => get_option('tfgg_scp_cart_sage_key').':'.get_option('tfgg_scp_cart_sage_pass'),
+        CURLOPT_HTTPHEADER => array(
+            "Cache-Control: no-cache",
+            "Content-Type: application/json"
+        ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        log_me($response);
+        curl_close($curl);
+
+    }
 
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();
