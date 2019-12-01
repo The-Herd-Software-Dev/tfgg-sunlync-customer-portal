@@ -1436,10 +1436,11 @@
     //hardcoded to 18 months at present
     function tfgg_purchased_within_acceptable_period($purchase_date){
         //return true;
-        if($_SERVER['HTTP_HOST']=='localhost:8888'){  
-            return true;
+        if(($_SERVER['HTTP_HOST']!='localhost:8888')&&
+        ($_SERVER['HTTP_HOST']!='tfgg-portal.theherdsoftware.com')){  
+            $purchase_date = str_replace('/', '-', $purchase_date); //this line is to ensure UK dates parse correctly
         }
-        $purchase_date = str_replace('/', '-', $purchase_date); //this line is to ensure UK dates parse correctly
+        
         $purchase_date = new DateTime($purchase_date);
 
         $now = new DateTime();
