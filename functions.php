@@ -1793,6 +1793,7 @@
 
         switch(StrToUpper($postBody["externalDesc"])){
             case 'PAYPAL':$postBody['keyValue'] = get_option('tfgg_scp_cart_paypal_payment','0000000001');
+            case 'SAGE':$postBody['keyVaue'] = get_option('tfgg_scp_cart_sage_payment','0000000001');
         }
 
         $postBody = json_encode($postBody);
@@ -1824,6 +1825,54 @@
     }
     add_action('wp_ajax_tfgg_scp_post_payment_item','tfgg_scp_post_payment_item');
     add_action('wp_ajax_nopriv_tfgg_scp_post_payment_item','tfgg_scp_post_payment_item');
+
+    function tfgg_scp_post_payment_item_manual($cartid, $amt, $externalID, $externalDesc){
+        $url=tfgg_get_api_url().'TAPICart/CartPayments';
+
+        $postBody = array();
+        $postBody["cartID"] = $cartid;
+        //$postBody["keyValue"] = $_POST['data']['keyValue'];
+        $postBody["amt"] = $amt;
+        $postBody["mrkt"] = get_option('tfgg_scp_api_mrkt');
+        $postBody["externalID"] = $externalID;
+        $postBody["externalDesc"] = $externalDesc;
+
+        switch(StrToUpper($postBody["externalDesc"])){
+            case 'PAYPAL':
+                $postBody['keyValue'] = get_option('tfgg_scp_cart_paypal_payment','0000000001');
+            break;
+            case 'SAGE':
+                $postBody['keyValue'] = get_option('tfgg_scp_cart_sage_payment','0000000001');
+            break;
+        }
+
+        $postBody = json_encode($postBody);
+       
+        try{
+            $data = tfgg_execute_api_request('POST', $url, $postBody);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        $result=$data->result[0][0];
+
+        if((array_key_exists('ERROR',$result))||(array_key_exists('WARNING',$result))){
+			if(array_key_exists('ERROR',$result)){
+				$result=array("results"=>"FAIL",
+					"response"=>$result->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$result->WARNING);
+			}			
+			return json_encode($result);
+		}else{
+            $return["results"]="success";
+
+            return json_encode($return);
+		} 
+    }
 
     function tfgg_api_finalize_cart(){
         $url=tfgg_get_api_url().'TAPICart/Cart/sCartID';
@@ -1863,6 +1912,187 @@
     }
     add_action('wp_ajax_tfgg_api_finalize_cart','tfgg_api_finalize_cart');
     add_action('wp_ajax_nopriv_tfgg_api_finalize_cart','tfgg_api_finalize_cart');
+
+    function tfgg_api_finalize_cart_manual($cartid){
+        $url=tfgg_get_api_url().'TAPICart/Cart/sCartID';
+        $url=str_replace('sCartID',$cartid,$url);
+
+        try{
+            $data = tfgg_execute_api_request('PUT', $url, '');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+        $result=$data->result[0][0];
+        $receipt=$data->result[0][1];
+
+        if((array_key_exists('ERROR',$result))||(array_key_exists('WARNING',$result))){
+			if(array_key_exists('ERROR',$result)){
+				$result=array("results"=>"FAIL",
+					"response"=>$result->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$result->WARNING);
+			}			
+			return json_encode($result);
+		}else{
+            $return["results"]="success";
+
+            unset($_SESSION['tfgg_scp_cartid']);
+            unset($_SESSION['tfgg_scp_cart_qty']);
+
+            $return["receipt"]=$receipt->recipt;
+
+            return json_encode($return);
+		}     
+    }
+
+    function tfgg_scp_sagepay_generate_merchant_session_key(){
+
+        $auth = get_option('tfgg_scp_cart_sage_key').':'.get_option('tfgg_scp_cart_sage_pass');
+        //echo $auth;
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://pi-test.sagepay.com/api/v1/merchant-session-keys",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => '{ "vendorName": "'.get_option('tfgg_scp_cart_sage_vendor_name').'" }',
+            CURLOPT_USERPWD => $auth,
+            CURLOPT_HTTPHEADER => array(
+              "Cache-Control: no-cache",
+              "Content-Type: application/json"
+            ),
+          ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+        
+        switch($httpcode){
+            case 401:
+                log_me('sage merchant session fetch error: '.$response);
+                $result = array('results'=>'error',
+                'errorNice'=>'There was an error staging your credit card transaction',
+                'error'=>$response);
+            break;
+            case 201:
+                $response = json_decode($response);
+                
+                $result = array('results'=>'success',
+                'sageMerchantSession'=>$response->merchantSessionKey,
+                'sageMerchantSessionExp'=>$response->expiry);
+            break;
+        }
+
+        exit(json_encode($result));
+
+    }
+    add_action('wp_ajax_tfgg_scp_sagepay_generate_merchant_session_key','tfgg_scp_sagepay_generate_merchant_session_key');
+    add_action('wp_ajax_nopriv_tfgg_scp_sagepay_generate_merchant_session_key','tfgg_scp_sagepay_generate_merchant_session_key');
+
+    function tfgg_scp_process_sage_pay_cart(){
+        if(isset($_POST['tfgg_cp_cart_sage_nonce']) && wp_verify_nonce($_POST['tfgg_cp_cart_sage_nonce'],'tfgg-cp-cart-sage-nonce')){
+            log_me('processing cart ('.$_POST['cartid'].') payment via sage identifier '.$_POST['card-identifier']);
+
+            /*$_POST array(10) { ["tfgg_cp_user_email"]=> 
+                ["tfgg_cp_user_first"]=> 
+                ["tfgg_cp_user_last"]=>
+                ["tfgg_cp_street_address"]=> 
+                ["tfgg_cp_street_address_2"]=>
+                ["tfgg_cp_city"]=> 
+                ["tfgg_cp_post_code"]=>
+                ["cartid"]=> 
+                ["tfgg_cp_cart_sage_nonce"]=>
+                ["card-identifier"]=>*/
+
+            //using the card-identifier, we POST a transaction to SagePayPI and send the results to the SunLync API and finalize the cart
+
+            //sage api reference https://test.sagepay.com/documentation/#transactions
+
+
+            $cartContents = json_decode(tfgg_scp_get_cart_contents());
+            $cartHeader = $cartContents->header;
+            $auth = get_option('tfgg_scp_cart_sage_key').':'.get_option('tfgg_scp_cart_sage_pass');
+
+            $tranDate = new DateTime();
+
+            $vendorCode = $cartHeader->processingStoreName.time();
+            
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://pi-test.sagepay.com/api/v1/transactions",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => '{' .
+                                    '"transactionType": "Payment",' .
+                                    '"paymentMethod": {' .
+                                    '    "card": {' .
+                                    '        "merchantSessionKey": "' . $_POST['sageMerchantSession'] . '",' .
+                                    '        "cardIdentifier": "' . $_POST['card-identifier'] . '",' .
+                                    '        "save": "false"' .
+                                    '    }' .
+                                    '},' .
+                                    '"vendorTxCode": "'.$vendorCode.'",' .
+                                    '"amount": '. (($cartHeader->total)*100)  .',' .
+                                    '"currency": "GBP",' .
+                                    '"description": "'.$cartHeader->processingStoreName.' Services",' .
+                                    '"apply3DSecure": "Disable",' .
+                                    '"applyAvsCvcCheck": "Disable", '.
+                                    '"customerFirstName": "'.$_POST['tfgg_cp_user_first'].'",' .
+                                    '"customerLastName": "'.$_POST['tfgg_cp_user_last'].'",' .
+                                    '"billingAddress": {' .
+                                    '    "address1": "'.$_POST['tfgg_cp_street_address'].'",' .
+                                    '    "city": "'.$_POST['tfgg_cp_city'].'",' .
+                                    '    "postalCode": "'.$_POST['tfgg_cp_post_code'].'",' .
+                                    '    "country": "GB"' .
+                                    '},' .
+                                    '"entryMethod": "Ecommerce", ' .
+                                    '"customerEmail": "'.$_POST['tfgg_cp_user_email'].'" '.
+                                    '}',
+            CURLOPT_USERPWD => $auth,
+            CURLOPT_HTTPHEADER => array("Cache-Control: no-cache",
+                "Content-Type: application/json"
+            ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            log_me($response);
+            curl_close($curl);
+            $response = json_decode($response);
+
+            if($response->statusCode=='0000'){
+                //the transaction processed with no errors
+
+                $postPayment = json_decode(tfgg_scp_post_payment_item_manual($_POST['cartid'],
+                $cartHeader->total,
+                $response->retrievalReference,
+                'SAGE'));
+
+                if($postPayment->results=='success'){
+                    $cartFinal = json_decode(tfgg_api_finalize_cart_manual($_POST['cartid']));
+                    
+                    $msg = get_option('tfgg_scp_cart_success_message');
+                    $msg = str_replace('!@#receiptnumber#@!',$cartFinal->receipt, $msg);
+
+                    tfgg_cp_errors()->add('success', __($msg));
+                }else{
+                    tfgg_cp_errors()->add('error_processing_card', __('There was an error processing your card<br/><br/>'.$postPayment->response));    
+                }
+
+            }else{
+                //handle errors
+                tfgg_cp_errors()->add('error_processing_card', __('There was an error processing your card<br/><br/>'.$response->statusDetail));
+            }
+
+
+        }
+    }
+    add_action('init','tfgg_scp_process_sage_pay_cart');
 
     /*function tfgg_user_menu(){
         $user = wp_get_current_user();

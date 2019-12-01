@@ -63,6 +63,11 @@
             wp_register_script('paypal-script','https://www.paypal.com/sdk/js?currency=GBP&client-id='.get_option('tfgg_scp_cart_paypal_clientid'),'',null);
             wp_enqueue_script('paypal-script');
         }
+
+        /*if((get_option('tfgg_scp_cart_sage_key')!='')&&(get_option('tfgg_scp_cart_sage_pass')!='')){
+            wp_register_script('sagepay-script','https://pi-test.sagepay.com/api/v1/js/sagepay.js','',null);
+            wp_enqueue_script('sagepay-script');
+        }*/
         
              
     }

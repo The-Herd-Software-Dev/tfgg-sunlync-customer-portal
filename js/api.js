@@ -1301,3 +1301,75 @@ function tfgg_scp_changePage(newPage){
         window.location.href=newPage;
     }
 }
+
+function tfgg_scp_toggle_cart_payment(newPanel){
+
+    console.log(newPanel);
+    if(newPanel=='paypal'){
+        jQuery('#paypal-button-container').show();
+        jQuery('#paypalCartPayment').addClass('account-overview-standard-button-active');
+        jQuery('#paypalCartPayment').removeClass('account-overview-standard-button');
+        jQuery('#sagepay-button-container').hide();
+        jQuery('#sagepayCartPayment').removeClass('account-overview-standard-button-active');
+        jQuery('#sagepayCartPayment').addClass('account-overview-standard-button');
+    }else{
+        jQuery('#paypal-button-container').hide();
+        jQuery('#paypalCartPayment').removeClass('account-overview-standard-button-active');
+        jQuery('#paypalCartPayment').addClass('account-overview-standard-button');
+        jQuery('#sagepay-button-container').show();
+        jQuery('#sagepayCartPayment').addClass('account-overview-standard-button-active');
+        jQuery('#sagepayCartPayment').removeClass('account-overview-standard-button');
+    }
+
+}
+
+function validateSagePayCartDemographics(){
+    ResetRegValidation();
+    event.preventDefault();
+    
+    var bResult = true;
+
+    if(!isEmail(jQuery('#tfgg_cp_user_email').val())){
+        jQuery('#new_reg_email').html('<p>'+jQuery('label[for="tfgg_cp_user_email"]').text()+' is required</p>');
+        jQuery('#new_reg_email').css('display','block');
+        bResult = false;
+    }
+
+    jQuery('.required').each(function(){
+        //console.log(this.id);
+        if(jQuery(this).val()===''){
+            var label = jQuery('label[for="'+this.id+'"]').text();
+            var alrtpnl = '#'+jQuery(this).data('alertpnl');
+            jQuery(alrtpnl).html('<p>'+label+' is required</p>');
+            jQuery(alrtpnl).css('display','block');
+            bResult = false;
+        }
+    });
+
+    if(!bResult){
+        event.preventDefault();
+        return false;
+    }else{
+        jQuery('#tfgg_scp_sagepay_cart').submit();
+    }
+}
+
+function tfgg_scp_sage_cart_merchant_session_key(callback){
+    var pathname = window.location.pathname;  
+    
+    jQuery.get(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_scp_sagepay_generate_merchant_session_key',
+		'dataType'  : 'json',
+		'pathname'  : pathname
+    },function(data){
+        //console.log(data);
+        var obj = jQuery.parseJSON(data);
+        if(obj["results"].toUpperCase()=='SUCCESS'){
+            callback(obj["sageMerchantSession"]);
+        }else{
+            alert('There was an error staging your transaction');
+            return false;
+        }
+
+    }); 
+}

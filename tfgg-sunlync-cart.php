@@ -7,9 +7,8 @@
         //var_dump($cartContents);
         if(StrToUpper($cartContents->results) === 'SUCCESS'){
             tfgg_scp_display_cart_banner();
-
-            echo '<br/><br/><br/> <br/>';
-
+            echo '<br/><br/><br/><br/>';
+            tfgg_sunlync_cp_show_error_messages();
             echo'<div class="row" id="tfgg_scp_cart_contents" >';
                 tfgg_scp_cart_items_display($cartContents->lineItems);
                 tfgg_scp_cart_header_display($cartContents->header, $cartContents->paymentItems);
@@ -26,10 +25,14 @@
             </script>
             <?php
         }else{
-            tfgg_scp_empty_cart_display();
+            if(empty(tfgg_cp_errors()->get_error_messages())){
+                tfgg_scp_empty_cart_display();
+            }else{
+                tfgg_scp_successful_cart_finalize();
+            }
             ?>
             <script>
-                tfggSetCartLinkQty(0);
+            tfggSetCartLinkQty(0);
             </script>
             <?php
         }
@@ -72,6 +75,18 @@
         </div>
 
 
+        <?php
+    }
+
+    function tfgg_scp_successful_cart_finalize(){
+        tfgg_scp_display_cart_banner();
+        ?>
+        <br/<br/><br/><br/>
+        <?php  
+            tfgg_sunlync_cp_show_error_messages();
+            tfgg_scp_cart_continue_shopping();
+        ?>
+        <br/><br/>
         <?php
     }
 
@@ -132,9 +147,18 @@
                     <div id="cart_payment_container">&nbsp;
                     </div>
                     <div class="overlay-button-container">
-                        <div id="paypal-button-container">
+                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                <button type="button" class="btn account-overview-button account-overview-standard-button-active overlay-checkout-button"
+                                id="sagepayCartPayment" onclick="tfgg_scp_toggle_cart_payment('sage');">Credit Card</button>
+                                <button type="button" class="btn account-overview-button account-overview-standard-button overlay-checkout-button"
+                                id="paypalCartPayment" onclick="tfgg_scp_toggle_cart_payment('paypal');">PayPal</button>
+                            </div>
                         </div>
-                        <button type="button" class="account-overview-button account-overview-standard-button overlay-checkout-button" id="tfgg_scp_cart_complete" <?php if($header->allowToFinalize==0){echo "disabled";} ?>>COMPLETE</button>
+                        <br/>
+                        <div id="paypal-button-container" style="display:none"></div>
+                        <?php echo tfgg_scp_display_sage_entry_form();?>
+                    </div>
                     </div>
                 </div>
 
@@ -187,6 +211,191 @@
         <form action="<?php echo site_url(get_option('tfgg_scp_cart_slug'));?>">
             <button type="submit" class="account-overview-button account-overview-standard-button">CONTINUE SHOPPING</button>
         </form>     
+    <?php
+    }
+
+    function tfgg_scp_display_sage_cart(){
+        return false;//this is for use in the 'drop in cart' integration
+        if((get_option('tfgg_scp_cart_allow_sage_payment','0')=='0')||
+        (get_option('tfgg_scp_cart_sage_key')=='')||(get_option('tfgg_scp_cart_sage_pass')=='')){
+            return false;
+        }
+        if(!tfgg_scp_sagepay_generate_merchant_session_key()){
+            return false;
+        }
+        ?>
+        <script src="https://pi-test.sagepay.com/api/v1/js/sagepay.js"></script>
+        
+        <script>
+            sagepayCheckout({ merchantSessionKey: '<?php echo $_SESSION['sageMerchantSession'];?>' }).form();
+        </script>
+        <?php
+    }
+
+    function tfgg_scp_display_sage_entry_form(){
+    ?>
+        <div id="sagepay-button-container">
+            <form action="" method="post" id="tfgg_scp_sagepay_cart"> 
+                <div class="registration-container-main">
+                    <div class="account-overview-input-single-left">
+                        <h4>Billing Details</h4>
+                        <div class="registration-container">
+                            <div class="account-overview-input-single">
+                                <label for="tfgg_cp_user_email" class="account-overview-label"><?php _e('Email'); ?></label>
+                                <input data-alertpnl="new_reg_email" name="tfgg_cp_user_email" id="tfgg_cp_user_email" class="required account-overview-input" type="email"/>
+                                <div style="display:none" id="new_reg_email" class="reg_alert"></div> 
+                            </div>
+                        </div>
+
+                        <div class="registration-container">
+                            <div class="account-overview-input-double">
+                                <label for="tfgg_cp_user_first" class="account-overview-label"><?php _e('First Name'); ?></label>
+                                <input data-alertpnl="new_reg_fname" name="tfgg_cp_user_first" id="tfgg_cp_user_first" class="required account-overview-input" type="text"/>
+                                <div style="display:none" id="new_reg_fname" class="reg_alert"></div>
+                            </div>
+                            <div class="account-overview-input-single">
+                                <label for="tfgg_cp_user_last" class="account-overview-label"><?php _e('Last Name'); ?></label>
+                                <input data-alertpnl="new_reg_lname" name="tfgg_cp_user_last" id="tfgg_cp_user_last" class="required account-overview-input" type="text"/>
+                                <div style="display:none" id="new_reg_lname" class="reg_alert"></div>
+                            </div>
+                        </div>
+
+                        <div class="registration-container">
+                            <div class="account-overview-input-double">
+                                <label for="tfgg_cp_street_address" class="account-overview-label"><?php _e('Street Address'); ?></label>
+                                <input data-alertpnl="new_reg_street_address" id="tfgg_cp_street_address" name="tfgg_cp_street_address" class="required account-overview-input" type="text"/>
+                                <div style="display:none" id="new_reg_street_address" class="reg_alert"></div>
+                            </div>
+                            <div class="account-overview-input-single">
+                                <label for="tfgg_cp_street_address_2" class="account-overview-label"><?php _e('Unit / Apt. #'); ?></label>
+                                <input data-alertpnl="new_reg_street_address_2_alertpnl" name="tfgg_cp_street_address_2" id="tfgg_cp_street_address_2" class="account-overview-input" type="text"/>
+                                <div style="display:none" id="new_reg_street_address_2_alertpnl" class="reg_alert"></div>
+                            </div>
+                        </div>
+                        <div class="registration-container">
+                            <div class="account-overview-input-double">
+                                <label for="tfgg_cp_city" class="account-overview-label"><?php _e('City'); ?></label>
+                                <input data-alertpnl="new_reg_city" id="tfgg_cp_city" name="tfgg_cp_city" class="required account-overview-input" type="text"/>
+                                <div style="display:none" id="new_reg_city" class="reg_alert"></div>
+                            </div>
+                            <div class="account-overview-input-single">
+                                <label for="tfgg_cp_post_code" class="account-overview-label"><?php _e('Post Code'); ?></label>
+                                <input data-alertpnl="new_reg_post_code_alertpnl" name="tfgg_cp_post_code" id="tfgg_cp_post_code" class="required account-overview-input" type="text"/>
+                                <div style="display:none" id="new_reg_post_code_alertpnl" class="reg_alert"></div>
+                            </div>
+                        </div>
+                        
+                        <hr/>
+
+                        <h4>Card Details</h4>
+                        <div class="registration-container">
+                            <div class="account-overview-input-single">
+                                <label for="tfgg_cp_sage_card_name" class="account-overview-label"><?php _e('Name On Card'); ?></label>
+                                <input data-card-details="cardholder-name" data-alertpnl="tfgg_cart_card_name_alertpnl" id="tfgg_cp_sage_card_name" class="required account-overview-input" type="text"/>
+                                <div style="display:none" id="tfgg_cart_card_name_alertpnl" class="reg_alert"></div> 
+                            </div>
+                        </div>
+                        <div class="registration-container">
+                            <div class="account-overview-input-single">
+                                <label for="tfgg_cp_sage_card_number" class="account-overview-label"><?php _e('Card number'); ?></label>
+                                <input data-card-details="card-number" data-alertpnl="tfgg_cart_card_number_alertpnl" id="tfgg_cp_sage_card_number" class="required account-overview-input" type="text" placeholder="0000 0000 0000 0000"/>
+                                <div style="display:none" id="tfgg_cart_card_number_alertpnl" class="reg_alert"></div> 
+                            </div>
+                        </div>
+                        <div class="registration-container">
+                            <div class="account-overview-input-double">
+                                <label for="tfgg_cp_sage_card_expiry" class="account-overview-label"><?php _e('Expiry'); ?></label>
+                                <input data-card-details="expiry-date" data-alertpnl="tfgg_cart_card_expiry_alertpnl" id="tfgg_cp_sage_card_expiry" class="required account-overview-input" type="text" placeholder="MMYY"/>
+                                <div style="display:none" id="tfgg_cart_card_expiry_alertpnl" class="reg_alert"></div>
+                            </div>
+                            <div class="account-overview-input-single">
+                                <label for="tfgg_cp_sage_card_cvc" class="account-overview-label"><?php _e('CVC'); ?></label>
+                                <input data-card-details="security-code" data-alertpnl="tfgg_cart_card_cvc_alertpnl" id="tfgg_cp_sage_card_cvc" class="required account-overview-input" type="text" placeholder="000"/>
+                                <div style="display:none" id="tfgg_cart_card_cvc_alertpnl" class="reg_alert"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="cartid" value="<?php echo $_SESSION['tfgg_scp_cartid'];?>"/>
+                <input type="hidden" name="tfgg_cp_cart_sage_nonce" value="<?php echo wp_create_nonce('tfgg-cp-cart-sage-nonce'); ?>"/> 
+                <input type="hidden" name="card-identifier"/>
+                <input type="hidden" name="sageMerchantSession" id="sageMerchantSession"/> 
+                <div id="sp-container"></div>
+                <button type="submit" class="account-overview-button account-overview-standard-button overlay-checkout-button" id="tfgg_scp_cart_complete" >COMPLETE PURCHASE</button>
+            </form>
+
+            <script src="https://pi-test.sagepay.com/api/v1/js/sagepay.js"></script>
+            <script>
+                document.getElementById('tfgg_scp_cart_complete')
+                    .addEventListener('click', function(e) {
+                        event.preventDefault();
+                        //validate data entry
+                        var validateResult = true;
+                        
+                        var alertPanels = document.querySelectorAll('.reg_alert');
+                        //reset the warnings
+                        alertPanels.forEach(function(alertPnl){
+                            alertPnl.innerHTML='';
+                            alertPnl.style.display='none';
+                        });
+                        
+                        var inputFields = document.querySelectorAll('.required');
+                        inputFields.forEach(function(inputData){
+
+                            if(inputData.value==''){
+                                validateResult = false;
+                                var label = jQuery('label[for="'+inputData.id+'"]').text();
+                                var alertPnl = document.getElementById(inputData.dataset.alertpnl);
+                                alertPnl.innerHTML=label+' is required';
+                                alertPnl.style.display='';  
+                            }
+
+                            //alert(inputData.dataset.alertpnl);
+                        });
+
+                        if(!validateResult){return false};
+
+                        tfgg_scp_sage_cart_merchant_session_key(function(merchantKey){
+                            sagepayOwnForm({ merchantSessionKey: merchantKey })
+                            .tokeniseCardDetails({
+                                cardDetails: {
+                                    cardholderName: document.querySelector('[data-card-details="cardholder-name"]').value,
+                                    cardNumber: document.querySelector('[data-card-details="card-number"]').value,
+                                    expiryDate: document.querySelector('[data-card-details="expiry-date"]').value,
+                                    securityCode: document.querySelector('[data-card-details="security-code"]').value
+                                },
+                                onTokenised : function(result) {
+                                    if (result.success) {
+                                        document.querySelector('[name="card-identifier"]').value = result.cardIdentifier;
+                                        document.querySelector('[name="sageMerchantSession"]').value = merchantKey;
+                                        document.getElementById('tfgg_scp_sagepay_cart').submit();
+                                    } else {
+                                        //alert(JSON.stringify(result));
+                                        //var errors = JSON.parse(result.errors);
+                                        //alert(errors);
+                                        //console.log(result.errors);
+                                        result.errors.forEach(function(thisError){
+                                            if(thisError.message.indexOf('card number')>0){
+                                                var pnl=document.getElementById('tfgg_cart_card_number_alertpnl');  
+                                            }else if(thisError.message.indexOf('security code')>0){
+                                                var pnl=document.getElementById('tfgg_cart_card_cvc_alertpnl');
+                                            }else if(thisError.message.indexOf('expiry')>0){
+                                                var pnl=document.getElementById('tfgg_cart_card_expiry_alertpnl');
+                                            }
+                                            pnl.innerHTML=pnl.innerHTML+'<br/>'+thisError.message;
+                                            pnl.style.display=''; 
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                        
+                                           
+                }, false);
+
+            </script>
+
+        </div>
     <?php
     }
 
