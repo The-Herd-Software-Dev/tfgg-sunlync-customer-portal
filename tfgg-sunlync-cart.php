@@ -415,7 +415,8 @@
                 amount: {
                     "custom_id": "<?php echo $_SESSION['tfgg_scp_cartid']; ?>",
                     "value": "<?php echo ($header->total-$header->totalPayments); ?>"
-                }
+                },
+                description: "<?php echo $header->processingStoreName; ?> Services"
                 }]
                 });
             },
@@ -618,9 +619,7 @@
 
                     <br />
                     <div class="overlay-items-item-buttongroup">
-                        <?php
-                        /*<a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class="overlay-items-item-link">ADD TO CART</a>*/
-                        ?>         
+                        <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class="overlay-items-item-link">ADD TO CART</a>        
                     </div>
                 </div>
 

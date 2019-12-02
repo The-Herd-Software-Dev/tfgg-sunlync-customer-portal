@@ -1304,7 +1304,7 @@ function tfgg_scp_changePage(newPage){
 
 function tfgg_scp_toggle_cart_payment(newPanel){
 
-    console.log(newPanel);
+    //console.log(newPanel);
     if(newPanel=='paypal'){
         jQuery('#paypal-button-container').show();
         jQuery('#paypalCartPayment').addClass('account-overview-standard-button-active');
