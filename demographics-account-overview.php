@@ -211,7 +211,7 @@
 			    							if(($details->is_eft==0)&&(tfgg_scp_can_service_be_purchased('M',$details->membership_number))){
 			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
 											?>
-											<button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" >BUY AGAIN</button>
+											<button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfggPostCartItem('M','<?php echo $details->membership_number;?>','1');">BUY AGAIN</button>
 											<?php
 												}//if
 											?>

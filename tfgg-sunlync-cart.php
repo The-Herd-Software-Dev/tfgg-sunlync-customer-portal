@@ -197,8 +197,8 @@
                 <div class="modal-body" id="tfgg_scp_cart_add_message">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfgg_scp_changePage('<?php echo $viewCartURL; ?>');">Pay Now</button>
-                    <button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" data-dismiss="modal">CONTINUE SHOPPING</button>
+                    <button id="tfgg_scp_cart_add_pay_btn" type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfgg_scp_changePage('<?php echo $viewCartURL; ?>');">Pay Now</button>
+                    <button id="tfgg_scp_cart_add_continue_btn" type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" data-dismiss="modal">CONTINUE SHOPPING</button>
                 </div>
                 </div>
             </div>
@@ -619,7 +619,7 @@
 
                     <br />
                     <div class="overlay-items-item-buttongroup">
-                        <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class="overlay-items-item-link">ADD TO CART</a>        
+                        <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">ADD TO CART</a>        
                     </div>
                 </div>
 
