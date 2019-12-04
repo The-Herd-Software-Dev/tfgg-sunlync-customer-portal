@@ -244,22 +244,25 @@ tr.account_overview_row > td {
 }
 
 .cart-paynow-font-color {
-    color:#56DB39;    
+    color:#5AAC44;    
 }
 
 .cart-paynow-font-color:hover {
-    color:#3E9C2A;    
+    color:#407830;    
 }
 
 .cart-standard-button-paynow {
-    background-color:#56DB39;
-    border:1px solid #56DB39;
+    background-color:#5AAC44;
+    border:1px solid #5AAC44;
+    color:white;
+    font-weight: bold !important;
 }
 
 .cart-standard-button-paynow:hover {
-    background-color:#3E9C2A;
-    border:1px solid #3E9C2A;
+    background-color:#407830;
+    border:1px solid #407830;
     color:#fff;
+    font-weight: bold !important;
 }
 
 .account-overview-table {
