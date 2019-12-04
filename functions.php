@@ -83,6 +83,18 @@
         if(isset($_SESSION['tfgg_scp_cart_qty'])){
             unset($_SESSION['tfgg_scp_cart_qty']);
         }
+        if(isset($_SESSION['sageMerchantSession'])){
+            unset($_SESSION['sageMerchantSession']);
+        }
+        if(isset($_SESSION['sageMerchantSessionExp'])){
+            unset($_SESSION['sageMerchantSessionExp']);
+        }
+        if(isset($_SESSION['clientHomeStore'])){
+            unset($_SESSION['clientHomeStore']);
+        }
+        if(isset($_SESSION['tfgg_scp_cart_store'])){
+            unset($_SESSION['tfgg_scp_cart_store']);
+        }
 
         $result["logout"]=site_url();//possible configurable option
         exit(json_encode($result));
@@ -317,12 +329,6 @@
             $result["results"]="success";
             $result["data"]=array_slice($data,1,-1);
 
-            if(!isset($_SESSION['tfgg_scp_cartid'])){
-                unset($_SESSION['tfgg_scp_cartid']);
-            }
-
-            tfgg_scp_get_cart_contents();//after login, verify cart contents
-
             return json_encode($result);
 		}
     }
@@ -358,6 +364,18 @@
 		       
             $result["results"]="success";
             $result["demographics"]=array_slice($data,1,-1);
+
+            $demo = $result['demographics'][0];
+
+            //default purchasing store if the cart is empty
+            $_SESSION['clientHomeStore'] = $demo->homeStore;
+
+            if(!isset($_SESSION['tfgg_scp_cartid'])){
+                unset($_SESSION['tfgg_scp_cartid']);
+            }
+            
+            tfgg_scp_get_cart_contents();//after login, verify cart contents
+
             return json_encode($result);
 		}
         
@@ -691,6 +709,41 @@
     }
     add_action( 'wp_ajax_tfgg_api_get_stores', 'tfgg_api_get_stores' );
     add_action( 'wp_ajax_nopriv_tfgg_api_get_stores', 'tfgg_api_get_stores' );
+
+    function tfgg_api_get_unfiltered_stores(){
+        //2019-09-30 CB V1.0.0.6 - changed to use store demo appt info
+        //$url=tfgg_get_api_url().'TSunLyncAPI/ApptGetStoreSettings/sStoreCode';
+        $url= tfgg_get_api_url().'TSunLyncAPI/CIPGetStoreDemoApptInfo/sStoreCode/nInAppts';
+        
+        $url=str_replace('sStoreCode','',$url);
+        $url=str_replace('nInAppts','',$url);
+        
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+        
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            $result["stores"]=array_slice($data,1,-1);
+            usort($result["stores"],"tfgg_store_store_by_name");//2019-09-30 CB V1.0.0.6 - the new api call is not sorted alphabetically
+            return json_encode($result);
+		}    
+    }
 
     function tfgg_api_get_stores_for_appts(){
         //2019-10-01 CB V1.0.0.8 - new method added to retrieve stores
@@ -1488,12 +1541,12 @@
         }    
     }
 
-    function tfgg_scp_get_packages_from_api($allowedPackageList){
+    function tfgg_scp_get_packages_from_api($allowedPackageList='', $affiliatedStore=''){
         /*CIPGetPackages(sPackageList, sStoreCode:String; mrktCode*/
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetPackages/sPackageList/sStoreCode';
         
         $url=str_replace('sPackageList',$allowedPackageList,$url);
-        $url=str_replace('sStoreCode','',$url);
+        $url=str_replace('sStoreCode',$affiliatedStore,$url);
 
         try{
             $data = tfgg_execute_api_request('GET',$url,'');
@@ -1522,11 +1575,11 @@
 		}  
     }
 
-    function tfgg_scp_get_memberships_from_api($allowedMembershipList){
+    function tfgg_scp_get_memberships_from_api($allowedMembershipList='', $affiliatedStore=''){
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetMemberships/sMembershipList/sStoreCode';
         
         $url=str_replace('sMembershipList',$allowedMembershipList,$url);
-        $url=str_replace('sStoreCode','',$url);
+        $url=str_replace('sStoreCode',$affiliatedStore,$url);
 
         try{
             $data = tfgg_execute_api_request('GET',$url,'');
@@ -1619,6 +1672,7 @@
         $cartHeader = $data->result[0][0][0];
         $cartHeader = $cartHeader->header[0];//there is only ever 1 header record
 
+        $_SESSION['tfgg_scp_cart_store'] = $cartHeader->processingStore;
         $_SESSION['tfgg_scp_cart_qty'] = $cartHeader->qty;
 
         $cartItems= $data->result[0][0][1];
@@ -1661,9 +1715,11 @@
             $cartid='';
         }
 
+        if(isset($_SESSION['tfgg_scp_cart_store'])){$storecode = $_SESSION['tfgg_scp_cart_store'];}else{$storecode=$_SESSION['clientHomeStore'];}
+
         $postBody = array();
         $postBody["clientNumber"] = tfgg_cp_get_sunlync_client();
-        $postBody["storeCode"] = '0000000001';
+        $postBody["storeCode"] = $storecode;
         $postBody["cartID"] = $cartid;
         $postBody["itemType"] = $_POST['data']['itemType'];
         $postBody["keyValue"] = $_POST['data']['keyValue'];
@@ -1880,6 +1936,56 @@
             return json_encode($return);
 		} 
     }
+
+    function tfgg_scp_post_cart_storecode(){
+
+        if((!isset($_SESSION['tfgg_scp_cartid']))||
+        (isset($_SESSION['tfgg_scp_cart_store'])&&($_SESSION['tfgg_scp_cart_store']==$_POST['data']['storecode']))
+        ){
+            //no need to hit the API, just change the cart store and retrun
+            $_SESSION['tfgg_scp_cart_store']=$_POST['data']['storecode'];
+            
+            $return["results"]="success";
+
+            exit(json_encode($return));
+        }
+
+        $url=tfgg_get_api_url().'TAPICart/CartStore/sCartID/sStoreCode';
+
+        $url=str_replace('sCartID',$_SESSION['tfgg_scp_cartid'],$url);
+        $url=str_replace('sStoreCode',$_POST['data']['storecode'],$url);
+
+        try{
+            $data = tfgg_execute_api_request('POST', $url, '');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            exit(json_encode($result));
+        }
+
+        $result=$data->result[0][0];
+
+        if((array_key_exists('ERROR',$result))||(array_key_exists('WARNING',$result))){
+			if(array_key_exists('ERROR',$result)){
+				$result=array("results"=>"FAIL",
+					"response"=>$result->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$result->WARNING);
+			}			
+			exit(json_encode($result));
+		}else{
+            $return["results"]="success";
+
+            tfgg_scp_get_cart_contents();//after update, refresh cart
+
+            exit(json_encode($result));
+		} 
+
+    }
+    add_action('wp_ajax_tfgg_scp_post_cart_storecode','tfgg_scp_post_cart_storecode');
+    add_action('wp_ajax_tfgg_scp_post_cart_storecode','tfgg_scp_post_cart_storecode');
+
 
     function tfgg_api_finalize_cart(){
         $url=tfgg_get_api_url().'TAPICart/Cart/sCartID';

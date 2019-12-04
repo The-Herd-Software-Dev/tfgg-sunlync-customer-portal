@@ -8,7 +8,7 @@ function tfgg_scp_store_selction_description(){
 
 function display_tfgg_store_selection(){
     //first thing we need to do is actually display all the stores the API returns
-    $storeList = json_decode(tfgg_api_get_stores());
+    $storeList = json_decode(tfgg_api_get_unfiltered_stores());
     if(StrToUpper($storeList->results)==='SUCCESS'){
         $storeList = $storeList->stores;	
         $selectedStores = (array)get_option('tfgg_scp_store_selection');

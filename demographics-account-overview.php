@@ -8,14 +8,21 @@
             //$client="0000000002";
             $demographics = json_decode(tfgg_api_get_client_demographics($client)); 
             //var_dump($demographics);
-            
+            if(isset($_SESSION['tfgg_scp_cart_qty'])){
+				?>
+				<script>
+				console.log(<?php echo $_SESSION['tfgg_scp_cart_qty'];?>);
+				tfggSetCartLinkQty(<?php echo $_SESSION['tfgg_scp_cart_qty'];?>);
+				</script>
+				<?php
+			}
             
             if(StrToUpper($demographics->results) === 'SUCCESS'){
                 $actualDemographics = $demographics->demographics[0];
                 //print_r($actualDemographics);
                 //foreach($actualDemographics as $key => $value){
                 //    echo $key."::".$value."<br/>";
-                //}
+				//}
                 
                 $disabled = "";	
 	           if (get_option('tfgg_scp_demogrphics_allow') !== '1')

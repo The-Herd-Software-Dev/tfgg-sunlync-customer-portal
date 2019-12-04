@@ -202,7 +202,7 @@
                 </div>
                 </div>
             </div>
-            </div>
+        </div>
         <?php
     }
 
@@ -495,16 +495,25 @@
     function tfgg_scp_display_services_for_sale(){
         ob_start();
 
+        if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}
+        
         //$packageList = json_decode(tfgg_scp_get_packages_from_api(tfgg_scp_get_packages_selected_for_api()));
-        $packageList = json_decode(tfgg_scp_get_packages_from_api(tfgg_scp_get_packages_selected_for_api()));
+        $packageList = json_decode(tfgg_scp_get_packages_from_api(tfgg_scp_get_packages_selected_for_api(), $browsingStore));
+        
         if(StrToUpper($packageList->results) === 'SUCCESS'){
             $packageList = $packageList->packages;
+        }else{
+            $packageList = '';    
         }
 
-        $membershipList = json_decode(tfgg_scp_get_memberships_from_api(tfgg_scp_get_memberships_selected_for_api()));
+        $membershipList = json_decode(tfgg_scp_get_memberships_from_api(tfgg_scp_get_memberships_selected_for_api(), $browsingStore));
         if(StrToUpper($membershipList->results) === 'SUCCESS'){
             $membershipList = $membershipList->memberships;
+        }else{
+            $membershipList = '';    
         }
+
+        tfgg_scp_display_store_service_selection();
         
         if($packageList<>''){
             ?>
@@ -633,6 +642,46 @@
         
         tfgg_scp_display_cart_successful_add();
         return ob_get_clean();
+    }
+
+    function tfgg_scp_display_store_service_selection(){
+        $storeList = json_decode(tfgg_api_get_stores());
+        if(StrToUpper($storeList->results)==='SUCCESS'){
+            $storeList = $storeList->stores;
+            if(isset($_SESSION['tfgg_scp_cart_store'])){$selected = $_SESSION['tfgg_scp_cart_store'];}else{$selected=$_SESSION['clientHomeStore'];}
+
+            ?>
+            <div class="" style="margin-bottom: 1em;">
+                <label for="tfgg_scp_store_purchasing_selection"><?php _e('You are currently purchasing services for '); ?></label>
+                <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" style="max-width: 30%">
+                <?php
+                    foreach($storeList as &$details){
+                        $output='<option value="'.$details->store_id.'" '.($details->store_id === $selected ? "selected" : "").'>'.$details->store_loc.'</option>';
+                        echo $output; 
+                    }
+                ?>
+                </select>
+                <div style="display:inline">
+                <button type="button" class="account-overview-button account-overview-standard-button" onclick="confirmChangeCartStore(<?php echo $selected?>);">Change Store Selection</button>
+                </div>
+
+                <div class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                        <div class="modal-body" id="tfgg_scp_store_purchasing_selection_confirm_message">
+                            Any items in your cart that cannot be used at the new store location will be removed, continue?
+                        </div>
+                        <div class="modal-footer">
+                            <button id="tfgg_scp_cart_add_pay_btn" type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="changeCartStore();">Yes</button>
+                            <button id="tfgg_scp_cart_add_continue_btn" type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" data-dismiss="modal">Cancel</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <?php
+        }
     }
 
 ?>

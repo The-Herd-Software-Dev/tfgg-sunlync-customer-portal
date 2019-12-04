@@ -1376,3 +1376,31 @@ function tfgg_scp_sage_cart_merchant_session_key(callback){
 
     }); 
 }
+
+function confirmChangeCartStore(){
+    jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');    
+}
+
+function changeCartStore(){
+    jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');
+    var selected = jQuery('#tfgg_scp_store_purchasing_selection option:selected').val();
+
+    var pathname = window.location.pathname; 
+
+    jQuery.post(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_scp_post_cart_storecode',
+        'data'      : {storecode: selected},
+		'dataType'  : 'json',
+		'pathname'  : pathname
+    },function(data){
+        console.log(data);
+        var obj = jQuery.parseJSON(data);
+
+        if(obj["result"].toUpperCase()=='SUCCESS'){
+            window.location.reload();
+        }else{
+            console.log(obj);            
+        }
+    });    
+    
+}

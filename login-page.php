@@ -118,7 +118,9 @@
     		if((!isset($_POST['tfgg_cp_user_pass']))||($_POST['tfgg_cp_user_pass']==='')){
     			tfgg_cp_errors()->add('error_empty_password', __('Please enter a password'));	
     		}
-    		
+			
+			tfgg_cp_errors()->add('error_empty_password', __('Please enter a password'));	
+
     		$errors = tfgg_cp_errors()->get_error_messages();
     		
     		if(empty($errors)){
