@@ -127,6 +127,7 @@
 
                 <div id="cart-totals-content">
 
+
                     <?php
                     if($header->payments < -1){
                     ?>
@@ -142,12 +143,15 @@
                         <?php
                         }
                         ?>
+                        
+
                     </div>
                     <?php
                     }
                     ?>
-                    <div id="cart_payment_container">&nbsp;
-                    </div>
+                    
+        
+
                     <div class="overlay-button-container">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group d-flex" role="group" aria-label="Second group" style="width:100%;">
