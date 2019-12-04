@@ -231,12 +231,17 @@ tr.account_overview_row > td {
     border:1px solid #FCAF41;
 }
 
+
+
+
 .account-overview-standard-button:hover,
 .account-overview-standard-button-active{
     background-color:#F16631;
     border:1px solid #F16631;
     color:#fff;
 }
+
+
 
 .account-overview-cancel-button {
     background-color:#fff;
@@ -1041,3 +1046,9 @@ tr.account_overview_row > td {
     margin:8px;
 }
 
+.overlay-checkout-group-button {
+    width:100%;
+    font-size:1em !important;
+    font-weight: 700;
+    border-radius:0px !important;
+}

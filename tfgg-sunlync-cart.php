@@ -148,10 +148,10 @@
                     </div>
                     <div class="overlay-button-container">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                            <div class="btn-group mr-2" role="group" aria-label="Second group">
-                                <button type="button" class="btn account-overview-button account-overview-standard-button-active overlay-checkout-button"
+                            <div class="btn-group d-flex" role="group" aria-label="Second group" style="width:100%;">
+                                <button type="button" class="btn account-overview-button account-overview-standard-button-active overlay-checkout-group-button"
                                 id="sagepayCartPayment" onclick="tfgg_scp_toggle_cart_payment('sage');">Credit Card</button>
-                                <button type="button" class="btn account-overview-button account-overview-standard-button overlay-checkout-button"
+                                <button type="button" class="btn account-overview-button account-overview-standard-button overlay-checkout-group-button"
                                 id="paypalCartPayment" onclick="tfgg_scp_toggle_cart_payment('paypal');">PayPal</button>
                             </div>
                         </div>
