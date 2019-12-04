@@ -652,7 +652,7 @@
 
             ?>
             <div class="" style="margin-bottom: 1em;">
-                <label for="tfgg_scp_store_purchasing_selection"><?php _e('You are currently purchasing services for '); ?></label>
+                <label for="tfgg_scp_store_purchasing_selection"><?php _e('You are viewing packages and services offered by '); ?></label>
                 <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" style="max-width: 30%">
                 <?php
                     foreach($storeList as &$details){
