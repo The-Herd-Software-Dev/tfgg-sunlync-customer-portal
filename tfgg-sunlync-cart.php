@@ -10,7 +10,7 @@
             echo '<br/><br/><br/><br/>';
             tfgg_sunlync_cp_show_error_messages();
             echo'<div class="row" id="tfgg_scp_cart_contents" >';
-                tfgg_scp_cart_items_display($cartContents->lineItems);
+                tfgg_scp_cart_items_display($cartContents->header, $cartContents->lineItems);
                 tfgg_scp_cart_header_display($cartContents->header, $cartContents->paymentItems);
             echo '</div>';//row
 
@@ -40,7 +40,7 @@
         return ob_get_clean();
     }
 
-    function tfgg_scp_cart_items_display($lineItems){
+    function tfgg_scp_cart_items_display($header, $lineItems){
         ?>
 
         <div id="cart-items-left" class="col-lg-4">
@@ -72,8 +72,37 @@
                 }
             ?>
 
-        </div>
+            <hr />
+            <br />
+            <div class="cart-items-header"><h4>ORDER SUMMARY</h4></div>
 
+            <div id="cart-totals-content-labels-container">
+
+            <span class="cart-totals-content-label">Items</span>
+            <span class="cart-totals-content-value"><?php echo $header->qty; ?></span>
+
+            <br />
+
+            <span class="cart-totals-content-label">Sub-total</span>
+            <span class="cart-totals-content-value">&#163;<?php echo $header->subtotal; ?></span>
+
+            <br />
+            <?php
+            if ($header->payments>0){
+            ?>
+            <span class="cart-totals-content-label">Payments</span>
+            <span class="cart-totals-content-value">&#163;<?php echo $header->totalPayments; ?></span>
+            <br />
+            <?php
+            }
+            ?>
+
+            <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
+            <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo ($header->total - $header->totalPayments); ?></span>
+
+            </div>
+
+        </div>
 
         <?php
     }
@@ -96,35 +125,8 @@
 
         <div id="cart-items-right" class="col-lg-4">
 
-            <div class="cart-items-header"><h4>ORDER SUMMARY</h4></div>
-
                 <div id="cart-totals-content">
 
-                    <div id="cart-totals-content-labels-container">
-
-                        <span class="cart-totals-content-label">Items</span>
-                        <span class="cart-totals-content-value"><?php echo $header->qty; ?></span>
-
-                        <br />
-
-                        <span class="cart-totals-content-label">Sub-total</span>
-                        <span class="cart-totals-content-value">&#163;<?php echo $header->subtotal; ?></span>
-
-                        <br />
-                        <?php
-                        if ($header->payments>0){
-                        ?>
-                        <span class="cart-totals-content-label">Payments</span>
-                        <span class="cart-totals-content-value">&#163;<?php echo $header->totalPayments; ?></span>
-                        <br />
-                        <?php
-                        }
-                        ?>
-
-                        <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
-                        <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo ($header->total - $header->totalPayments); ?></span>
-                
-                    </div>
                     <?php
                     if($header->payments < -1){
                     ?>

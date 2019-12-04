@@ -981,11 +981,8 @@ tr.account_overview_row > td {
   }
 
 #cart_payment_container,
-#cart_payment_items_container  {
-    margin-top:10px;
-    border-top: solid 1px #ebebeb;
+#cart_payment_items_container  {    
     padding:10px;
-    height:60px;
 }
 
 .cart-payment-label {
