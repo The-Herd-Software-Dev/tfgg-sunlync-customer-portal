@@ -574,7 +574,7 @@
 
                     <br />
                     <div class="overlay-items-item-buttongroup">
-                        <a href="javascript:tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">ADD TO CART</a>         
+                        <a href="javascript:tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">BUY NOW</a>         
                     </div>
                 </div>
 
@@ -634,7 +634,7 @@
 
                     <br />
                     <div class="overlay-items-item-buttongroup">
-                        <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">ADD TO CART</a>        
+                        <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">BUY NOW</a>        
                     </div>
                 </div>
 
