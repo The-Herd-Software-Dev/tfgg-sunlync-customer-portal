@@ -172,17 +172,23 @@
         }
     }
 
+    function tfgg_scp_remove_slashes($str){
+        $str = str_replace('/','',$str);
+        $str = stripslashes($str);
+        return $str;
+    }
+
     function tfgg_redirect_from_user_req_pages(){
         global $wp;
         log_me('requested page: '.$wp->request);
         $sunlyncUser = tfgg_cp_get_sunlync_client();
         if($sunlyncUser<>false){$sunlyncUser=true;}
         
-        $acctOverview = get_option('tfgg_scp_acct_overview');
-        $apptBooking = get_option('tfgg_scp_cpappt_page');
-        $login = get_option('tfgg_scp_cplogin_page');
-        $registration=get_option('tfgg_scp_cpnewuser_page');
-        $cart = get_option('tfgg_scp_cart_slug');
+        $acctOverview = tfgg_scp_remove_slashes(get_option('tfgg_scp_acct_overview'));
+        $apptBooking = tfgg_scp_remove_slashes(get_option('tfgg_scp_cpappt_page'));
+        $login = tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page'));
+        $registration = tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_page'));
+        $cart = tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_slug'));
 
         //I am purposely leaving this broken out to make management easier
         if($sunlyncUser){
