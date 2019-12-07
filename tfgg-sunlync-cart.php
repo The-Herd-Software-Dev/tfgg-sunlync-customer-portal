@@ -6,8 +6,8 @@
         $cartContents = json_decode(tfgg_scp_get_cart_contents());
         //var_dump($cartContents);
         if(StrToUpper($cartContents->results) === 'SUCCESS'){
-            tfgg_scp_display_cart_banner();
-            echo '<br/><br/><br/><br/>';
+           // tfgg_scp_display_cart_banner();
+           // echo '<br/><br/><br/><br/>';
             tfgg_sunlync_cp_show_error_messages();
             echo'<div class="row" id="tfgg_scp_cart_contents" >';
                 tfgg_scp_cart_items_display($cartContents->header, $cartContents->lineItems);
