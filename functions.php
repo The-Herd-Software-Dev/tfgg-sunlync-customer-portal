@@ -440,7 +440,19 @@
 		}else{
 		       
             $result["results"]="success";
-            $result["clientPackages"]=array_slice($data,1,-1);
+            //$result["clientPackages"]=array_slice($data,1,-1);
+            $packages = array_slice($data,1,-1);
+            $packageAlias = get_option('tfgg_scp_package_alias');
+            foreach($packages as &$packageDetails){
+                if((array_key_exists($packageDetails->package_number, $packageAlias))&&
+                ($packageAlias[$packageDetails->package_number]<>'')){ 
+                    $packageDetails->alias = $packageAlias[$packageDetails->package_number]; 
+                }else{ 
+                    $packageDetails->alias = $packageDetails->description;
+                }
+            }
+
+            $result["clientPackages"]=$packages;
             return json_encode($result);
 		}    
     }
@@ -472,7 +484,21 @@
 		}else{
 		       
             $result["results"]="success";
-            $result["clientMemberships"]=array_slice($data,1,-1);
+            //$result["clientMemberships"]=array_slice($data,1,-1);
+
+            $memberships = array_slice($data,1,-1);
+            $membershipAlias = get_option('tfgg_scp_membership_alias');
+            foreach($memberships as &$membershipDetails){
+                if((array_key_exists($membershipDetails->membership_number, $membershipAlias))&&
+                ($membershipAlias[$membershipDetails->membership_number]<>'')){ 
+                    $membershipDetails->alias = $membershipAlias[$membershipDetails->membership_number]; 
+                }else{ 
+                    $membershipDetails->alias = $membershipDetails->description;
+                }
+            }
+
+            $result["clientMemberships"]=$memberships;
+
             return json_encode($result);
 		}    
     }

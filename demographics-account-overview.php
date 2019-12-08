@@ -162,7 +162,7 @@
 							//2019-09-27 CB V1.0.0.5 - changed if statement to include call to check of purchased with X months
 							if(((StrToUpper($details->status)=='ACTIVE')||(StrToUpper($details->status)=='PURCHASED'))&&
 							(tfgg_purchased_within_acceptable_period($details->purchase_date))){
-		    					$description=tfgg_delete_all_between('(',')',$details->description);
+		    					$description=tfgg_delete_all_between('(',')',$details->alias);
 		    					?>
 		    					<div class="account-overview-service-container">
 		    						<table class="account-overview-table">
@@ -207,7 +207,7 @@
 						$clientMems = $clientMems->clientMemberships;
 						foreach($clientMems as &$details){
 							if((StrToUpper($details->status)=='ACTIVE')||(StrToUpper($details->status)=='PURCHASED')){
-								$description=tfgg_delete_all_between('(',')',$details->description);
+								$description=tfgg_delete_all_between('(',')',$details->alias);
 
 								?>
 								<div class="account-overview-service-container">
