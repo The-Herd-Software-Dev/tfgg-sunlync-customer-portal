@@ -12,15 +12,20 @@ function display_tfgg_package_selection(){
     if(StrToUpper($packageList->results)==='SUCCESS'){
         $packageList = $packageList->packages;	
         $selectedPackages = (array)get_option('tfgg_scp_package_selection');
+        $packageAlias = (array)get_option('tfgg_scp_package_alias');
+        //var_dump($packageAlias);
         $rowCounter = 1;
         echo '<div class="container border rounded" style="padding: 10px">';
         foreach($packageList as &$packageDetails){
             if($rowCounter==1){echo "<div class=\"row\" style=\"padding: 5px;\">";}
                 
             if(in_array($packageDetails->package_id, $selectedPackages)){ $isChecked = 'checked="checked"'; }else{ $isChecked = ''; }
+            if((array_key_exists($packageDetails->package_id, $packageAlias))&&
+            ($packageAlias[$packageDetails->package_id]<>'')){ $alias = $packageAlias[$packageDetails->package_id]; }else{ $alias = ''; }
             echo '<div class="col-sm">'.
-            '<input type="checkbox" value="'.$packageDetails->package_id.'" name="tfgg_scp_package_selection[]" '.$isChecked.' />'.
-            $packageDetails->description.'</div>';	
+            '<input type="checkbox" value="'.$packageDetails->package_id.'" name="tfgg_scp_package_selection[]" '.$isChecked.' />'.$packageDetails->description.'<br/>'.
+            '<div><label>Alias: </label><input type="text" name="tfgg_scp_package_alias['.$packageDetails->package_id.']" value="'.$alias.'"/></div>'.
+            '</div>';	
             
             $rowCounter++;
             if($rowCounter>3){
@@ -41,15 +46,19 @@ function display_tfgg_membership_selection(){
     if(StrToUpper($membershipList->results)==='SUCCESS'){
         $membershipList = $membershipList->memberships;	
         $selectedMemberships = (array)get_option('tfgg_scp_membership_selection');
+        $membershipAlias = (array)get_option('tfgg_scp_membership_alias');
         $rowCounter = 1;
         echo '<div class="container border rounded" style="padding: 10px">';
         foreach($membershipList as &$membershipDetails){
             if($rowCounter==1){echo "<div class=\"row\" style=\"padding: 5px;\">";}
                 
             if(in_array($membershipDetails->membership_id, $selectedMemberships)){ $isChecked = 'checked="checked"'; }else{ $isChecked = ''; }
+            if((array_key_exists($membershipDetails->membership_id, $membershipAlias))&&
+            ($membershipAlias[$membershipDetails->membership_id]<>'')){ $alias = $membershipAlias[$membershipDetails->membership_id]; }else{ $alias = ''; }
             echo '<div class="col-sm">'.
-            '<input type="checkbox" value="'.$membershipDetails->membership_id.'" name="tfgg_scp_membership_selection[]" '.$isChecked.' />'.
-            $membershipDetails->description.'</div>';	
+            '<input type="checkbox" value="'.$membershipDetails->membership_id.'" name="tfgg_scp_membership_selection[]" '.$isChecked.' />'.$membershipDetails->description.'<br/>'.
+            '<div><label>Alias: </label><input type="text" name="tfgg_scp_membership_alias['.$membershipDetails->membership_id.']" value="'.$alias.'"/></div>'.
+            '</div>';	
             
             $rowCounter++;
             if($rowCounter>3){

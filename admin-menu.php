@@ -179,6 +179,9 @@
         add_settings_field("tfgg_scp_package_selection","Packages For Sale:","display_tfgg_package_selection", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_package_selection");
 
+        //add_settings_field("tfgg_scp_package_alias","Package Alias:","", "tfgg-service-selection", "tfgg_service_selection_section");
+        register_setting("tfgg_service_selection_section","tfgg_scp_package_alias");
+
         add_settings_field("tfgg_scp_membership_header_label","Membership Display Header:","display_tfgg_membership_header_label", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_membership_header_label");
 
@@ -187,6 +190,9 @@
 
         add_settings_field("tfgg_scp_membership_selection","Memberships For Sale:","display_tfgg_membership_selection", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_membership_selection");
+
+        //add_settings_field("tfgg_scp_membership_alias","Membership Alias:","", "tfgg-service-selection", "tfgg_service_selection_section");
+        register_setting("tfgg_service_selection_section","tfgg_scp_membership_alias");
 
         //cart options
         add_settings_field("tfgg_scp_cart_slug","Cart & Services Slug:","display_tfgg_cart_slug", "tfgg-cart-options", "tfgg_cart_section");
