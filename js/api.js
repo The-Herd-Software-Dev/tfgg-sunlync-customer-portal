@@ -1248,7 +1248,7 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty){
         var obj = jQuery.parseJSON(data);
 
         if(obj["results"].toUpperCase()=='SUCCESS'){
-            jQuery('#tfgg_scp_cart_add_message').html('Your item was successfully added to your cart');
+            /*jQuery('#tfgg_scp_cart_add_message').html('Your item was successfully added to your cart');
             jQuery('tfgg_scp_cart_add_pay_btn').css('display','');
             jQuery('#tfgg_scp_cart_add').modal('toggle');
             
@@ -1259,7 +1259,9 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty){
                 addItemQty=parseInt(addItemQty)+parseInt(currentQty);
             }
             
-            tfggSetCartLinkQty(addItemQty);
+            tfggSetCartLinkQty(addItemQty);*/
+            location.href = jQuery('#tfgg_scp_cart_link').attr('href');
+            
         }else{
             //console.log(obj);
             jQuery('#tfgg_scp_cart_add_message').html('Unable to add membership to your cart: <br/><br/>'+obj["response"]);
