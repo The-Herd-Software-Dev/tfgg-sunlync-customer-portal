@@ -2280,6 +2280,15 @@
                     tfgg_cp_errors()->add('error_processing_card', __('There was an error processing your card<br/><br/>'.$postPayment->response.'<br/><br/>You have not been charged for this transaction'));    
                 }
 
+                if(array_key_exists('tfgg_cp_update_demographics',$_POST)){
+                    //update the client demographics                    
+                    $updateResult = json_decode(tfgg_scp_update_demographics(tfgg_cp_get_sunlync_client(),
+                    $_POST['tfgg_cp_user_first'], $_POST['tfgg_cp_user_last'],
+                    $_POST['tfgg_cp_street_address'], $_POST['tfgg_cp_street_address_2'], 
+                    $_POST['tfgg_cp_city'], $_POST['tfgg_cp_post_code'],
+                    $_POST['tfgg_cp_user_email'],'',''));
+                }
+
             }else{
                 //handle errors
                 tfgg_cp_errors()->add('error_processing_card', __('There was an error processing your card<br/><br/>'.$response->statusDetail));

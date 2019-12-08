@@ -151,7 +151,7 @@
                     ?>
                     
         
-
+                    <h4><?php _e('Please select your payment type');?></h4>
                     <div class="overlay-button-container">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group d-flex" role="group" aria-label="Second group" style="width:100%;">
@@ -239,16 +239,18 @@
     }
 
     function tfgg_scp_display_sage_entry_form(){
+        $demographics = json_decode(tfgg_api_get_client_demographics(tfgg_cp_get_sunlync_client()));
+        $demographics = $demographics->demographics[0];
     ?>
         <div id="sagepay-button-container">
             <form action="" method="post" id="tfgg_scp_sagepay_cart"> 
                 <div class="registration-container-main">
                     <div class="account-overview-input-single-left">
-                        <h4>Billing Details</h4>
+                        <h4><?php _e('Billing Details');?></h4>
                         <div class="registration-container">
                             <div class="account-overview-input-single">
                                 <label for="tfgg_cp_user_email" class="account-overview-label"><?php _e('Email'); ?></label>
-                                <input data-alertpnl="new_reg_email" name="tfgg_cp_user_email" id="tfgg_cp_user_email" class="required account-overview-input" type="email"/>
+                                <input data-alertpnl="new_reg_email" name="tfgg_cp_user_email" id="tfgg_cp_user_email" class="required account-overview-input" type="email" value="<?php _e($demographics->email);?>"/>
                                 <div style="display:none" id="new_reg_email" class="reg_alert"></div> 
                             </div>
                         </div>
@@ -256,12 +258,12 @@
                         <div class="registration-container">
                             <div class="account-overview-input-double">
                                 <label for="tfgg_cp_user_first" class="account-overview-label"><?php _e('First Name'); ?></label>
-                                <input data-alertpnl="new_reg_fname" name="tfgg_cp_user_first" id="tfgg_cp_user_first" class="required account-overview-input" type="text"/>
+                                <input data-alertpnl="new_reg_fname" name="tfgg_cp_user_first" id="tfgg_cp_user_first" class="required account-overview-input" type="text" value="<?php _e($demographics->first_name);?>"/>
                                 <div style="display:none" id="new_reg_fname" class="reg_alert"></div>
                             </div>
                             <div class="account-overview-input-single">
                                 <label for="tfgg_cp_user_last" class="account-overview-label"><?php _e('Last Name'); ?></label>
-                                <input data-alertpnl="new_reg_lname" name="tfgg_cp_user_last" id="tfgg_cp_user_last" class="required account-overview-input" type="text"/>
+                                <input data-alertpnl="new_reg_lname" name="tfgg_cp_user_last" id="tfgg_cp_user_last" class="required account-overview-input" type="text" value="<?php _e($demographics->last_name);?>"/>
                                 <div style="display:none" id="new_reg_lname" class="reg_alert"></div>
                             </div>
                         </div>
@@ -269,31 +271,37 @@
                         <div class="registration-container">
                             <div class="account-overview-input-double">
                                 <label for="tfgg_cp_street_address" class="account-overview-label"><?php _e('Street Address'); ?></label>
-                                <input data-alertpnl="new_reg_street_address" id="tfgg_cp_street_address" name="tfgg_cp_street_address" class="required account-overview-input" type="text"/>
+                                <input data-alertpnl="new_reg_street_address" id="tfgg_cp_street_address" name="tfgg_cp_street_address" class="required account-overview-input" type="text" value="<?php _e($demographics->address1);?>"/>
                                 <div style="display:none" id="new_reg_street_address" class="reg_alert"></div>
                             </div>
                             <div class="account-overview-input-single">
                                 <label for="tfgg_cp_street_address_2" class="account-overview-label"><?php _e('Unit / Apt. #'); ?></label>
-                                <input data-alertpnl="new_reg_street_address_2_alertpnl" name="tfgg_cp_street_address_2" id="tfgg_cp_street_address_2" class="account-overview-input" type="text"/>
+                                <input data-alertpnl="new_reg_street_address_2_alertpnl" name="tfgg_cp_street_address_2" id="tfgg_cp_street_address_2" class="account-overview-input" type="text" value="<?php _e($demographics->address2);?>"/>
                                 <div style="display:none" id="new_reg_street_address_2_alertpnl" class="reg_alert"></div>
                             </div>
                         </div>
                         <div class="registration-container">
                             <div class="account-overview-input-double">
                                 <label for="tfgg_cp_city" class="account-overview-label"><?php _e('City'); ?></label>
-                                <input data-alertpnl="new_reg_city" id="tfgg_cp_city" name="tfgg_cp_city" class="required account-overview-input" type="text"/>
+                                <input data-alertpnl="new_reg_city" id="tfgg_cp_city" name="tfgg_cp_city" class="required account-overview-input" type="text" value="<?php _e($demographics->city);?>"/>
                                 <div style="display:none" id="new_reg_city" class="reg_alert"></div>
                             </div>
                             <div class="account-overview-input-single">
                                 <label for="tfgg_cp_post_code" class="account-overview-label"><?php _e('Post Code'); ?></label>
-                                <input data-alertpnl="new_reg_post_code_alertpnl" name="tfgg_cp_post_code" id="tfgg_cp_post_code" class="required account-overview-input" type="text"/>
+                                <input data-alertpnl="new_reg_post_code_alertpnl" name="tfgg_cp_post_code" id="tfgg_cp_post_code" class="required account-overview-input" type="text" value="<?php _e($demographics->zip);?>"/>
                                 <div style="display:none" id="new_reg_post_code_alertpnl" class="reg_alert"></div>
                             </div>
                         </div>
-                        
+
+                        <div class="registration-container">
+                            <div class="account-overview-input-single">
+                            <input name="tfgg_cp_update_demographics" id="tfgg_cp_update_demographics" class="required account-overview-survey-input" type="checkbox"/>
+                            <label for="tfgg_cp_update_demographics" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php _e('Save updated account information');?></label>	
+                            </div>   
+                        </div>                     
                         <hr/>
 
-                        <h4>Card Details</h4>
+                        <h4><?php _e('Card Details');?></h4>
                         <div class="registration-container">
                             <div class="account-overview-input-single">
                                 <label for="tfgg_cp_sage_card_name" class="account-overview-label"><?php _e('Name On Card'); ?></label>
