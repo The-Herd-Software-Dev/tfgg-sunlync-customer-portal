@@ -55,7 +55,7 @@
 
                 <div class="overlay-items-item-container" id="tfgg_cart_item_row_<?php echo $i;?>">
                     <div class="cart-items-item">
-                        <span class="overlay-items-item-description"><?php echo $details->Description; ?></span>
+                        <span class="overlay-items-item-description"><?php echo $details->alias; ?></span>
                         <span class="overlay-items-item-price">&#163;<?php echo ($details->Qty*$details->PPU);?></span>
                         <br />
                         <span class="overlay-items-item-quantity-label">Quantity:</span>
@@ -562,7 +562,7 @@
                     data-packagenumber="<?php echo $packageDetails->package_id;?>"
                     data-packagename="<?php echo $packageDetails->description;?>">
 
-                    <span class="overlay-items-item-description"><?php echo $packageDetails->description;?></span>
+                    <span class="overlay-items-item-description"><?php echo $packageDetails->alias;?></span>
                     <span class="overlay-items-item-price">&#163;<?php echo $packageDetails->price; ?></span>
                     <br />
                     <span class="overlay-items-item-quantity-label">Units:</span>
@@ -624,7 +624,7 @@
                     data-membershipnumber="<?php echo $membershipDetails->membership_id;?>"
                     data-membershipname="<?php echo $membershipDetails->description;?>">
 
-                    <span class="overlay-items-item-description"><?php echo $membershipDetails->description;?></span>
+                    <span class="overlay-items-item-description"><?php echo $membershipDetails->alias;?></span>
                     <span class="overlay-items-item-price">&#163;<?php echo $membershipDetails->price; ?></span>
                     <br />
 

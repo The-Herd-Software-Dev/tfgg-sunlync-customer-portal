@@ -1569,8 +1569,22 @@
 		}else{
 		       
             $result["results"]="success";
-            $result["packages"]=array_slice($data,1,-1);
-            usort($result["packages"],'tfgg_order_service_by_name');
+            /*$result["packages"]=array_slice($data,1,-1);
+            usort($result["packages"],'tfgg_order_service_by_name');*/
+
+            $packages = array_slice($data,1,-1);
+            usort($packages,'tfgg_order_service_by_name');
+
+            $packageAlias = (array)get_option('tfgg_scp_package_alias');
+            foreach($packages as &$packageDetails){
+                if((array_key_exists($packageDetails->package_id, $packageAlias))&&
+                ($packageAlias[$packageDetails->package_id]<>'')){
+                    $packageDetails->alias = $packageAlias[$packageDetails->package_id];
+                }else{
+                    $packageDetails->alias = $packageDetails->description;
+                }
+            }
+            $result["packages"]=$packages;
             return json_encode($result);
 		}  
     }
@@ -1602,8 +1616,22 @@
 		}else{
 		       
             $result["results"]="success";
-            $result["memberships"]=array_slice($data,1,-1);
-            usort($result["memberships"],'tfgg_order_service_by_name');
+
+            $memberships=array_slice($data,1,-1);
+            usort($memberships,'tfgg_order_service_by_name'); 
+
+            $membershipAlias = (array)get_option('tfgg_scp_membership_alias');
+            foreach($memberships as &$membershipDetails){
+                if((array_key_exists($membershipDetails->membership_id, $membershipAlias))&&
+                ($membershipAlias[$membershipDetails->membership_id]<>'')){
+                    $membershipDetails->alias = $membershipAlias[$membershipDetails->membership_id];
+                }else{
+                    $membershipDetails->alias = $membershipDetails->description;
+                }
+            }
+
+            $result["memberships"]=$memberships;
+            //usort($result["memberships"],'tfgg_order_service_by_name');
             return json_encode($result);
 		}  
     }
@@ -1684,6 +1712,28 @@
         $result["results"]="success";
         $result["header"]=$cartHeader;
         $result["lineItems"]=$cartItems;
+
+        $packageAlias = get_option('tfgg_scp_package_alias');
+        $membershipAlias = get_option('tfgg_scp_membership_alias');
+
+        foreach($result["lineItems"] as &$itemDetails){
+            if($itemDetails->ItemType=='P'){
+                if((array_key_exists($itemDetails->KeyValue,$packageAlias))&&
+                ($packageAlias[$itemDetails->KeyValue]<>'')){
+                    $itemDetails->alias = $packageAlias[$itemDetails->KeyValue];
+                }else{
+                    $itemDetails->alias = $itemDetails->Description;
+                }
+            }else{
+                if((array_key_exists($itemDetails->KeyValue,$membershipAlias))&&
+                ($membershipAlias[$itemDetails->KeyValue]<>'')){
+                    $itemDetails->alias = $membershipAlias[$itemDetails->KeyValue];
+                }else{
+                    $itemDetails->alias = $itemDetails->Description;
+                }
+            }
+        }
+
         $result["paymentItems"]=$paymentItems;
         
         if(!isset($_SESSION['tfgg_scp_cartid'])){
