@@ -108,7 +108,7 @@
     }
 
     function tfgg_scp_successful_cart_finalize(){
-        tfgg_scp_display_cart_banner();
+        //tfgg_scp_display_cart_banner();
         ?>
         <br/<br/><br/><br/>
         <?php  
@@ -465,7 +465,7 @@
     }
 
     function tfgg_scp_empty_cart_display(){
-        tfgg_scp_display_cart_banner();
+        //tfgg_scp_display_cart_banner();
         ?>
         
         <br/<br/><br/><br/>
