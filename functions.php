@@ -1489,7 +1489,7 @@
     function tfgg_format_date_for_display($date){
         //$date='07/27/2019';
         $date = new DateTime(tfgg_format_date_to_ymd($date));        
-        return $date->format('j-n-Y');
+        return $date->format('j/n/Y');
     }
 
     function tfgg_format_time_for_display($time){
@@ -1499,7 +1499,10 @@
 
     function tfgg_format_date_to_ymd($date){
         //USE THIS FUNCTION CONVERT D/M/Y TO Y/M/D
-        $date = str_replace('/', '-', $date); //this line is to ensure UK dates parse correctly
+        if(($_SERVER['HTTP_HOST']!='localhost:8888')&&
+        ($_SERVER['HTTP_HOST']!='tfgg-portal.theherdsoftware.com')){ 
+            $date = str_replace('/', '-', $date); //this line is to ensure UK dates parse correctly
+        }
         $date = new DateTime($date);
         return $date->format('Y-m-d');   
     }

@@ -181,12 +181,12 @@
 			    						</tr>
 			    						<tr class="account_overview_row">
 			    							<td><span class="account-overview-generic-label">Purchased: </span></td>
-			    							<td><span class="account-overview-generic-value"><?php echo $details->purchase_date ?></span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo tfgg_format_date_for_display($details->purchase_date)?></span></td>
 			    						</tr>
 			    						<?php if(strpos($details->expiration_date,'1899')<1){ ?>
 			    						<tr class="account_overview_row">
 			    							<td><span class="account-overview-generic-label">Expires: </span></td>
-			    							<td><span class="account-overview-generic-value"><?php echo $details->expiration_date ?></span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo tfgg_format_date_for_display($details->expiration_date) ?></span></td>
 			    						</tr>
 			    						<?php } ?>
 			    						<tr class="account_overview_row">
@@ -226,12 +226,12 @@
 			    						</tr>
 			    						<tr class="account_overview_row">
 			    							<td><span class="account-overview-generic-label">Purchased: </span></td>
-			    							<td><span class="account-overview-generic-value"><?php echo $details->purchase_date ?></span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo tfgg_format_date_for_display($details->purchase_date) ?></span></td>
 			    						</tr>
 			    						<?php if(strpos($details->expiration_date,'1899')<1){ ?>
 			    						<tr class="account_overview_row">
 			    							<td><span class="account-overview-generic-label">Expires: </span></td>
-			    							<td><span class="account-overview-generic-value"><?php echo $details->expiration_date ?></span></td>
+			    							<td><span class="account-overview-generic-value"><?php echo tfgg_format_date_for_display($details->expiration_date) ?></span></td>
 			    						</tr>
 			    						<?php } ?>			    						
 		    						</table>
