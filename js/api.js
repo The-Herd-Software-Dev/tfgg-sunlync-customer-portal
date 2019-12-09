@@ -25,7 +25,7 @@ jQuery(function(){
     var height = jQuery('#main-content').height()/2;
 
     //set dialog options
-    jQuery("#tfgg_cp_reg_tandc_dialog").dialog({
+    /*jQuery("#tfgg_cp_reg_tandc_dialog").dialog({
         autoOpen: false,
         show: {
             effect: "blind",
@@ -36,7 +36,7 @@ jQuery(function(){
         modal:true,
         draggable: false,
         resizeable: false
-    });
+    });*/
 
     jQuery('#tfgg_cp_skin_type').change(function(){
         jQuery('#new_reg_skin_type_alertpnl').css('display','none');
@@ -127,6 +127,18 @@ jQuery(function(){
             jQuery('#tfgg_membership_search_warning').show();        
         }
     });
+
+    jQuery('#tfgg_cp_paypal_tandc_confirm').change(function(){
+        if(jQuery(this).is(':checked')){
+            jQuery('#paypal-button-container').show();
+        }else{
+            jQuery('#paypal-button-container').hide();
+        }
+    });
+
+    /*jQuery('#tfgg_cp_paypal_tandc_confirm_label').click(function(){
+        jQuery('#tfgg_cp_paypal_tandc_confirm').click();
+    });*/
 
 });
 
@@ -983,7 +995,8 @@ function bookAppt(){
 }
 
 function showRegTAndC(){
-    jQuery('#tfgg_cp_reg_tandc_dialog').dialog('open');
+    //jQuery('#tfgg_cp_reg_tandc_dialog').dialog('open');
+    genModalDialog('tfgg_cp_reg_tandc_dialog');
 }
 
 function closeRegTAndC(){
@@ -1218,7 +1231,7 @@ function genModalDialog($modalID){
             jQuery('#main-header').css('z-index',0);   
             jQuery('#'+$modalID).css('z-index','100000 !important');
         }
-      });    
+      });   
 
     dialog.dialog('open');
 }
@@ -1311,14 +1324,14 @@ function tfgg_scp_toggle_cart_payment(newPanel){
 
     //console.log(newPanel);
     if(newPanel=='paypal'){
-        jQuery('#paypal-button-container').show();
+        jQuery('#paypal-button-container-parent').show();
         jQuery('#paypalCartPayment').addClass('account-overview-standard-button-active');
         jQuery('#paypalCartPayment').removeClass('account-overview-standard-button');
         jQuery('#sagepay-button-container').hide();
         jQuery('#sagepayCartPayment').removeClass('account-overview-standard-button-active');
         jQuery('#sagepayCartPayment').addClass('account-overview-standard-button');
     }else{
-        jQuery('#paypal-button-container').hide();
+        jQuery('#paypal-button-container-parent').hide();
         jQuery('#paypalCartPayment').removeClass('account-overview-standard-button-active');
         jQuery('#paypalCartPayment').addClass('account-overview-standard-button');
         jQuery('#sagepay-button-container').show();
@@ -1405,4 +1418,13 @@ function changeCartStore(){
         }
     });    
     
+}
+
+function tfggCartPaypalTandCDialog(){
+    genModalDialog('tfgg_cp_paypal_tandc_dialog');
+    //jQuery('#tfgg_cp_paypal_tandc_dialog').dialog('close');
+}
+
+function closeCartPayPalTandC(){
+    jQuery('#tfgg_cp_paypal_tandc_dialog').dialog('close');
 }

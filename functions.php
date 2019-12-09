@@ -2289,6 +2289,16 @@
                     $_POST['tfgg_cp_user_email'],'',''));
                 }
 
+                if(array_key_exists('tfgg_cp_update_comm_pref',$_POST)){
+                    if($_POST['tfgg_cp_update_comm_pref']==='1'){
+                        $reg_result = json_decode(tfgg_scp_update_comm_pref(tfgg_cp_get_sunlync_client(),
+					    '0','0','1','0','0'));
+                    }else{
+                        $reg_result = json_decode(tfgg_scp_update_comm_pref(tfgg_cp_get_sunlync_client(),
+						'1','0','0','0','0'));
+                    }
+                }
+
             }else{
                 //handle errors
                 tfgg_cp_errors()->add('error_processing_card', __('There was an error processing your card<br/><br/>'.$response->statusDetail));

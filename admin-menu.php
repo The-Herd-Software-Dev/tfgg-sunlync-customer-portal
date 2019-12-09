@@ -207,18 +207,36 @@
         add_settings_field("tfgg_scp_cart_allow_paypal_payment","Allow PayPal Payments:","display_tfgg_allow_paypal_payment", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_allow_paypal_payment");
 
+        add_settings_field("tfgg_scp_cart_paypal_tandc_label","PayPal T&C Label:","display_tfgg_paypal_tand_label", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_tandc_label");
+
         add_settings_field("tfgg_scp_cart_paypal_payment","Process Paypal Payments As:","display_tfgg_paypal_payment", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_payment");
 
         add_settings_field("tfgg_scp_cart_paypal_clientid","PayPal Client ID:","display_tfgg_paypal_clientid", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_clientid");
 
+        add_settings_field("tfgg_scp_cart_save_demographics","Allow Save Demographics:","display_tfgg_save_cart_demographics", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_save_demographics");
+
+        add_settings_field("tfgg_save_cart_demographics_label","Save Demographics Label:","display_tfgg_save_cart_demographics_label", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_save_cart_demographics_label");
+
+        add_settings_field("tfgg_scp_cart_save_commpref","Allow Save Comm Pref:","display_tfgg_save_cart_commpref", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_save_commpref");
+
+        add_settings_field("tfgg_scp_cart_save_commpref_label","Save Comm Pref Label:","display_tfgg_scp_cart_save_commpref_label", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_save_commpref_label");
 
         add_settings_field("tfgg_scp_cart_allow_sage_payment","Allow SagePay Payments:","display_tfgg_allow_sage_payment", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_allow_sage_payment");
 
         add_settings_field("tfgg_scp_cart_sage_payment","Process SagePay Payments As:","display_tfgg_sage_payment", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_sage_payment");
+
+
+        add_settings_field("tfgg_scp_cart_sage_vendor_name","SagePay Vendor Name:","display_tfgg_sage_vendor_name", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_vendor_name");
 
         add_settings_field("tfgg_scp_cart_sage_vendor_name","SagePay Vendor Name:","display_tfgg_sage_vendor_name", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_sage_vendor_name");

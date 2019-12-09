@@ -28,6 +28,36 @@ function display_tfgg_paypal_clientid(){
     <?php
 }
 
+function display_tfgg_paypal_tand_label(){
+    ?>
+    <input type="text" name="tfgg_scp_cart_paypal_tandc_label" value='<?php echo get_option('tfgg_scp_cart_paypal_tandc_label'); ?>' style="width: 60%" />
+    <?php    
+}
+
+function display_tfgg_save_cart_demographics_label(){
+    ?>
+    <input type="text" name="tfgg_save_cart_demographics_label" value='<?php echo get_option('tfgg_save_cart_demographics_label'); ?>' style="width: 60%" />
+    <?php    
+}
+
+function display_tfgg_save_cart_demographics(){
+    ?>
+    <input type="checkbox" name="tfgg_scp_cart_save_demographics" value="1" <?php if(get_option('tfgg_scp_cart_save_demographics')==1){echo 'checked';} ?> />
+    <?php    
+}
+
+function display_tfgg_scp_cart_save_commpref_label(){
+    ?>
+    <input type="text" name="tfgg_scp_cart_save_commpref_label" value='<?php echo get_option('tfgg_scp_cart_save_commpref_label'); ?>' style="width: 60%" />
+    <?php    
+}
+
+function display_tfgg_save_cart_commpref(){
+    ?>
+    <input type="checkbox" name="tfgg_scp_cart_save_commpref" value="1" <?php if(get_option('tfgg_scp_cart_save_commpref')==1){echo 'checked';} ?> />
+    <?php    
+}
+
 function display_tfgg_cart_employee(){
     $updateEmp = get_option('tfgg_scp_cart_employee');
     $employeeList = json_decode(tfgg_api_get_employees());

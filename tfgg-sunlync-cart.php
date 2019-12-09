@@ -162,7 +162,16 @@
                             </div>
                         </div>
                         <br/>
-                        <div id="paypal-button-container" style="display:none"></div>
+                        <div id="paypal-button-container-parent" style="display:none">
+                            <div class='reg-checkbox-container'>
+                                <input name="tfgg_cp_paypal_tandc_confirm" id="tfgg_cp_paypal_tandc_confirm" class="account-overview-survey-input" type="checkbox"/>
+                                <label id="tfgg_cp_paypal_tandc_confirm_label" for="tfgg_cp_paypal_tandc_confirm" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_cart_paypal_tandc_label'); ?></label>	
+                                <div style="display:none" id="new_reg_tandc_confirm" class="reg_alert"></div>
+                            </div>
+                            <br/>
+                            <div id="paypal-button-container" style="display:none">
+                            </div>
+                        </div>
                         <?php echo tfgg_scp_display_sage_entry_form();?>
                     </div>
                     </div>
@@ -241,6 +250,9 @@
     function tfgg_scp_display_sage_entry_form(){
         $demographics = json_decode(tfgg_api_get_client_demographics(tfgg_cp_get_sunlync_client()));
         $demographics = $demographics->demographics[0];
+
+        $commPref = json_decode(tfgg_api_get_client_comm_pref(tfgg_cp_get_sunlync_client()));
+        $commPref = $commPref->commPref[0];
     ?>
         <div id="sagepay-button-container">
             <form action="" method="post" id="tfgg_scp_sagepay_cart"> 
@@ -292,13 +304,21 @@
                                 <div style="display:none" id="new_reg_post_code_alertpnl" class="reg_alert"></div>
                             </div>
                         </div>
-
-                        <div class="registration-container">
+                        
+                        <div class="registration-container" <?php if(get_option('tfgg_scp_cart_save_demographics')==''){echo 'style="display:none"';}?>>
                             <div class="account-overview-input-single">
-                            <input name="tfgg_cp_update_demographics" id="tfgg_cp_update_demographics" class="required account-overview-survey-input" type="checkbox"/>
-                            <label for="tfgg_cp_update_demographics" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php _e('Save updated account information');?></label>	
+                            <input name="tfgg_cp_update_demographics" id="tfgg_cp_update_demographics" class="account-overview-survey-input" type="checkbox"/>
+                            <label for="tfgg_cp_update_demographics" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_save_cart_demographics_label');?></label>	
                             </div>   
-                        </div>                     
+                        </div>
+
+                        <div class="registration-container" <?php if(($commPref->allow==='1')||(get_option('tfgg_scp_cart_save_demographics')=='')){echo 'style="display:none"';} ?>>
+                            <div class="account-overview-input-single">
+                            <input name="tfgg_cp_update_comm_pref" id="tfgg_cp_update_comm_pref" class="account-overview-survey-input" type="checkbox"/>
+                            <label for="tfgg_cp_update_comm_pref" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_cart_save_commpref_label') ?></label>	
+                            </div>   
+                        </div>
+
                         <hr/>
 
                         <h4><?php _e('Card Details');?></h4>
@@ -344,6 +364,7 @@
                     .addEventListener('click', function(e) {
                         event.preventDefault();
                         //validate data entry
+                        jQuery('#tfgg_scp_cart_complete').text('PROCESSING...');
                         var validateResult = true;
                         
                         var alertPanels = document.querySelectorAll('.reg_alert');
@@ -367,7 +388,10 @@
                             //alert(inputData.dataset.alertpnl);
                         });
 
-                        if(!validateResult){return false};
+                        if(!validateResult){
+                            jQuery('#tfgg_scp_cart_complete').text('COMPLETE PURCHASE');                            
+                            return false
+                        };
 
                         tfgg_scp_sage_cart_merchant_session_key(function(merchantKey){
                             sagepayOwnForm({ merchantSessionKey: merchantKey })
