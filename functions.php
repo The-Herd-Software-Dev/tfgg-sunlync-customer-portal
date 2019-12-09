@@ -442,7 +442,7 @@
             $result["results"]="success";
             //$result["clientPackages"]=array_slice($data,1,-1);
             $packages = array_slice($data,1,-1);
-            $packageAlias = get_option('tfgg_scp_package_alias');
+            $packageAlias = get_option('tfgg_scp_package_alias',array());
             foreach($packages as &$packageDetails){
                 if((array_key_exists($packageDetails->package_number, $packageAlias))&&
                 ($packageAlias[$packageDetails->package_number]<>'')){ 
@@ -487,7 +487,7 @@
             //$result["clientMemberships"]=array_slice($data,1,-1);
 
             $memberships = array_slice($data,1,-1);
-            $membershipAlias = get_option('tfgg_scp_membership_alias');
+            $membershipAlias = get_option('tfgg_scp_membership_alias',array());
             foreach($memberships as &$membershipDetails){
                 if((array_key_exists($membershipDetails->membership_number, $membershipAlias))&&
                 ($membershipAlias[$membershipDetails->membership_number]<>'')){ 
@@ -1601,7 +1601,7 @@
             $packages = array_slice($data,1,-1);
             usort($packages,'tfgg_order_service_by_name');
 
-            $packageAlias = (array)get_option('tfgg_scp_package_alias');
+            $packageAlias = (array)get_option('tfgg_scp_package_alias',array());
             foreach($packages as &$packageDetails){
                 if((array_key_exists($packageDetails->package_id, $packageAlias))&&
                 ($packageAlias[$packageDetails->package_id]<>'')){
@@ -1646,7 +1646,7 @@
             $memberships=array_slice($data,1,-1);
             usort($memberships,'tfgg_order_service_by_name'); 
 
-            $membershipAlias = (array)get_option('tfgg_scp_membership_alias');
+            $membershipAlias = (array)get_option('tfgg_scp_membership_alias',array());
             foreach($memberships as &$membershipDetails){
                 if((array_key_exists($membershipDetails->membership_id, $membershipAlias))&&
                 ($membershipAlias[$membershipDetails->membership_id]<>'')){
@@ -1739,8 +1739,8 @@
         $result["header"]=$cartHeader;
         $result["lineItems"]=$cartItems;
 
-        $packageAlias = get_option('tfgg_scp_package_alias');
-        $membershipAlias = get_option('tfgg_scp_membership_alias');
+        $packageAlias = get_option('tfgg_scp_package_alias',array());
+        $membershipAlias = get_option('tfgg_scp_membership_alias',array());
 
         foreach($result["lineItems"] as &$itemDetails){
             if($itemDetails->ItemType=='P'){
