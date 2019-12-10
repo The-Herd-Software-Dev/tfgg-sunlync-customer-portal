@@ -203,7 +203,8 @@
 
     function tfgg_scp_display_cart_successful_add(){
 
-        $viewCartURL=esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug'))));
+        //$viewCartURL=esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug'))));
+        $viewCartURL=esc_url(site_url(get_option('tfgg_scp_cart_slug')));
 
         ?>
         <div class="modal fade" id="tfgg_scp_cart_add" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_cart_add" aria-hidden="true">
@@ -212,7 +213,7 @@
                 <div class="modal-body" id="tfgg_scp_cart_add_message">
                 </div>
                 <div class="modal-footer">
-                    <button id="tfgg_scp_cart_add_pay_btn" type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfgg_scp_changePage('<?php echo $viewCartURL; ?>');">Pay Now</button>
+                    <button id="tfgg_scp_cart_add_pay_btn" type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfgg_scp_changePage('<?php echo $viewCartURL; ?>');">PAY NOW</button>
                     <button id="tfgg_scp_cart_add_continue_btn" type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" data-dismiss="modal">CONTINUE SHOPPING</button>
                 </div>
                 </div>
@@ -223,7 +224,7 @@
 
     function tfgg_scp_cart_continue_shopping(){
     ?>      
-        <form action="<?php echo site_url(get_option('tfgg_scp_cart_slug'));?>">
+        <form action="<?php echo site_url(get_option('tfgg_scp_services_sale_slug'));?>">
             <button type="submit" class="account-overview-button account-overview-standard-button">CONTINUE SHOPPING</button>
         </form>     
     <?php

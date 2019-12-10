@@ -161,6 +161,9 @@
         register_setting("tfgg_registration_options_section_instore", "tfgg_scp_instore_reg_password_hint");
 
         //service selection
+        add_settings_field("tfgg_scp_services_sale_slug","Services Sale Slug:","display_tfgg_services_sale_slug", "tfgg-service-selection", "tfgg_service_selection_section");
+        register_setting("tfgg_service_selection_section","tfgg_scp_services_sale_slug");
+
         add_settings_field("tfgg_scp_package_header_label","Package Display Header:","display_tfgg_package_header_label", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_package_header_label");
 
@@ -181,6 +184,8 @@
 
         //add_settings_field("tfgg_scp_package_alias","Package Alias:","", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_package_alias");
+        register_setting("tfgg_service_selection_section","tfgg_scp_package_img");
+        register_setting("tfgg_service_selection_section","tfgg_scp_package_free_text");
 
         add_settings_field("tfgg_scp_membership_header_label","Membership Display Header:","display_tfgg_membership_header_label", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_membership_header_label");
@@ -193,9 +198,11 @@
 
         //add_settings_field("tfgg_scp_membership_alias","Membership Alias:","", "tfgg-service-selection", "tfgg_service_selection_section");
         register_setting("tfgg_service_selection_section","tfgg_scp_membership_alias");
+        register_setting("tfgg_service_selection_section","tfgg_scp_membership_img");
+        register_setting("tfgg_service_selection_section","tfgg_scp_membership_free_text");
 
         //cart options
-        add_settings_field("tfgg_scp_cart_slug","Cart & Services Slug:","display_tfgg_cart_slug", "tfgg-cart-options", "tfgg_cart_section");
+        add_settings_field("tfgg_scp_cart_slug","Cart Slug:","display_tfgg_cart_slug", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_slug");
 
         add_settings_field("tfgg_scp_cart_menu_link_text","Cart Menu Link Label:","display_tfgg_menu_link_label", "tfgg-cart-options", "tfgg_cart_section");

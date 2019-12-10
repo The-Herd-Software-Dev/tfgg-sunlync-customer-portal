@@ -96,7 +96,7 @@ function tfgg_cp_sunlync_register_instore_setstore(){
 add_shortcode('cp_sunlync_registrationform_instore_setstore','tfgg_cp_sunlync_register_instore_setstore');
 
 function tfgg_cp_sunlync_cart(){
-    $viewCart= get_query_var('viewcart');
+    /*$viewCart= get_query_var('viewcart');
     
     if($viewCart=='cart'){
         return tfgg_scp_display_cart();
@@ -104,8 +104,15 @@ function tfgg_cp_sunlync_cart(){
         
     }else{
         return tfgg_scp_display_services_for_sale();
-    }
+    }*/
+
+    return tfgg_scp_display_cart();
 }
 add_shortcode('cp_sunlync_cart','tfgg_cp_sunlync_cart');
+
+function tfgg_cp_sunlync_cart_services_sale(){
+    return tfgg_scp_display_services_for_sale();
+}
+add_shortcode('cp_sunlync_cart_services','tfgg_cp_sunlync_cart_services_sale');
 
 ?>

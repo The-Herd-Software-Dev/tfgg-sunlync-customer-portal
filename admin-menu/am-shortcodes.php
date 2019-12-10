@@ -29,7 +29,11 @@
                     <td>[cp_sunlync_appts]</td>
                 </tr>
                 <tr>
-                    <th scope="row">Cart: </th>
+                    <th scope="row">Purchase Services: </th>
+                    <td>[cp_sunlync_cart_services]</td>
+                </tr>
+                <tr>
+                    <th scope="row">Shopping Cart: </th>
                     <td>[cp_sunlync_cart]</td>
                 </tr>
             </tbody>

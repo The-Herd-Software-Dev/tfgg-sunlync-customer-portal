@@ -201,6 +201,7 @@
         $login = tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page'));
         $registration = tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_page'));
         $cart = tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_slug'));
+        $servicesSale = tfgg_scp_remove_slashes(get_option('tfgg_scp_services_sale_slug'));
 
         //I am purposely leaving this broken out to make management easier
         if($sunlyncUser){
@@ -212,7 +213,7 @@
             }
         }else{
             log_me('not a sunlync user');
-            if(is_page(array($acctOverview,$apptBooking,$cart))){
+            if(is_page(array($acctOverview,$apptBooking,$cart, $servicesSale))){
                 log_me('page exists in array - redirecting to login');
                 wp_redirect( $login ); 
                 exit;
@@ -2474,7 +2475,8 @@
         $link.="</span>";
 
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
-            $items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
+            //$items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
+            $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>';
         }
         return $items;
     }
