@@ -566,7 +566,7 @@
 
 				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref, get_option('tfgg_scp_reg_promo'), ''));
 				if(strtoupper($reg_result->results)=='SUCCESS'){
-				
+					tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
 					$clientNumber=$reg_result->clientnumber;
 					tfgg_cp_set_sunlync_client($clientNumber);
 					tfgg_cp_redirect_after_login();

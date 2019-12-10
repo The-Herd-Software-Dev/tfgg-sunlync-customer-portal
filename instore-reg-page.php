@@ -464,8 +464,10 @@
 	add_action('init','tfgg_sunlync_client_instore_reg_set_store');
 
     function tfgg_sunlync_client_instore_api_registration(){
-        if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST))&&
-        (wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg-cp-register-instore-nonce')))){
+		/*2019-12-09 CB V1.2.4.8 - removed nonce verification
+		if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST))&&
+		(wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg-cp-register-instore-nonce')))){*/
+		if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST)))){
 			//organize the data
 			$address = array(
 			'street'	=> $_POST['tfgg_cp_street_address'],
@@ -532,6 +534,11 @@
 
 				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,get_option('tfgg_scp_reg_promo_instore'), ''));
 				if(strtoupper($reg_result->results)=='SUCCESS'){
+
+					//now set the password
+
+					tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
+
 					//2019-11-14 CB V1.2.3.1 - added palceholders to replace data
 					$successMessage=get_option('tfgg_scp_instore_registration_success');
 					$successMessage=str_replace('!@#firstname#@!',$_POST['tfgg_cp_user_first'],$successMessage);
