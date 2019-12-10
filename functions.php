@@ -444,12 +444,28 @@
             //$result["clientPackages"]=array_slice($data,1,-1);
             $packages = array_slice($data,1,-1);
             $packageAlias = get_option('tfgg_scp_package_alias',array());
+            $packageImg = get_option('tfgg_scp_package_img',array());
+            $packageText = get_option('tfgg_scp_package_free_text',array());
             foreach($packages as &$packageDetails){
                 if((array_key_exists($packageDetails->package_number, $packageAlias))&&
                 ($packageAlias[$packageDetails->package_number]<>'')){ 
                     $packageDetails->alias = $packageAlias[$packageDetails->package_number]; 
                 }else{ 
                     $packageDetails->alias = $packageDetails->description;
+                }
+
+                if((array_key_exists($packageDetails->package_number, $packageImg))&&
+                ($packageImg[$packageDetails->package_number]<>'')){ 
+                    $packageDetails->img = $packageImg[$packageDetails->package_number]; 
+                }else{ 
+                    $packageDetails->img = '';
+                }
+
+                if((array_key_exists($packageDetails->package_number, $packageText))&&
+                ($packageText[$packageDetails->package_number]<>'')){ 
+                    $packageDetails->freeText = $packageText[$packageDetails->package_number]; 
+                }else{ 
+                    $packageDetails->freeText = '';
                 }
             }
 
@@ -489,12 +505,28 @@
 
             $memberships = array_slice($data,1,-1);
             $membershipAlias = get_option('tfgg_scp_membership_alias',array());
+            $membershipImg = get_option('tfgg_scp_membership_img',array());
+            $membershipText = get_option('tfgg_scp_membership_free_text',array());
             foreach($memberships as &$membershipDetails){
                 if((array_key_exists($membershipDetails->membership_number, $membershipAlias))&&
                 ($membershipAlias[$membershipDetails->membership_number]<>'')){ 
                     $membershipDetails->alias = $membershipAlias[$membershipDetails->membership_number]; 
                 }else{ 
                     $membershipDetails->alias = $membershipDetails->description;
+                }
+
+                if((array_key_exists($membershipDetails->membership_number, $membershipImg))&&
+                ($membershipImg[$membershipDetails->membership_number]<>'')){ 
+                    $membershipDetails->img = $membershipImg[$membershipDetails->membership_number]; 
+                }else{ 
+                    $membershipDetails->img = '';
+                }
+
+                if((array_key_exists($membershipDetails->membership_number, $membershipText))&&
+                ($membershipText[$membershipDetails->membership_number]<>'')){ 
+                    $membershipDetails->freeText = $membershipText[$membershipDetails->membership_number]; 
+                }else{ 
+                    $membershipDetails->freeText = '';
                 }
             }
 
@@ -1643,12 +1675,28 @@
             usort($packages,'tfgg_order_service_by_name');
 
             $packageAlias = (array)get_option('tfgg_scp_package_alias',array());
+            $packageImg = get_option('tfgg_scp_package_img',array());
+            $packageText = get_option('tfgg_scp_package_free_text',array());
             foreach($packages as &$packageDetails){
                 if((array_key_exists($packageDetails->package_id, $packageAlias))&&
                 ($packageAlias[$packageDetails->package_id]<>'')){
                     $packageDetails->alias = $packageAlias[$packageDetails->package_id];
                 }else{
                     $packageDetails->alias = $packageDetails->description;
+                }
+
+                if((array_key_exists($packageDetails->package_id, $packageImg))&&
+                ($packageImg[$packageDetails->package_id]<>'')){ 
+                    $packageDetails->img = $packageImg[$packageDetails->package_id]; 
+                }else{ 
+                    $packageDetails->img = '';
+                }
+
+                if((array_key_exists($packageDetails->package_id, $packageText))&&
+                ($packageText[$packageDetails->package_id]<>'')){ 
+                    $packageDetails->freeText = $packageText[$packageDetails->package_id]; 
+                }else{ 
+                    $packageDetails->freeText = '';
                 }
             }
             $result["packages"]=$packages;
@@ -1688,12 +1736,28 @@
             usort($memberships,'tfgg_order_service_by_name'); 
 
             $membershipAlias = (array)get_option('tfgg_scp_membership_alias',array());
+            $membershipImg = get_option('tfgg_scp_membership_img',array());
+            $membershipText = get_option('tfgg_scp_membership_free_text',array());
             foreach($memberships as &$membershipDetails){
                 if((array_key_exists($membershipDetails->membership_id, $membershipAlias))&&
                 ($membershipAlias[$membershipDetails->membership_id]<>'')){
                     $membershipDetails->alias = $membershipAlias[$membershipDetails->membership_id];
                 }else{
                     $membershipDetails->alias = $membershipDetails->description;
+                }
+
+                if((array_key_exists($membershipDetails->membership_id, $membershipImg))&&
+                ($membershipImg[$membershipDetails->membership_id]<>'')){ 
+                    $membershipDetails->img = $membershipImg[$membershipDetails->membership_id]; 
+                }else{ 
+                    $membershipDetails->img = '';
+                }
+
+                if((array_key_exists($membershipDetails->membership_id, $membershipText))&&
+                ($membershipText[$membershipDetails->membership_id]<>'')){ 
+                    $membershipDetails->freeText = $membershipText[$membershipDetails->membership_id]; 
+                }else{ 
+                    $membershipDetails->freeText = '';
                 }
             }
 
@@ -1781,7 +1845,12 @@
         $result["lineItems"]=$cartItems;
 
         $packageAlias = get_option('tfgg_scp_package_alias',array());
+        $packageImg = get_option('tfgg_scp_package_img',array());
+        $packageText = get_option('tfgg_scp_package_free_text',array());
+
         $membershipAlias = get_option('tfgg_scp_membership_alias',array());
+        $membershipImg = get_option('tfgg_scp_membership_img',array());
+        $membershipText = get_option('tfgg_scp_membership_free_text',array());
 
         foreach($result["lineItems"] as &$itemDetails){
             if($itemDetails->ItemType=='P'){
@@ -1791,6 +1860,20 @@
                 }else{
                     $itemDetails->alias = $itemDetails->Description;
                 }
+
+                if((array_key_exists($itemDetails->KeyValue, $packageImg))&&
+                ($packageImg[$itemDetails->KeyValue]<>'')){ 
+                    $itemDetails->img = $packageImg[$itemDetails->KeyValue]; 
+                }else{ 
+                    $itemDetails->img = '';
+                }
+
+                if((array_key_exists($itemDetails->KeyValue, $packageText))&&
+                ($packageText[$itemDetails->KeyValue]<>'')){ 
+                    $itemDetails->freeText = $packageText[$itemDetails->KeyValue]; 
+                }else{ 
+                    $itemDetails->freeText = '';
+                }
             }else{
                 if((array_key_exists($itemDetails->KeyValue,$membershipAlias))&&
                 ($membershipAlias[$itemDetails->KeyValue]<>'')){
@@ -1798,6 +1881,21 @@
                 }else{
                     $itemDetails->alias = $itemDetails->Description;
                 }
+
+                if((array_key_exists($itemDetails->KeyValue,$membershipImg))&&
+                ($membershipImg[$itemDetails->KeyValue]<>'')){
+                    $itemDetails->img = $membershipImg[$itemDetails->KeyValue];
+                }else{
+                    $itemDetails->img = '';
+                }
+
+                if((array_key_exists($itemDetails->KeyValue,$membershipText))&&
+                ($membershipText[$itemDetails->KeyValue]<>'')){
+                    $itemDetails->freeText = $membershipText[$itemDetails->KeyValue];
+                }else{
+                    $itemDetails->freeText = '';
+                }
+                
             }
         }
 

@@ -602,9 +602,9 @@
                     <span class="overlay-items-item-quantity-value"><?php echo $packageDetails->num_units.' ('.$packageDetails->unit_type.')'; ?></span>
                     <br />
                     <span class="overlay-items-item-quantity-label"> Expiration:</span>
-
                     <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($packageDetails->exp_days, $packageDetails->exp_date, $packageDetails->open_ended); ?></span>
-
+                    <br />
+                    <span class="overlay-items-item-quantity-label"><?php echo $packageDetails->freeText; ?></span>
                     <br />
                     <div class="overlay-items-item-buttongroup">
                         <a href="javascript:tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">BUY NOW</a>         
@@ -662,9 +662,9 @@
                     <br />
 
                     <span class="overlay-items-item-quantity-label"> Expiration:</span>
-
                     <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($membershipDetails->exp_days, $membershipDetails->exp_date, $membershipDetails->open_ended); ?></span>
-
+                    <br />
+                    <span class="overlay-items-item-quantity-label"><?php echo $membershipDetails->freeText; ?></span>
                     <br />
                     <div class="overlay-items-item-buttongroup">
                         <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">BUY NOW</a>        
