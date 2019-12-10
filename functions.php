@@ -1255,6 +1255,43 @@
 		} 
         
     }
+
+    function tfgg_api_set_password($clientNumber, $password){
+        //TFGG_SyncPassword(sclientNumber, sEmpNo, sNewPass
+        $url=tfgg_get_api_url().'TSunLyncAPI/TFGG_SyncPassword/sclientNumber/sEmpNo/sNewPass';
+        $emp = get_option('tfgg_scp_update_employee');
+
+        $url=str_replace('sclientNumber',$clientNumber,$url);
+        $url=str_replace('sEmpNo',$emp,$url);
+        $url=str_replace('sNewPass',tfgg_cp_hash_password($password), $url);
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+            }
+            
+            $result['url']=$url;
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            return json_encode($result);
+		} 
+
+    } 
     
     function tfgg_api_schedule_appt(){
         /*

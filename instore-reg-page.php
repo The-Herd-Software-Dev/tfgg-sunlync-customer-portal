@@ -531,6 +531,9 @@
 
 				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,get_option('tfgg_scp_reg_promo_instore'), ''));
 				if(strtoupper($reg_result->results)=='SUCCESS'){
+					//now set the password
+					tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
+					
 					//2019-11-14 CB V1.2.3.1 - added palceholders to replace data
 					$successMessage=get_option('tfgg_scp_instore_registration_success');
 					$successMessage=str_replace('!@#firstname#@!',$_POST['tfgg_cp_user_first'],$successMessage);
