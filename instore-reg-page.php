@@ -536,7 +536,6 @@
 				if(strtoupper($reg_result->results)=='SUCCESS'){
 
 					//now set the password
-
 					tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
 
 					//2019-11-14 CB V1.2.3.1 - added palceholders to replace data
