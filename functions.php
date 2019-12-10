@@ -95,6 +95,9 @@
         if(isset($_SESSION['tfgg_scp_cart_store'])){
             unset($_SESSION['tfgg_scp_cart_store']);
         }
+        if(isset($_SESSION['tfgg_cp_cart_warning'])){
+            unset($_SESSION['tfgg_cp_cart_warning']);
+        }
 
         $result["logout"]=site_url();//possible configurable option
         exit(json_encode($result));
@@ -2153,6 +2156,7 @@
     }
 
     function tfgg_scp_post_cart_storecode(){
+        $_SESSION['tfgg_cp_cart_warning']='1';
 
         if((!isset($_SESSION['tfgg_scp_cartid']))||
         (isset($_SESSION['tfgg_scp_cart_store'])&&($_SESSION['tfgg_scp_cart_store']==$_POST['data']['storecode']))
@@ -2161,7 +2165,6 @@
             $_SESSION['tfgg_scp_cart_store']=$_POST['data']['storecode'];
             
             $return["results"]="success";
-
             exit(json_encode($return));
         }
 
@@ -2194,7 +2197,7 @@
 
             tfgg_scp_get_cart_contents();//after update, refresh cart
 
-            exit(json_encode($result));
+            exit(json_encode($return));
 		} 
 
     }

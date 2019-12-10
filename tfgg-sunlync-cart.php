@@ -56,10 +56,10 @@
                 <div class="overlay-items-item-container" id="tfgg_cart_item_row_<?php echo $i;?>">
                     <div class="cart-items-item">
                         <span class="overlay-items-item-description"><?php echo $details->alias; ?></span>
-                        <span class="overlay-items-item-price">&#163;<?php echo ($details->Qty*$details->PPU);?></span>
+                        <span class="overlay-items-item-price">&#163;<?php echo number_format(($details->Qty*$details->PPU),2,'.',',');?></span>
                         <br />
                         <span class="overlay-items-item-quantity-label">Quantity:</span>
-                        <span class="overlay-items-item-quantity-value"><?php echo $details->Qty; ?> @ &#163;<?php echo $details->PPU; ?></span>
+                        <span class="overlay-items-item-quantity-value"><?php echo $details->Qty; ?> @ &#163;<?php echo number_format($details->PPU,2,'.',','); ?></span>
                         <br />
                         <div class="overlay-items-item-buttongroup">
                             <a href="javascript:  tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')" class="overlay-items-item-link">REMOVE</a>
@@ -81,11 +81,12 @@
             <span class="cart-totals-content-label">Items</span>
             <span class="cart-totals-content-value"><?php echo $header->qty; ?></span>
 
+            <?php
+            /*
             <br />
-
             <span class="cart-totals-content-label">Sub-total</span>
             <span class="cart-totals-content-value">&#163;<?php echo $header->subtotal; ?></span>
-
+            
             <br />
             <?php
             if ($header->payments>0){
@@ -96,9 +97,11 @@
             <?php
             }
             ?>
-
+            */
+            ?>
+            <br/>
             <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
-            <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo ($header->total - $header->totalPayments); ?></span>
+            <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo number_format(($header->total - $header->totalPayments),2,'.',','); ?></span>
 
             </div>
 
@@ -596,7 +599,7 @@
                     data-packagename="<?php echo $packageDetails->description;?>">
 
                     <span class="overlay-items-item-description"><?php echo $packageDetails->alias;?></span>
-                    <span class="overlay-items-item-price">&#163;<?php echo $packageDetails->price; ?></span>
+                    <span class="overlay-items-item-price">&#163;<?php echo number_format($packageDetails->price,2,'.',','); ?></span>
                     <br />
                     <span class="overlay-items-item-quantity-label">Units:</span>
                     <span class="overlay-items-item-quantity-value"><?php echo $packageDetails->num_units.' ('.$packageDetails->unit_type.')'; ?></span>
@@ -658,7 +661,7 @@
                     data-membershipname="<?php echo $membershipDetails->description;?>">
 
                     <span class="overlay-items-item-description"><?php echo $membershipDetails->alias;?></span>
-                    <span class="overlay-items-item-price">&#163;<?php echo $membershipDetails->price; ?></span>
+                    <span class="overlay-items-item-price">&#163;<?php echo number_format($membershipDetails->price,2,'.',','); ?></span>
                     <br />
 
                     <span class="overlay-items-item-quantity-label"> Expiration:</span>
@@ -688,7 +691,11 @@
         if(StrToUpper($storeList->results)==='SUCCESS'){
             $storeList = $storeList->stores;
             if(isset($_SESSION['tfgg_scp_cart_store'])){$selected = $_SESSION['tfgg_scp_cart_store'];}else{$selected=$_SESSION['clientHomeStore'];}
-
+                if((isset($_SESSION['tfgg_cp_cart_warning']))&&($_SESSION['tfgg_cp_cart_warning']=='1')){
+                    $onclick = 'changeCartStore();';
+                }else{
+                    $onclick = 'confirmChangeCartStore();';
+                }
             ?>
             <div class="" style="margin-bottom: 1em;">
                 <label for="tfgg_scp_store_purchasing_selection"><?php _e('You are viewing packages and services offered by '); ?></label>
@@ -701,7 +708,7 @@
                 ?>
                 </select>
                 <div style="display:inline">
-                <button type="button" class="account-overview-button account-overview-standard-button" onclick="confirmChangeCartStore(<?php echo $selected?>);">Change Store Selection</button>
+                <button type="button" class="account-overview-button account-overview-standard-button" onclick="<?php echo $onclick;?>">Change Store Selection</button>
                 </div>
 
                 <div class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
@@ -717,7 +724,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
             <?php
         }

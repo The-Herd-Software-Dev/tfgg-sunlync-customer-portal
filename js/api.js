@@ -1393,11 +1393,22 @@ function tfgg_scp_sage_cart_merchant_session_key(callback){
 }
 
 function confirmChangeCartStore(){
-    jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');    
+    var currentQty = jQuery('#tfgg_scp_cart_qty').text();
+    currentQty = currentQty.trim().replace(/\(|\)/g, '');
+    
+    //console.log('|'+currentQty+'|');
+    
+    if(currentQty!=''){
+        jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');  
+    }else{
+        //console.log('change cart');
+        changeCartStore(); 
+    }
 }
 
 function changeCartStore(){
-    jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');
+    //console.log('changing store');
+    //jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');
     var selected = jQuery('#tfgg_scp_store_purchasing_selection option:selected').val();
 
     var pathname = window.location.pathname; 
@@ -1408,13 +1419,14 @@ function changeCartStore(){
 		'dataType'  : 'json',
 		'pathname'  : pathname
     },function(data){
-        console.log(data);
+        //console.log(data);
         var obj = jQuery.parseJSON(data);
-
-        if(obj["result"].toUpperCase()=='SUCCESS'){
+        if(obj["results"].toUpperCase()=='SUCCESS'){
+            //jQuery('#tfgg_scp_cart_change_store_block_warning').val('1');
+            //jQuery('#tfgg_scp_cart_change_store').submit();
             window.location.reload();
         }else{
-            console.log(obj);            
+            //console.log(obj);            
         }
     });    
     
