@@ -226,13 +226,13 @@
 
 				<div class='reg-checkbox-container'>
 					<input data-alertpnl="new_reg_tandc_confirm" name="tfgg_cp_user_tandc_agree" id="tfgg_cp_user_tandc_agree" class="required account-overview-survey-input scaled-checkbox" type="checkbox"/>
-					<label onclick="instoreTandCDialog();" for="tfgg_cp_user_tandc_agree" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label_instore'); ?></label>	
+					<label for="tfgg_cp_user_tandc_agree" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_tandc_label'); ?></label>	
 					<div style="display:none" id="new_reg_tandc_confirm" class="reg_alert"></div>
 				</div>
 				<br style="line-height:0.9"/>		
 				<div class='reg-checkbox-container'>
 					<input data-alertpnl="new_reg_marketing" id="tfgg_cp_marketing" name="tfgg_cp_marketing" class="account-overview-survey-input scaled-checkbox" type="checkbox" value="1"/>
-					<label onclick="instoreMarketingDialog();" for="tfgg_cp_marketing" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label_instore') ?></label>	
+					<label for="tfgg_cp_marketing" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_marketing_optin_label') ?></label>	
 					<div style="display:none" id="new_reg_marketing" class="reg_alert"></div>	
 				</div>
 				<br style="line-height:0.9"/>
