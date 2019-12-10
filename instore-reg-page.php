@@ -462,8 +462,9 @@
 	add_action('init','tfgg_sunlync_client_instore_reg_set_store');
 
     function tfgg_sunlync_client_instore_api_registration(){
-        if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST))&&
-        (wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg-cp-register-instore-nonce')))){
+        /*if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST))&&
+		(wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg-cp-register-instore-nonce')))){*/
+		if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST)))){
 			//organize the data
 			$address = array(
 			'street'	=> $_POST['tfgg_cp_street_address'],

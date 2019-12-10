@@ -370,18 +370,18 @@ function ValidateNewReg(isOnline){
             jQuery('#new_reg_pass').html('Password does not meet requirements');
             bResult = false;    
         }
-    }
 
-    if(jQuery('#tfgg_cp_user_pass_confirm').val()===""){
-        jQuery('#new_reg_pass_confirm').css('display','block');
-	    jQuery('#new_reg_pass_confirm').html('A confirmation of your password must be set');
-	    bResult = false;    
-    }
-
-    if(jQuery('#tfgg_cp_user_pass').val()!=jQuery('#tfgg_cp_user_pass_confirm').val()){
-        jQuery('#new_reg_pass_confirm').css('display','block');
-	    jQuery('#new_reg_pass_confirm').html('Confirmation password does not match');
-	    bResult = false;    
+        if(jQuery('#tfgg_cp_user_pass_confirm').val()===""){
+            jQuery('#new_reg_pass_confirm').css('display','block');
+            jQuery('#new_reg_pass_confirm').html('A confirmation of your password must be set');
+            bResult = false;    
+        }
+    
+        if(jQuery('#tfgg_cp_user_pass').val()!=jQuery('#tfgg_cp_user_pass_confirm').val()){
+            jQuery('#new_reg_pass_confirm').css('display','block');
+            jQuery('#new_reg_pass_confirm').html('Confirmation password does not match');
+            bResult = false;    
+        }
     }
 
     if(!bResult){
@@ -1261,7 +1261,7 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty){
         var obj = jQuery.parseJSON(data);
 
         if(obj["results"].toUpperCase()=='SUCCESS'){
-            /*jQuery('#tfgg_scp_cart_add_message').html('Your item was successfully added to your cart');
+            jQuery('#tfgg_scp_cart_add_message').html('Your item was successfully added to your cart');
             jQuery('tfgg_scp_cart_add_pay_btn').css('display','');
             jQuery('#tfgg_scp_cart_add').modal('toggle');
             
@@ -1272,8 +1272,8 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty){
                 addItemQty=parseInt(addItemQty)+parseInt(currentQty);
             }
             
-            tfggSetCartLinkQty(addItemQty);*/
-            location.href = jQuery('#tfgg_scp_cart_link').attr('href');
+            tfggSetCartLinkQty(addItemQty);
+            //location.href = jQuery('#tfgg_scp_cart_link').attr('href');
             
         }else{
             //console.log(obj);
