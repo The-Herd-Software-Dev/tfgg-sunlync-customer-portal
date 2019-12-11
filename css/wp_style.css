@@ -908,15 +908,22 @@ tr.account_overview_row > td {
 
 .overlay-items-item-quantity-label {
     font-size:0.8em;
+    line-height: 0.5;
 }
 
 .overlay-items-item-quantity-value {
     font-size: 0.8em;
     font-weight: 700;
+    line-height: 0.5;
 }
 
 .overlay-items-item-buttongroup {
     float:right;
+
+}
+
+.overlay-items-item-service-buttongroup {
+
 }
 
 .overlay-items-item-link {
@@ -1005,7 +1012,7 @@ tr.account_overview_row > td {
 
 .services-items-item{
     background-color: #fff;  
-    height:115px;
+    
     -moz-border-radius:3px;
     -webkit-border-radius:3px;
     border-radius:3px; 
@@ -1048,4 +1055,19 @@ tr.account_overview_row > td {
     font-size:1em !important;
     font-weight: 700;
     border-radius:0px !important;
+}
+
+.button-container {
+    border-top: solid 1px #d1d0d0;
+    margin-top:5px;
+    margin-bottom:5px;
+}
+
+.overlay-items-item-link {
+    
+}
+
+.btn-light {
+    font-weight: 700 !important;
+    color: #5AAC44 !important;
 }

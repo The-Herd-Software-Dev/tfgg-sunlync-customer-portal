@@ -609,9 +609,11 @@
                     <br />
                     <span class="overlay-items-item-quantity-label"><?php echo $packageDetails->freeText; ?></span>
                     <br />
-                    <div class="overlay-items-item-buttongroup">
-                        <a href="javascript:tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">BUY NOW</a>         
-                    </div>
+               
+                        <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup ">
+                            <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class="btn btn-sm btn-light" value="BUY NOW"/>         
+                        </div>
+                    
                 </div>
 
 
@@ -669,8 +671,10 @@
                     <br />
                     <span class="overlay-items-item-quantity-label"><?php echo $membershipDetails->freeText; ?></span>
                     <br />
-                    <div class="overlay-items-item-buttongroup">
-                        <a href="javascript:tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class=" cart-paynow-font-color overlay-items-item-link">BUY NOW</a>        
+                    <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup">
+                        <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class="btn btn-sm btn-light" value="BUY NOW" />       
+                    
+                    
                     </div>
                 </div>
 
