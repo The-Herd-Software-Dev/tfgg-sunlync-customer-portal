@@ -1020,6 +1020,7 @@ tr.account_overview_row > td {
     border: solid 1px rgb(194, 194, 194);
    box-sizing: border-box;
    margin:5px;
+
 }
 
 .services-items-membership{
@@ -1071,3 +1072,26 @@ tr.account_overview_row > td {
     font-weight: 700 !important;
     color: #5AAC44 !important;
 }
+
+.services-item-details-container {
+    width:100%;
+    box-sizing: border-box !important;
+    position: relative;
+}
+
+.services-image-container {
+    box-sizing: border-box !important;
+    display: inline-block;
+    width:33%;
+    vertical-align:top;
+    padding:8px 15px 0px 0px;
+      
+}
+
+.services-details-container { 
+    box-sizing: border-box !important;
+    display: inline-block;
+    vertical-align:top;
+}
+
+
