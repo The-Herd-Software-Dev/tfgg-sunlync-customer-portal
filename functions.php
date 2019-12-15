@@ -1988,7 +1988,7 @@
     
     function tfgg_scp_delete_cart_item(){
         $url=tfgg_get_api_url().'TAPICart/CartItems/sCartItemID';
-
+        
         $url=str_replace('sCartItemID',$_POST['data']['itemID'],$url);
         
         try{

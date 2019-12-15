@@ -52,14 +52,24 @@
                 foreach($lineItems as &$details){
                     $i++;
             ?>
-
                 <div class="overlay-items-item-container" id="tfgg_cart_item_row_<?php echo $i;?>">
                     <div class="cart-items-item">
                         <span class="overlay-items-item-description"><?php echo $details->alias; ?></span>
                         <span class="overlay-items-item-price">&#163;<?php echo number_format(($details->Qty*$details->PPU),2,'.',',');?></span>
                         <br />
                         <span class="overlay-items-item-quantity-label">Quantity:</span>
-                        <span class="overlay-items-item-quantity-value"><?php echo $details->Qty; ?> @ &#163;<?php echo number_format($details->PPU,2,'.',','); ?></span>
+                        <span class="overlay-items-item-quantity-value"><select class="tfgg_scp_cart_qty_select"
+                        data-itemid="<?php echo $details->ID; ?>"
+                        data-oldQty="<?php echo $details->Qty; ?>"
+                        data-itemtype="<?php echo $details->ItemType; ?>"
+                        data-keyvalue="<?php echo $details->KeyValue; ?>"
+                        data-itemrow="tfgg_cart_item_row_<?php echo  $i; ?>"><?php 
+                            for($j=0; $j<10; $j++){
+                                if($j==$details->Qty){$selected='selected';}else{$selected='';}
+
+                                echo '<option value="'.$j.'" '.$selected.'>'.$j.'</option>';
+                            }
+                        ?></select> @ &#163;<?php echo number_format($details->PPU,2,'.',','); ?></span>
                         <br />
                         <div class="overlay-items-item-buttongroup">
                             <a href="javascript:  tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')" class="overlay-items-item-link">REMOVE</a>
