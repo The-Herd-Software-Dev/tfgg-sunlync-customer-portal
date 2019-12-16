@@ -152,7 +152,7 @@ jQuery(function(){
             return true;
         }else{
             //post update
-            console.log('update');
+            tfggPostCartItem(itemtype, keyvalue, newQty, id, false);
         }
         
     });
@@ -1267,14 +1267,15 @@ function tfggSCPTogglePassword(){
     } 
 }
 
-function tfggPostCartItem(addItemType, addItemNumnber, addItemQty){
+function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID='', showDialog=true){
     var pathname = window.location.pathname;
 
     jQuery.post(localAccess.adminAjaxURL,{
         'action'    : 'tfgg_scp_post_cart_item',
         'data'      : {itemType: addItemType, 
             keyValue: addItemNumnber, 
-            qty: addItemQty},
+            qty: addItemQty,
+            itemid: itemID},
 		'dataType'  : 'json',
 		'pathname'  : pathname
     },function(data){
@@ -1282,18 +1283,23 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty){
         var obj = jQuery.parseJSON(data);
 
         if(obj["results"].toUpperCase()=='SUCCESS'){
-            jQuery('#tfgg_scp_cart_add_message').html('Your item was successfully added to your cart');
-            jQuery('tfgg_scp_cart_add_pay_btn').css('display','');
-            jQuery('#tfgg_scp_cart_add').modal('toggle');
-            
-            var currentQty = jQuery('#tfgg_scp_cart_qty').text();
-            currentQty = currentQty.trim().replace(/\(|\)/g, '');
+            if(showDialog){
+                jQuery('#tfgg_scp_cart_add_message').html('Your item was successfully added to your cart');
+                jQuery('tfgg_scp_cart_add_pay_btn').css('display','');
+                jQuery('#tfgg_scp_cart_add').modal('toggle');
+                
+                var currentQty = jQuery('#tfgg_scp_cart_qty').text();
+                currentQty = currentQty.trim().replace(/\(|\)/g, '');
 
-            if(currentQty!=''){
-                addItemQty=parseInt(addItemQty)+parseInt(currentQty);
+                if(currentQty!=''){
+                    addItemQty=parseInt(addItemQty)+parseInt(currentQty);
+                }
+                
+                tfggSetCartLinkQty(addItemQty);
+            }else{
+                console.log('here');
+                window.location.reload();
             }
-            
-            tfggSetCartLinkQty(addItemQty);
             //location.href = jQuery('#tfgg_scp_cart_link').attr('href');
             
         }else{

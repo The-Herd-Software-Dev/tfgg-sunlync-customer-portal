@@ -1918,6 +1918,7 @@
         "clientNumber": "",
         "storeCode": "",
         "cartID": "",
+        "itemID": "",
         "itemType": "",
         "keyValue": "",
         "qty": "",
@@ -1940,6 +1941,13 @@
         $postBody["storeCode"] = $storecode;
         $postBody["cartID"] = $cartid;
         $postBody["itemType"] = $_POST['data']['itemType'];
+
+        if(array_key_exists('itemid',$_POST['data'])){
+            $postBody["itemID"] = $_POST['data']['itemid'];
+        }else{
+            $postbody["itemID"] = '';
+        }
+
         $postBody["keyValue"] = $_POST['data']['keyValue'];
         $postBody["qty"] = $_POST['data']['qty'];
         $postBody["mrkt"] = get_option('tfgg_scp_api_mrkt');

@@ -169,9 +169,9 @@
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group d-flex" role="group" aria-label="Second group" style="width:100%;">
                                 <button type="button" class="btn account-overview-button account-overview-standard-button-active overlay-checkout-group-button"
-                                id="sagepayCartPayment" onclick="tfgg_scp_toggle_cart_payment('sage');">Credit Card</button>
+                                id="sagepayCartPayment" onclick="tfgg_scp_toggle_cart_payment('sage');">Credit/Debit Card</button>
                                 <button type="button" class="btn account-overview-button account-overview-standard-button overlay-checkout-group-button"
-                                id="paypalCartPayment" onclick="tfgg_scp_toggle_cart_payment('paypal');">PayPal</button>
+                                id="paypalCartPayment" onclick="tfgg_scp_toggle_cart_payment('paypal');" >PayPal</button>
                             </div>
                         </div>
                         <br/>
@@ -615,7 +615,7 @@
                     <div class="services-item-details-container">
 
                         <div class="services-image-container">
-                            <img src="<?php echo plugin_dir_url( __FILE__ ); ?>/images/placeholder.png" class="service-image"/>
+                            <img src="<?php echo $packageDetails->img;?>" class="service-image"/>
                         </div>
 
                         <div class="services-details-container">
@@ -691,7 +691,7 @@
                     <div class="services-item-details-container">
 
                         <div class="services-image-container">
-                            <img src="<?php echo plugin_dir_url( __FILE__ ); ?>/images/placeholder.png" class="service-image"/>
+                            <img src="<?php echo $membershipDetails->img;?>" class="service-image"/>
                         </div>
 
                         <div class="services-details-container">
