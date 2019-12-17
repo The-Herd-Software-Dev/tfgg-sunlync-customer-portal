@@ -923,7 +923,10 @@ tr.account_overview_row > td {
 }
 
 .overlay-items-item-service-buttongroup {
-
+    position: absolute;
+    bottom: 0;
+    right:0;
+    margin:5px;
 }
 
 .overlay-items-item-link {
@@ -1093,5 +1096,4 @@ tr.account_overview_row > td {
     display: inline-block;
     vertical-align:top;
 }
-
 

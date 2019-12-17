@@ -614,9 +614,14 @@
 
                     <div class="services-item-details-container">
 
+                        <?php if ($packageDetails->img != "") {?>
                         <div class="services-image-container">
                             <img src="<?php echo $packageDetails->img;?>" class="service-image"/>
                         </div>
+
+                        <?php 
+                        }
+                        ?>
 
                         <div class="services-details-container">
                             <span class="overlay-items-item-quantity-label">Units:</span>
@@ -629,7 +634,7 @@
                             <br />
                         </div>
 
-                </div>
+                        </div>
                
 
                     <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup ">
@@ -690,15 +695,21 @@
 
                     <div class="services-item-details-container">
 
+                    <?php if ($membershipDetails->img != "") {?>
                         <div class="services-image-container">
                             <img src="<?php echo $membershipDetails->img;?>" class="service-image"/>
                         </div>
+                        <?php 
+                        }
+                        ?>
+            
 
                         <div class="services-details-container">
                             <span class="overlay-items-item-quantity-label"> Expiration:</span>
                             <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($membershipDetails->exp_days, $membershipDetails->exp_date, $membershipDetails->open_ended); ?></span>
                             <br />
                             <span class="overlay-items-item-quantity-label"><?php echo $membershipDetails->freeText; ?></span>
+                            <br />
                             <br />
                         </div>
                     </div>
