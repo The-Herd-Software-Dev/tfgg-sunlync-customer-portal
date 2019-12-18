@@ -42,6 +42,7 @@
         wp_enqueue_script( 'boot3','https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js', array( 'jQuery'),'' );
         wp_enqueue_style('bootstrap4', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css');
         wp_enqueue_script( 'boot2','https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js', array( 'jQuery' ),'' );
+        wp_enqueue_style( 'boot5','https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css', '','' );
         
 
         wp_register_script( 'boot-script', 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', array( 'jquery' ) );

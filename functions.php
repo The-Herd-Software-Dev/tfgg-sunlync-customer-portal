@@ -2575,8 +2575,8 @@
     function tfgg_add_cart_link($items, $args){
         //add the account overview link to the nav bar
         $sunlyncuser = tfgg_cp_get_sunlync_client();
-        $link=get_option('tfgg_scp_cart_menu_link_text','Pay Now')." <span id=\"tfgg_scp_cart_qty\">";
-
+        //$link=get_option('tfgg_scp_cart_menu_link_text','Pay Now')." <span id=\"tfgg_scp_cart_qty\">";
+        $link = '<i class="fa fa-shopping-cart"></i> <span id="tfgg_scp_cart_qty">';
         if((isset($_SESSION['tfgg_scp_cart_qty']))&&($_SESSION['tfgg_scp_cart_qty']>0)){
             $link.=' ('.$_SESSION['tfgg_scp_cart_qty'].')';
         }
