@@ -170,8 +170,8 @@
                             <div class="btn-group d-flex" role="group" aria-label="Second group" style="width:100%;">
                                 <button type="button" class="btn account-overview-button account-overview-standard-button-active overlay-checkout-group-button"
                                 id="sagepayCartPayment" onclick="tfgg_scp_toggle_cart_payment('sage');">Credit/Debit Card</button>
-                                <button type="button" class="btn account-overview-button account-overview-standard-button overlay-checkout-group-button"
-                                id="paypalCartPayment" onclick="tfgg_scp_toggle_cart_payment('paypal');" >PayPal</button>
+                                <button type="button" class="btn account-overview-button paypal-standard-button overlay-checkout-group-button"
+                                id="paypalCartPayment" onclick="tfgg_scp_toggle_cart_payment('paypal');" ></button>
                             </div>
                         </div>
                         <br/>

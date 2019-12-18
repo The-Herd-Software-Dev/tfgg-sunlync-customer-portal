@@ -231,7 +231,14 @@ tr.account_overview_row > td {
     border:1px solid #FCAF41;
 }
 
-
+.paypal-standard-button {
+    background-image:url('../images/paypal_logo.png');
+    background-size: contain;
+    background-position:center;
+    background-repeat: no-repeat;
+    background-color:#FCAF41;
+    border:1px solid #FCAF41;
+}
 
 
 .account-overview-standard-button:hover,
@@ -241,7 +248,15 @@ tr.account_overview_row > td {
     color:#fff;
 }
 
-
+.paypal-standard-button:hover,
+.paypal-standard-button-active{
+    background-image:url('../images/paypal_logo.png');
+    background-size: contain;
+    background-position:center;
+    background-repeat: no-repeat;
+    background-color:#F16631;
+    border:1px solid #F16631;
+}
 
 .account-overview-cancel-button {
     background-color:#fff;

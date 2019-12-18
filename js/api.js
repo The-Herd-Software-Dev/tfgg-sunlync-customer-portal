@@ -1355,15 +1355,15 @@ function tfgg_scp_toggle_cart_payment(newPanel){
     //console.log(newPanel);
     if(newPanel=='paypal'){
         jQuery('#paypal-button-container-parent').show();
-        jQuery('#paypalCartPayment').addClass('account-overview-standard-button-active');
-        jQuery('#paypalCartPayment').removeClass('account-overview-standard-button');
+        jQuery('#paypalCartPayment').addClass('paypal-standard-button-active');
+        jQuery('#paypalCartPayment').removeClass('paypal-standard-button');
         jQuery('#sagepay-button-container').hide();
         jQuery('#sagepayCartPayment').removeClass('account-overview-standard-button-active');
         jQuery('#sagepayCartPayment').addClass('account-overview-standard-button');
     }else{
         jQuery('#paypal-button-container-parent').hide();
-        jQuery('#paypalCartPayment').removeClass('account-overview-standard-button-active');
-        jQuery('#paypalCartPayment').addClass('account-overview-standard-button');
+        jQuery('#paypalCartPayment').removeClass('paypal-standard-button-active');
+        jQuery('#paypalCartPayment').addClass('paypal-standard-button');
         jQuery('#sagepay-button-container').show();
         jQuery('#sagepayCartPayment').addClass('account-overview-standard-button-active');
         jQuery('#sagepayCartPayment').removeClass('account-overview-standard-button');
