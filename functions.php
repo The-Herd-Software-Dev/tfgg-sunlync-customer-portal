@@ -2210,7 +2210,7 @@
 
     }
     add_action('wp_ajax_tfgg_scp_post_cart_storecode','tfgg_scp_post_cart_storecode');
-    add_action('wp_ajax_tfgg_scp_post_cart_storecode','tfgg_scp_post_cart_storecode');
+    add_action('wp_ajax_nopriv_tfgg_scp_post_cart_storecode','tfgg_scp_post_cart_storecode');
 
 
     function tfgg_api_finalize_cart(){

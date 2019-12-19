@@ -1426,12 +1426,10 @@ function confirmChangeCartStore(){
     var currentQty = jQuery('#tfgg_scp_cart_qty').text();
     currentQty = currentQty.trim().replace(/\(|\)/g, '');
     
-    //console.log('|'+currentQty+'|');
-    
     if(currentQty!=''){
         jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');  
     }else{
-        //console.log('change cart');
+        //cart is empty, go ahead and change
         changeCartStore(); 
     }
 }
@@ -1439,6 +1437,7 @@ function confirmChangeCartStore(){
 function changeCartStore(){
     //console.log('changing store');
     //jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');
+    
     var selected = jQuery('#tfgg_scp_store_purchasing_selection option:selected').val();
 
     var pathname = window.location.pathname; 
@@ -1449,7 +1448,6 @@ function changeCartStore(){
 		'dataType'  : 'json',
 		'pathname'  : pathname
     },function(data){
-        //console.log(data);
         var obj = jQuery.parseJSON(data);
         if(obj["results"].toUpperCase()=='SUCCESS'){
             //jQuery('#tfgg_scp_cart_change_store_block_warning').val('1');
