@@ -100,6 +100,12 @@ function display_tfgg_allow_sage_payment(){
     <?php
 }
 
+function display_tfgg_sage_pay_sandbox(){
+    ?>
+    <input type="checkbox" name="tfgg_scp_cart_sage_pay_sandbox" value="1" <?php if(get_option('tfgg_scp_cart_sage_pay_sandbox','1')==1){echo 'checked';} ?> />
+    <?php
+}
+
 function display_tfgg_sage_key(){
     ?>
     <input type="text" name="tfgg_scp_cart_sage_key" value="<?php echo get_option('tfgg_scp_cart_sage_key'); ?>" style="width: 60%" />

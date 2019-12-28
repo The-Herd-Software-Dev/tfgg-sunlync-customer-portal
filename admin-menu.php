@@ -241,6 +241,9 @@
         add_settings_field("tfgg_scp_cart_sage_payment","Process SagePay Payments As:","display_tfgg_sage_payment", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_sage_payment");
 
+        add_settings_field("tfgg_scp_cart_sage_pay_sandbox","Use SagePay Sandbox:","display_tfgg_sage_pay_sandbox", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_pay_sandbox");
+
 
         add_settings_field("tfgg_scp_cart_sage_vendor_name","SagePay Vendor Name:","display_tfgg_sage_vendor_name", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_sage_vendor_name");

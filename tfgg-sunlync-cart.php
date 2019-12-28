@@ -371,8 +371,11 @@
                 <div id="sp-container"></div>
                 <button type="submit" class="account-overview-button account-overview-standard-button overlay-checkout-button" id="tfgg_scp_cart_complete" >COMPLETE PURCHASE</button>
             </form>
-
+            <?php if(get_option('tfgg_scp_cart_sage_pay_sandbox','1')=='1'){ ?>
             <script src="https://pi-test.sagepay.com/api/v1/js/sagepay.js"></script>
+            <?php }else{ ?>
+            <script src="https://pi-live.sagepay.com/api/v1/js/sagepay.js"></script>
+            <?php } ?>
             <script>
                 document.getElementById('tfgg_scp_cart_complete')
                     .addEventListener('click', function(e) {
