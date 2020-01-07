@@ -314,10 +314,10 @@ function ValidateNewReg(isOnline){
 	    bResult = false;
     }
 
-    //new postcode validation    
+    //new postcode validation
     var postcode = jQuery('#tfgg_cp_post_code').val();
     //2019-12-24 CB V1.2.4.10 - instore only checks for non-blank
-    if(!isOnline){
+    /*if(!isOnline){
         if(postcode=''){
             jQuery('#new_reg_post_code_alertpnl').css('display','block');
             jQuery('#new_reg_post_code_alertpnl').html('Please enter a post code');
@@ -329,6 +329,12 @@ function ValidateNewReg(isOnline){
             jQuery('#new_reg_post_code_alertpnl').html('This is not a valid post code');
             bResult = false; 
         }
+    }*/
+    //2020-01-06 CB V1.2.4.11 - relaxed POST CODE requirements
+    if(postcode=''){
+        jQuery('#new_reg_post_code_alertpnl').css('display','block');
+        jQuery('#new_reg_post_code_alertpnl').html('Please enter a post code');
+        bResult = false;     
     }
     
     //new mobile number validation
