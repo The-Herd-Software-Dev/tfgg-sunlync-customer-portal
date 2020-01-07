@@ -344,10 +344,15 @@ function ValidateNewReg(isOnline){
 
     if(!bResult){
         event.preventDefault();
-        if(jQuery('#tfgg_scp_reg_recaptcha').length){
+        /*if(jQuery('#tfgg_scp_reg_recaptcha').length){
+            console.log('not empty');
             grecaptcha.reset();//reset the reCaptcha
-        }
-        jQuery('#registrationSubmitButton').attr('disabled','true');
+        } */
+        //2020-01-07 CB V1.2.4.12 - changed how to check for recaptcha element
+        if(jQuery('#tfgg_scp_reg_recaptcha').children().length!=0){
+            grecaptcha.reset();//reset the reCaptcha 
+            jQuery('#registrationSubmitButton').attr('disabled','true');   
+        }       
         jQuery('#new_reg_overall_alertpnl').css('display','block');
         jQuery('#new_reg_overall_alertpnl').html('We encountered an error with your registration, please fix the highlighted fields');
         genModalDialog('instore_reg_validation_fail_warning');
