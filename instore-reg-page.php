@@ -301,23 +301,38 @@
 				</div>
 				<?php
 					//check to see if reCaptcha is active and if so, display it
-					if(get_option('tfgg_scp_instore_reg_recaptcha_req','1')=='1'){
+					//1.2.4.11 - change code to check for whitelisting
+					if(get_option('tfgg_scp_online_reg_recaptcha_req','1')=='1'){
+						$whitelisted_captcha = false;
 						include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 						if(is_plugin_active('google-captcha/google-captcha.php')){
 						?>
 							<div id="tfgg_scp_reg_recaptcha">
 						<?php
-							echo  do_shortcode("[bws_google_captcha]");
+							$captcha = do_shortcode('[bws_google_captcha]');
+							//var_dump($captcha);
+							if($captcha){
+								if(strpos($captcha,'gglcptch_whitelist_message')>0){
+									$whitelisted_captcha = true;
+								}else{
+									echo $captcha;
+									$whitelisted_captcha = false;
+								}
+							}else{
+								$whitelisted_captcha = true;
+							}
 						?>
 							</div>
 						<?php
 						}
+					}else{
+						$whitelisted_captcha = true;
 					}
 				?>
 		
 				<input type="hidden" name="tfgg_cp_register_instore_nonce" id="tfgg_cp_register_instore_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-instore-nonce'); ?>"/>
 				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(false)" 
-				<?php if(get_option('tfgg_scp_instore_reg_recaptcha_req','1')=='1'){echo 'disabled';}?>> <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
+				<?php if($whitelisted_captcha == false){echo 'disabled';}?>>  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
 					<div id="new_reg_overall_alertpnl" style="display:none;" class="reg_alert"></div>
 				</div>

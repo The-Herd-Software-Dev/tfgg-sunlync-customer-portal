@@ -422,8 +422,15 @@ function ValidateNewReg(isOnline){
 
     if(!bResult){
         event.preventDefault();
-        grecaptcha.reset();//reset the reCaptcha
-        jQuery('#registrationSubmitButton').attr('disabled','true');
+        /*if(jQuery('#tfgg_scp_reg_recaptcha').length){
+            console.log('not empty');
+            grecaptcha.reset();//reset the reCaptcha
+        } */
+        if(jQuery('#tfgg_scp_reg_recaptcha').children().length!=0){
+            console.log('still not empty');
+            grecaptcha.reset();//reset the reCaptcha 
+            jQuery('#registrationSubmitButton').attr('disabled','true');   
+        }       
         jQuery('#new_reg_overall_alertpnl').css('display','block');
         jQuery('#new_reg_overall_alertpnl').html('We encountered an error with your registration, please fix the highlighted fields');
         genModalDialog('instore_reg_validation_fail_warning');
