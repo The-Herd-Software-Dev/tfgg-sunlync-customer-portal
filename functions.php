@@ -147,6 +147,14 @@
 		}
     }
 
+    function tfgg_cp_redirect_after_registration(){
+        if(get_option('tfgg_scp_cpnewuser_success_page')==''){
+            wp_redirect(get_option('tfgg_scp_cplogin_page_success'));exit;
+        }else{
+            wp_redirect(get_option('tfgg_scp_cpnewuser_success_page'));exit;
+        }
+    }
+
     function tfgg_cp_get_redirect_after_login(){
         return get_option('tfgg_scp_cplogin_page_success');
     }

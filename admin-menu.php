@@ -28,6 +28,9 @@
         add_settings_field("tfgg_scp_cpnewuser_page", "Registration Page (Online):", "display_cpnewuser_page", "tfgg-shortcodes", "tfgg_shortcodes");
         register_setting("tfgg_shortcodes", "tfgg_scp_cpnewuser_page");
 
+        add_settings_field("tfgg_scp_cpnewuser_success_page", "Registration Page (Online) Success:", "display_cpnewuser_success_page", "tfgg-shortcodes", "tfgg_shortcodes");
+        register_setting("tfgg_shortcodes", "tfgg_scp_cpnewuser_success_page");
+
         add_settings_field("tfgg_scp_cpnewuser_page_instore", "Registration Page (instore):", "display_cpnewuser_page_instore", "tfgg-shortcodes", "tfgg_shortcodes");
         register_setting("tfgg_shortcodes", "tfgg_scp_cpnewuser_page_instore");
         

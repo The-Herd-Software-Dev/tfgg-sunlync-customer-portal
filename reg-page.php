@@ -584,8 +584,8 @@
 					tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
 					$clientNumber=$reg_result->clientnumber;
 					tfgg_cp_set_sunlync_client($clientNumber);
-					tfgg_cp_redirect_after_login();
-					
+					//2020-01-12 CB V1.2.4.13 - tfgg_cp_redirect_after_login();
+					tfgg_cp_redirect_after_registration();
 				}else{
 					tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$reg_result->response.
 					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));

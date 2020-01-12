@@ -50,6 +50,12 @@
         <?php
     }
 
+    function display_cpnewuser_success_page(){
+        ?>
+        <input type="text" name="tfgg_scp_cpnewuser_success_page" value="<?php echo get_option('tfgg_scp_cpnewuser_success_page'); ?>" style="width: 60%" />
+        <?php    
+    }
+
     function display_cpnewuser_page_instore(){
         ?>
         <input type="text" name="tfgg_scp_cpnewuser_page_instore" value="<?php echo get_option('tfgg_scp_cpnewuser_page_instore'); ?>" style="width: 60%" />
