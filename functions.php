@@ -458,21 +458,21 @@
             $packageImg = get_option('tfgg_scp_package_img',array());
             $packageText = get_option('tfgg_scp_package_free_text',array());
             foreach($packages as &$packageDetails){
-                if((array_key_exists($packageDetails->package_number, $packageAlias))&&
+                if((is_array($packageAlias))&&(array_key_exists($packageDetails->package_number, $packageAlias))&&
                 ($packageAlias[$packageDetails->package_number]<>'')){ 
                     $packageDetails->alias = $packageAlias[$packageDetails->package_number]; 
                 }else{ 
                     $packageDetails->alias = $packageDetails->description;
                 }
 
-                if((array_key_exists($packageDetails->package_number, $packageImg))&&
+                if((is_array($packageImg))&&(array_key_exists($packageDetails->package_number, $packageImg))&&
                 ($packageImg[$packageDetails->package_number]<>'')){ 
                     $packageDetails->img = $packageImg[$packageDetails->package_number]; 
                 }else{ 
                     $packageDetails->img = '';
                 }
 
-                if((array_key_exists($packageDetails->package_number, $packageText))&&
+                if((is_array($packageText))&&(array_key_exists($packageDetails->package_number, $packageText))&&
                 ($packageText[$packageDetails->package_number]<>'')){ 
                     $packageDetails->freeText = $packageText[$packageDetails->package_number]; 
                 }else{ 
@@ -519,21 +519,21 @@
             $membershipImg = get_option('tfgg_scp_membership_img',array());
             $membershipText = get_option('tfgg_scp_membership_free_text',array());
             foreach($memberships as &$membershipDetails){
-                if((array_key_exists($membershipDetails->membership_number, $membershipAlias))&&
+                if((is_array($membershipAlias))&&(array_key_exists($membershipDetails->membership_number, $membershipAlias))&&
                 ($membershipAlias[$membershipDetails->membership_number]<>'')){ 
                     $membershipDetails->alias = $membershipAlias[$membershipDetails->membership_number]; 
                 }else{ 
                     $membershipDetails->alias = $membershipDetails->description;
                 }
 
-                if((array_key_exists($membershipDetails->membership_number, $membershipImg))&&
+                if((is_array($membershipImg))&&(array_key_exists($membershipDetails->membership_number, $membershipImg))&&
                 ($membershipImg[$membershipDetails->membership_number]<>'')){ 
                     $membershipDetails->img = $membershipImg[$membershipDetails->membership_number]; 
                 }else{ 
                     $membershipDetails->img = '';
                 }
 
-                if((array_key_exists($membershipDetails->membership_number, $membershipText))&&
+                if((is_array($membershipText))&&(array_key_exists($membershipDetails->membership_number, $membershipText))&&
                 ($membershipText[$membershipDetails->membership_number]<>'')){ 
                     $membershipDetails->freeText = $membershipText[$membershipDetails->membership_number]; 
                 }else{ 
@@ -1580,8 +1580,9 @@
 
     function tfgg_format_date_to_ymd($date){
         //USE THIS FUNCTION CONVERT D/M/Y TO Y/M/D
-        if(($_SERVER['HTTP_HOST']!='localhost:8888')&&
-        ($_SERVER['HTTP_HOST']!='tfgg-portal.theherdsoftware.com')){ 
+        if((($_SERVER['HTTP_HOST']!='localhost:8888')&&
+        ($_SERVER['HTTP_HOST']!='tfgg-portal.theherdsoftware.com'))||
+        (get_option('tfgg_scp_api_url')=='188.95.206.202')){
             $date = str_replace('/', '-', $date); //this line is to ensure UK dates parse correctly
         }
         $date = new DateTime($date);
@@ -1605,8 +1606,9 @@
     //hardcoded to 18 months at present
     function tfgg_purchased_within_acceptable_period($purchase_date){
         //return true;
-        if(($_SERVER['HTTP_HOST']!='localhost:8888')&&
-        ($_SERVER['HTTP_HOST']!='tfgg-portal.theherdsoftware.com')){  
+        if((($_SERVER['HTTP_HOST']!='localhost:8888')&&
+        ($_SERVER['HTTP_HOST']!='tfgg-portal.theherdsoftware.com'))||
+        (get_option('tfgg_scp_api_url')=='188.95.206.202')){  
             $purchase_date = str_replace('/', '-', $purchase_date); //this line is to ensure UK dates parse correctly
         }
         
@@ -1689,21 +1691,21 @@
             $packageImg = get_option('tfgg_scp_package_img',array());
             $packageText = get_option('tfgg_scp_package_free_text',array());
             foreach($packages as &$packageDetails){
-                if((array_key_exists($packageDetails->package_id, $packageAlias))&&
+                if((is_array($packageAlias))&&(array_key_exists($packageDetails->package_id, $packageAlias))&&
                 ($packageAlias[$packageDetails->package_id]<>'')){
                     $packageDetails->alias = $packageAlias[$packageDetails->package_id];
                 }else{
                     $packageDetails->alias = $packageDetails->description;
                 }
 
-                if((array_key_exists($packageDetails->package_id, $packageImg))&&
+                if((is_array($packageImg))&&(array_key_exists($packageDetails->package_id, $packageImg))&&
                 ($packageImg[$packageDetails->package_id]<>'')){ 
                     $packageDetails->img = $packageImg[$packageDetails->package_id]; 
                 }else{ 
                     $packageDetails->img = '';
                 }
 
-                if((array_key_exists($packageDetails->package_id, $packageText))&&
+                if(is_array($packageText)&&(array_key_exists($packageDetails->package_id, $packageText))&&
                 ($packageText[$packageDetails->package_id]<>'')){ 
                     $packageDetails->freeText = $packageText[$packageDetails->package_id]; 
                 }else{ 
@@ -1750,21 +1752,21 @@
             $membershipImg = get_option('tfgg_scp_membership_img',array());
             $membershipText = get_option('tfgg_scp_membership_free_text',array());
             foreach($memberships as &$membershipDetails){
-                if((array_key_exists($membershipDetails->membership_id, $membershipAlias))&&
+                if((is_array($membershipAlias))&&(array_key_exists($membershipDetails->membership_id, $membershipAlias))&&
                 ($membershipAlias[$membershipDetails->membership_id]<>'')){
                     $membershipDetails->alias = $membershipAlias[$membershipDetails->membership_id];
                 }else{
                     $membershipDetails->alias = $membershipDetails->description;
                 }
 
-                if((array_key_exists($membershipDetails->membership_id, $membershipImg))&&
+                if((is_array($membershipImg))&&(array_key_exists($membershipDetails->membership_id, $membershipImg))&&
                 ($membershipImg[$membershipDetails->membership_id]<>'')){ 
                     $membershipDetails->img = $membershipImg[$membershipDetails->membership_id]; 
                 }else{ 
                     $membershipDetails->img = '';
                 }
 
-                if((array_key_exists($membershipDetails->membership_id, $membershipText))&&
+                if((is_array($membershipText))&&(array_key_exists($membershipDetails->membership_id, $membershipText))&&
                 ($membershipText[$membershipDetails->membership_id]<>'')){ 
                     $membershipDetails->freeText = $membershipText[$membershipDetails->membership_id]; 
                 }else{ 
