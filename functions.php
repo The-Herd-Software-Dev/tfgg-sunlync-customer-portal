@@ -1867,42 +1867,42 @@
 
         foreach($result["lineItems"] as &$itemDetails){
             if($itemDetails->ItemType=='P'){
-                if((array_key_exists($itemDetails->KeyValue,$packageAlias))&&
+                if((is_array($packageAlias))&&(array_key_exists($itemDetails->KeyValue,$packageAlias))&&
                 ($packageAlias[$itemDetails->KeyValue]<>'')){
                     $itemDetails->alias = $packageAlias[$itemDetails->KeyValue];
                 }else{
                     $itemDetails->alias = $itemDetails->Description;
                 }
 
-                if((array_key_exists($itemDetails->KeyValue, $packageImg))&&
+                if((is_array($packageImg))&&(array_key_exists($itemDetails->KeyValue, $packageImg))&&
                 ($packageImg[$itemDetails->KeyValue]<>'')){ 
                     $itemDetails->img = $packageImg[$itemDetails->KeyValue]; 
                 }else{ 
                     $itemDetails->img = '';
                 }
 
-                if((array_key_exists($itemDetails->KeyValue, $packageText))&&
+                if((is_array($packageText))&&(array_key_exists($itemDetails->KeyValue, $packageText))&&
                 ($packageText[$itemDetails->KeyValue]<>'')){ 
                     $itemDetails->freeText = $packageText[$itemDetails->KeyValue]; 
                 }else{ 
                     $itemDetails->freeText = '';
                 }
             }else{
-                if((array_key_exists($itemDetails->KeyValue,$membershipAlias))&&
+                if((is_array($membershipAlias))&&(array_key_exists($itemDetails->KeyValue,$membershipAlias))&&
                 ($membershipAlias[$itemDetails->KeyValue]<>'')){
                     $itemDetails->alias = $membershipAlias[$itemDetails->KeyValue];
                 }else{
                     $itemDetails->alias = $itemDetails->Description;
                 }
 
-                if((array_key_exists($itemDetails->KeyValue,$membershipImg))&&
+                if((is_array($membershipImg))&&(array_key_exists($itemDetails->KeyValue,$membershipImg))&&
                 ($membershipImg[$itemDetails->KeyValue]<>'')){
                     $itemDetails->img = $membershipImg[$itemDetails->KeyValue];
                 }else{
                     $itemDetails->img = '';
                 }
 
-                if((array_key_exists($itemDetails->KeyValue,$membershipText))&&
+                if((is_array($membershipText))&&(array_key_exists($itemDetails->KeyValue,$membershipText))&&
                 ($membershipText[$itemDetails->KeyValue]<>'')){
                     $itemDetails->freeText = $membershipText[$itemDetails->KeyValue];
                 }else{
