@@ -378,7 +378,7 @@
             $result["demographics"]=array_slice($data,1,-1);
 
             $demo = $result['demographics'][0];
-
+            //var_dump($demo);
             //default purchasing store if the cart is empty
             $_SESSION['clientHomeStore'] = $demo->homeStore;
 

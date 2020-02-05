@@ -548,7 +548,9 @@
     }
 
     function tfgg_scp_display_services_for_sale(){
-        ob_start();
+        ob_start();        
+
+        tfgg_scp_display_store_service_selection();
 
         if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}
         
@@ -567,8 +569,6 @@
         }else{
             $membershipList = '';    
         }
-
-        tfgg_scp_display_store_service_selection();
         
         if($packageList<>''){
             ?>
@@ -740,17 +740,31 @@
         $storeList = json_decode(tfgg_api_get_stores());
         if(StrToUpper($storeList->results)==='SUCCESS'){
             $storeList = $storeList->stores;
-            if(isset($_SESSION['tfgg_scp_cart_store'])){$selected = $_SESSION['tfgg_scp_cart_store'];}else{$selected=$_SESSION['clientHomeStore'];}
-                if((isset($_SESSION['tfgg_cp_cart_warning']))&&($_SESSION['tfgg_cp_cart_warning']=='1')){
-                    $onclick = 'changeCartStore();';
+
+            if(isset($_SESSION['tfgg_scp_cart_store'])){
+                $selected = $_SESSION['tfgg_scp_cart_store'];
+            }else{
+                if((isset($_SESSION['clientHomeStore']))&&($_SESSION['clientHomeStore']<>'')){
+                    echo 'here';
+                    $selected=$_SESSION['clientHomeStore'];
                 }else{
-                    $onclick = 'confirmChangeCartStore();';
+                    $_SESSION['tfgg_scp_cart_store']=$storeList[0]->store_id;;
+                    $selected=$_SESSION['tfgg_scp_cart_store'];
                 }
+            }
+            
+            if((isset($_SESSION['tfgg_cp_cart_warning']))&&($_SESSION['tfgg_cp_cart_warning']=='1')){
+                $onclick = 'changeCartStore();';
+            }else{
+                $onclick = 'confirmChangeCartStore();';
+            }
             ?>
             <div class="" style="margin-bottom: 1em;">
                 <label for="tfgg_scp_store_purchasing_selection"><?php _e('You are viewing packages and services offered by '); ?></label>
                 <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" style="max-width: 30%">
                 <?php
+
+                    echo 'selected: "'.$selected.'" ;';
                     foreach($storeList as &$details){
                         $output='<option value="'.$details->store_id.'" '.($details->store_id === $selected ? "selected" : "").'>'.$details->store_loc.'</option>';
                         echo $output; 
