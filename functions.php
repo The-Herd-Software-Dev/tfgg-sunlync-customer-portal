@@ -1633,6 +1633,26 @@
         }
     }
 
+    //2020-02-09 CB V1.2.4.15
+    function tfgg_scp_validate_service_dates($fromDate, $toDate){
+        if(($fromDate=='1899-12-30')&&($toDate=='1899-12-30')){
+            //dates are blank, so we are all set
+            return true;
+        }
+
+        if($fromDate=='1899-12-30'){$fromDate = new DateTime();}
+        if($toDate=='1899-12-30'){$toDatenew = new DateTime();}
+
+        if(($fromDate>new DateTime())||($toDate<new DateTime())){
+            //from date is in the future or
+            //to date is in the past
+            return false;
+        }else{
+            return true;
+        }
+                
+    }
+
     function tfgg_scp_get_packages_selected_for_api(){
         $packages = get_option('tfgg_scp_package_selection');
         if($packages<>''){
@@ -1780,19 +1800,26 @@
 		}  
     }
 
-    function tfgg_scp_can_service_be_purchased($serviceType, $serviceNumber){
-        if($serviceType=='P'){
-            $allowedServices=tfgg_scp_get_packages_selected_for_api();
-        }elseif($serviceType=='M'){
-            $allowedServices=tfgg_scp_get_memberships_selected_for_api();
-        }else{
-            //nothing should get here
-            return false;
-        }
-        if($allowedServices==''){return true;}
-        $pos = strpos($allowedServices,$serviceNumber);
+    function tfgg_scp_can_service_be_purchased($serviceType, $serviceNumber, $allowedServiceList){
+        if($allowedServiceList==''){return false;}
 
-        if(($pos!='')&&($pos>=0)){return true;}
+        foreach($allowedServiceList as &$allowedServiceDetails){
+            switch ($serviceType){
+                case 'P':
+                    if(($allowedServiceDetails->package_id==$serviceNumber)&&
+                    (tfgg_scp_validate_service_dates($allowedServiceDetails->available_from, $allowedServiceDetails->available_to))){
+                        return true;
+                    }
+                break;
+                case 'M':
+                    if(($allowedServiceDetails->membership_id==$serviceNumber)&&
+                    (tfgg_scp_validate_service_dates($allowedServiceDetails->available_from, $allowedServiceDetails->available_to))){
+                        return true;
+                    }
+                break;
+                default: return false;
+            }
+        }
 
         return false;//default
 

@@ -214,6 +214,9 @@
         add_settings_field("tfgg_scp_cart_employee","Process Transactions As:","display_tfgg_cart_employee", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_employee");
 
+        add_settings_field("tfgg_scp_cart_max_item_count","Max item count:","display_tfgg_cart_max_item_count", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_max_item_count");
+
         add_settings_field("tfgg_scp_cart_allow_paypal_payment","Allow PayPal Payments:","display_tfgg_allow_paypal_payment", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_allow_paypal_payment");
 

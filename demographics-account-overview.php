@@ -151,8 +151,24 @@
 		        	<h4>Active Services</h4>
 		        <?php
 					$clientPkgs = json_decode(tfgg_api_get_client_pkgs($client)); 
-		    		$clientMems = json_decode(tfgg_api_get_client_mems($client)); 
+					$clientMems = json_decode(tfgg_api_get_client_mems($client)); 
 					
+					if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}
+					//2020-02-09 CB V1.2.4.15 - need this here as well to validate from and to dates
+					$packageList = json_decode(tfgg_scp_get_packages_from_api(tfgg_scp_get_packages_selected_for_api(), $browsingStore));
+        
+					if(StrToUpper($packageList->results) === 'SUCCESS'){
+						$packageList = $packageList->packages;
+					}else{
+						$packageList = '';    
+					}
+
+					$membershipList = json_decode(tfgg_scp_get_memberships_from_api(tfgg_scp_get_memberships_selected_for_api(), $browsingStore));
+					if(StrToUpper($membershipList->results) === 'SUCCESS'){
+						$membershipList = $membershipList->memberships;
+					}else{
+						$membershipList = '';    
+					}
 		    		if(StrToUpper($clientPkgs->results) === 'SUCCESS'){
 		    			$clientPkgs = $clientPkgs->clientPackages;
 		    			//["description"]=> string(11) "100 Minutes" ["package_id"]=> string(10) "0000000004" ["purchase_date"]=> string(9) "3/26/2019" ["expiration_date"]=> string(10) "12/30/1899" ["status"]=> string(6) "Active" ["units"]=> string(2) "67" ["unit_type"]=> string(7) "Minutes" ["store_location"]=> string(4) "BFLO"
@@ -170,7 +186,7 @@
 			    							<td><span class="account-overview-generic-label">Service: </span></td>
 			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span>
 											<?php
-			    							if(tfgg_scp_can_service_be_purchased('P',$details->package_number)){
+			    							if(tfgg_scp_can_service_be_purchased('P',$details->package_number,$packageList)){
 			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
 											?>
 											<button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfggPostCartItem('P','<?php echo $details->package_number;?>','1');">BUY AGAIN</button>
@@ -215,7 +231,7 @@
 										<tr class="account_overview_row account_overview_row_header">
 			    							<td><span class="account-overview-generic-label">Service: </span></td>
 			    							<td><span class="account-overview-generic-title "><?php echo $description ?></span><?php
-			    							if(($details->is_eft==0)&&(tfgg_scp_can_service_be_purchased('M',$details->membership_number))){
+			    							if(($details->is_eft==0)&&(tfgg_scp_can_service_be_purchased('M',$details->membership_number, $membershipList))){
 			    								/*onclick="CancelAppt(<?php echo $details->appt_id; ?>);"*/
 											?>
 											<button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfggPostCartItem('M','<?php echo $details->membership_number;?>','1');">BUY AGAIN</button>

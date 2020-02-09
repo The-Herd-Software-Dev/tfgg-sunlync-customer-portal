@@ -64,7 +64,7 @@
                         data-itemtype="<?php echo $details->ItemType; ?>"
                         data-keyvalue="<?php echo $details->KeyValue; ?>"
                         data-itemrow="tfgg_cart_item_row_<?php echo  $i; ?>"><?php 
-                            for($j=0; $j<10; $j++){
+                            for($j=0; $j<(get_option('tfgg_scp_cart_max_item_count',10)+1); $j++){
                                 if($j==$details->Qty){$selected='selected';}else{$selected='';}
 
                                 echo '<option value="'.$j.'" '.$selected.'>'.$j.'</option>';
@@ -439,6 +439,7 @@
                                             }
                                             pnl.innerHTML=pnl.innerHTML+'<br/>'+thisError.message;
                                             pnl.style.display=''; 
+                                            jQuery('#tfgg_scp_cart_complete').text('COMPLETE PURCHASE');//2020-02-07 CB
                                         });
                                     }
                                 }
@@ -596,8 +597,14 @@
             //loop through the allowed services and output
             $rowCounter = 1;
             echo '<div id="tfgg_scp_package_for_sale_list" class="row" style="padding: 10px">';
-
+                
             foreach($packageList as &$packageDetails){
+
+                //2020-02-09 CB V1.2.4.15
+                if(!tfgg_scp_validate_service_dates($packageDetails->available_from, $packageDetails->available_to)){
+                    continue;
+                }
+                
                 
                 switch(StrToUpper($packageDetails->unit_type)){
                     case 'M':$unitType = get_option('tfgg_scp_package_unit_minutes');
@@ -685,7 +692,10 @@
 
 
             foreach($membershipList as &$membershipDetails){
-
+                //2020-02-09 CB V1.2.4.15
+                if(!tfgg_scp_validate_service_dates($membershipDetails->available_from, $membershipDetails->available_to)){
+                    continue;
+                }
                 ?>
 
                 <div class="col-lg-4 services-items-membership mems-sale-container" id="tfgg_scp_pack_sale_<?php echo $membershipDetails->membership_id;?>"

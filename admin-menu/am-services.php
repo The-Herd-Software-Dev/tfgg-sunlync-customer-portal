@@ -12,6 +12,12 @@ function display_tfgg_services_sale_slug(){
     <?php
 }
 
+function display_tfgg_cart_max_item_count(){
+    ?>
+    <input type="number" name="tfgg_scp_cart_max_item_count" value="<?php echo get_option('tfgg_scp_cart_max_item_count',10); ?>" style="width: 60%" />
+    <?php   
+}
+
 function display_tfgg_package_selection(){
     //first thing we need to do is actually display all the packages the API returns
     $packageList = json_decode(tfgg_scp_get_packages_from_api(''));
