@@ -1112,3 +1112,6 @@ tr.account_overview_row > td {
     vertical-align:top;
 }
 
+.account_overview_row_footer {
+    border-top: solid 1px #eee;
+}
