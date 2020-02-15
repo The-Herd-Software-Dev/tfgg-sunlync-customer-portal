@@ -73,6 +73,7 @@
                         <br />
                         <div class="overlay-items-item-buttongroup">
                             <a href="javascript:  tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')" class="overlay-items-item-link">REMOVE</a>
+                            <br />
                         </div>             
                     </div>
                 </div>
