@@ -30,9 +30,11 @@ function display_tfgg_package_selection(){
         $packageText = (array)get_option('tfgg_scp_package_free_text');
         //var_dump($packageAlias);
         $rowCounter = 1;
-        echo '<div class="container border rounded" style="padding: 10px; margin-left:unset">';
+
+        echo '<div class="container border rounded" style="padding: 10px; margin-left:unset"><div class="row">';
+        
         foreach($packageList as &$packageDetails){
-            if($rowCounter==1){echo "<div class=\"row\" style=\"padding: 5px;\">";}
+            
                 
             if(in_array($packageDetails->package_id, $selectedPackages)){ $isChecked = 'checked="checked"'; }else{ $isChecked = ''; }
             if((array_key_exists($packageDetails->package_id, $packageAlias))&&
@@ -42,21 +44,19 @@ function display_tfgg_package_selection(){
             if((array_key_exists($packageDetails->package_id, $packageText))&&
             ($packageText[$packageDetails->package_id]<>'')){ $freeText = $packageText[$packageDetails->package_id]; }else{ $freeText = ''; }
             
-            echo '<div class="col-sm">'.
-            '<input type="checkbox" value="'.$packageDetails->package_id.'" name="tfgg_scp_package_selection[]" '.$isChecked.' />'.$packageDetails->description.'<br/>'.
-            '<div><span>Price: </span><span>&#163;'.$packageDetails->price.'</span></div>'.
-            '<div><label>Alias: </label><input type="text" name="tfgg_scp_package_alias['.$packageDetails->package_id.']" value="'.$alias.'"/></div>'.
-            '<div><label>Img: </label><input type="text" name="tfgg_scp_package_img['.$packageDetails->package_id.']" value="'.$img.'"/></div>'.
-            '<div><label>Text: </label><input type="text" name="tfgg_scp_package_free_text['.$packageDetails->package_id.']" value="'.$freeText.'"/></div>'.
-            '</div>';	
-            
-            $rowCounter++;
-            if($rowCounter>2){
-                $rowCounter=1;
-                echo "</div>";//close the row
-            }
+            echo '<div class="col-lg-4 admin-service-item">'.
+
+            '<div class="admin-service-description"><input type="checkbox" value="'.$packageDetails->package_id.'" name="tfgg_scp_package_selection[]" '.$isChecked.' />'.$packageDetails->description.'</div>'.
+            '<div class="admin-service-detail">'.
+            '<div><span class="admin-service-label">Price:&nbsp; </span><span>&#163;'.$packageDetails->price.'</span></div>'.
+            '<div><label class="admin-service-label">Alias: </label><input type="text" class="admin-service-value" name="tfgg_scp_package_alias['.$packageDetails->package_id.']" value="'.$alias.'"/></div>'.
+            '<div><label class="admin-service-label">Img: </label><input type="text" class="admin-service-value" name="tfgg_scp_package_img['.$packageDetails->package_id.']" value="'.$img.'"/></div>'.
+            '<div><label class="admin-service-label">Text: </label><input type="text" class="admin-service-value" name="tfgg_scp_package_free_text['.$packageDetails->package_id.']" value="'.$freeText.'"/></div>'.
+            '<br />'.
+            '</div></div>';	
+        
         }//foreach
-        echo '</div>';//container
+        echo '</div></div>';//container
     }else{
         $alert = "<div class=\"notice notice-error\">Unable to retrieve your package list, please ensure your API credentials are setup</div>";
         echo $alert;
@@ -73,9 +73,12 @@ function display_tfgg_membership_selection(){
         $membershipImages = (array)get_option('tfgg_scp_membership_img');
         $membershipText = (array)get_option('tfgg_scp_membership_free_text');
         $rowCounter = 1;
-        echo '<div class="container border rounded" style="padding: 10px; margin-left:unset">';
+        echo '<div class="container border rounded" style="padding: 10px; margin-left:unset"> <div class="row">';
+        
+        
+
         foreach($membershipList as &$membershipDetails){
-            if($rowCounter==1){echo "<div class=\"row\" style=\"padding: 5px;\">";}
+            
                 
             if(in_array($membershipDetails->membership_id, $selectedMemberships)){ $isChecked = 'checked="checked"'; }else{ $isChecked = ''; }
             if((array_key_exists($membershipDetails->membership_id, $membershipAlias))&&
@@ -85,21 +88,21 @@ function display_tfgg_membership_selection(){
             if((array_key_exists($membershipDetails->membership_id, $membershipText))&&
             ($membershipText[$membershipDetails->membership_id]<>'')){ $freeText = $membershipText[$membershipDetails->membership_id]; }else{ $freeText = ''; }            
             
-            echo '<div class="col-sm">'.
-            '<input type="checkbox" value="'.$membershipDetails->membership_id.'" name="tfgg_scp_membership_selection[]" '.$isChecked.' />'.$membershipDetails->description.'<br/>'.
-            '<div><span>Price: </span><span>&#163;'.$membershipDetails->price.'</span></div>'.
-            '<div><label>Alias: </label><input type="text" name="tfgg_scp_membership_alias['.$membershipDetails->membership_id.']" value="'.$alias.'"/></div>'.
-            '<div><label>Img: </label><input type="text" name="tfgg_scp_membership_img['.$membershipDetails->membership_id.']" value="'.$img.'"/></div>'.
-            '<div><label>Text: </label><input type="text" name="tfgg_scp_membership_free_text['.$membershipDetails->membership_id.']" value="'.$freeText.'"/></div>'.
-            '</div>';	
+
+
+            echo '<div class="col-lg-4 admin-service-item">'.
+                '<div class="admin-service-description"><input type="checkbox" value="'.$membershipDetails->membership_id.'" name="tfgg_scp_membership_selection[]" '.$isChecked.' />'.$membershipDetails->description.'</div>'.
+                '<div class="admin-service-detail">'.
+                    '<div><span class="admin-service-label">Price:&nbsp; </span><span>&#163;'.$membershipDetails->price.'</span></div>'.
+                    '<div><label class="admin-service-label">Alias: </label><input type="text" class="admin-service-value" name="tfgg_scp_membership_alias['.$membershipDetails->membership_id.']" value="'.$alias.'"/></div>'.
+                    '<div><label class="admin-service-label">Img: </label><input type="text" class="admin-service-value" name="tfgg_scp_membership_img['.$membershipDetails->membership_id.']" value="'.$img.'"/></div>'.
+                    '<div><label class="admin-service-label">Text: </label><input type="text" class="admin-service-value" name="tfgg_scp_membership_free_text['.$membershipDetails->membership_id.']" value="'.$freeText.'"/></div>'.
+                    '<br />'.
+                '</div></div>';	
             
-            $rowCounter++;
-            if($rowCounter>3){
-                $rowCounter=1;
-                echo "</div>";//close the row
-            }
+            
         }//foreach
-        echo '</div>';//container
+        echo '</div></div>';//container
     }else{
         $alert = "<div class=\"notice notice-error\">Unable to retrieve your membership list, please ensure your API credentials are setup</div>";
         echo $alert;

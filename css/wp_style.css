@@ -1116,3 +1116,33 @@ tr.account_overview_row > td {
 .account_overview_row_footer {
     border-top: solid 1px #eee;
 }
+
+
+.admin-service-item {
+    box-sizing: border-box;
+    
+    padding: 0px 10px 15px 15px !important;
+   
+}
+
+.admin-service-label {
+    width:45px;
+}
+
+.admin-service-detail {
+    padding:7px 0px 0px 10px;
+    border-bottom: solid 1px rgb(216, 213, 213); 
+    
+}
+
+.admin-service-description {
+    
+}
+
+.admin-service-value {
+    margin-top :4px !important;   
+    width: -webkit-calc(100% - 50px);
+    width:    -moz-calc(100% - 50px);
+    width:         calc(100% - 50px);
+
+}
