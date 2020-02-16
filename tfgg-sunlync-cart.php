@@ -770,36 +770,45 @@
                 $onclick = 'confirmChangeCartStore();';
             }
             ?>
-            <div class="" style="margin-bottom: 1em;">
-                <label for="tfgg_scp_store_purchasing_selection"><?php _e('You are viewing packages and services offered by '); ?></label>
-                <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" style="max-width: 30%">
-                <?php
+            <div class="account-overview-input-double demo2-container">
+                <div class="account-overview-input-single" style="margin-bottom: 1em;">
+                    <label for="tfgg_scp_store_purchasing_selection"><?php _e('You are viewing packages and services offered by '); ?></label>
+                    <div class="select-container">
+                    <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" style="max-width: 30%" class="js-example-basic-single account-overview-input">
+                    <?php
 
-                    echo 'selected: "'.$selected.'" ;';
-                    foreach($storeList as &$details){
-                        $output='<option value="'.$details->store_id.'" '.($details->store_id === $selected ? "selected" : "").'>'.$details->store_loc.'</option>';
-                        echo $output; 
-                    }
-                ?>
-                </select>
-                <div style="display:inline">
-                <button type="button" class="account-overview-button account-overview-standard-button" onclick="<?php echo $onclick;?>">Change Store Selection</button>
+                        echo 'selected: "'.$selected.'" ;';
+                        foreach($storeList as &$details){
+                            $output='<option value="'.$details->store_id.'" '.($details->store_id === $selected ? "selected" : "").'>'.$details->store_loc.'</option>';
+                            echo $output; 
+                        }
+                    ?>
+                    </select>
+                    </div>
+                    <div style="display:inline; float:right; margin-top:5px;">
+                    <button type="button" class="account-overview-button account-overview-standard-button" onclick="<?php echo $onclick;?>">Change Store Selection</button>
+                    </div>
                 </div>
+                <br/><br/>
+            </div>
 
-                <div class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                        <div class="modal-body" id="tfgg_scp_store_purchasing_selection_confirm_message">
-                            Any items in your cart that cannot be used at the new store location will be removed, continue?
-                        </div>
-                        <div class="modal-footer">
-                            <button id="tfgg_scp_cart_add_pay_btn" type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="changeCartStore();">Yes</button>
-                            <button id="tfgg_scp_cart_add_continue_btn" type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" data-dismiss="modal">Cancel</button>
-                        </div>
-                        </div>
+            <div class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                    <div class="modal-body" id="tfgg_scp_store_purchasing_selection_confirm_message">
+                        Any items in your cart that cannot be used at the new store location will be removed, continue?
+                    </div>
+                    <div class="modal-footer">
+                        <button id="tfgg_scp_cart_add_pay_btn" type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" onclick="changeCartStore();">Yes</button>
+                        <button id="tfgg_scp_cart_add_continue_btn" type="button" class="account-overview-button account-overview-standard-button account-overview-appt-cancel-button" data-dismiss="modal">Cancel</button>
+                    </div>
                     </div>
                 </div>
             </div>
+
+            <script>
+            jQuery('.js-example-basic-single').select2();
+            </script>
             <?php
         }
     }
