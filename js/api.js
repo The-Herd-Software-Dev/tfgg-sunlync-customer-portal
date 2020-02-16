@@ -1028,7 +1028,8 @@ function bookAppt(){
                 jQuery('#redirectcountdown').html(timeleft);
             },
             function(){
-                window.location.href=localAccess.acctOverview;
+                //2020-02-16 cb V1.2.4.16 - window.location.href=localAccess.acctOverview;
+                window.location.href=localAccess.apptRedirect;
             }); 
         }else{            
             //console.log('fail');

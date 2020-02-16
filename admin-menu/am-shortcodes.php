@@ -87,5 +87,11 @@
         <input type="text" name="tfgg_scp_cpappt_page" value="<?php echo get_option('tfgg_scp_cpappt_page'); ?>" style="width: 60%" />
         <?php   
     }
+
+    function display_cpappt_redirect(){
+        ?>
+        <input type="text" name="tfgg_scp_cpappt_success" value="<?php echo get_option('tfgg_scp_cpappt_success'); ?>" style="width: 60%" />
+        <?php
+    }
     
 ?>

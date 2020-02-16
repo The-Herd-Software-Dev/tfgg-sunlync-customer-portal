@@ -38,6 +38,10 @@
         
         add_settings_field("tfgg_scp_cpappt_page", "Appt Booking Page:", "display_cpappt_page", "tfgg-shortcodes", "tfgg_shortcodes");
         register_setting("tfgg_shortcodes", "tfgg_scp_cpappt_page");
+
+        //2020-02-16 CB V1.2.4.16
+        add_settings_field("tfgg_scp_cpappt_success", "Appt Booking Success Redirect:", "display_cpappt_redirect", "tfgg-shortcodes", "tfgg_shortcodes");
+        register_setting("tfgg_shortcodes", "tfgg_scp_cpappt_success");
         
         //tfgg_api_section
         add_settings_field("tfgg_scp_api_protocol", "Protocol:", "display_tfgg_api_protocol", "tfgg-api-options", "tfgg_api_section");

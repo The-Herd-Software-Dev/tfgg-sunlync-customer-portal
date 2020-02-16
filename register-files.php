@@ -30,12 +30,14 @@
         wp_enqueue_script( 'tfgg-api-scripts', plugin_dir_url(__FILE__).'js/api.js', array( 'jquery' ), $apiJsV );
         wp_localize_script('tfgg-api-scripts', 'localAccess', array('pluginsUrl' => plugin_dir_url(__FILE__),
         'adminAjaxURL' => admin_url( 'admin-ajax.php' ),
-        'acctOverview' => get_option('tfgg_scp_acct_overview')));
+        'acctOverview' => get_option('tfgg_scp_acct_overview'),
+        'apptRedirect' => get_option('tfgg_scp_cpappt_success',get_option('tfgg_scp_acct_overview'))));
         
         wp_enqueue_script( 'tfgg-wp-scripts', plugin_dir_url(__FILE__).'js/include.js', array( 'jquery' ), $includeJsV );
         wp_localize_script('tfgg-wp-scripts', 'localAccess', array('pluginsUrl' => plugin_dir_url(__FILE__),
         'adminAjaxURL' => admin_url( 'admin-ajax.php' ),
-        'acctOverview' => get_option('tfgg_scp_acct_overview')));
+        'acctOverview' => get_option('tfgg_scp_acct_overview'),
+        'apptRedirect' => get_option('tfgg_scp_cpappt_success',get_option('tfgg_scp_acct_overview'))));
         
         wp_enqueue_style( 'tfgg-wp-styles', plugins_url( 'css/wp_style.css', __FILE__ ) );
         //wp_enqueue_script( 'boot1','https://code.jquery.com/jquery-3.3.1.slim.min.js', array( 'jquery' ),'' );
