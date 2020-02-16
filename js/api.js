@@ -1290,7 +1290,7 @@ function tfggSCPTogglePassword(){
     } 
 }
 
-function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID='', showDialog=true){
+function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID, showDialog){
     var pathname = window.location.pathname;
 
     jQuery.post(localAccess.adminAjaxURL,{
@@ -1302,7 +1302,7 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID='', sh
 		'dataType'  : 'json',
 		'pathname'  : pathname
     },function(data){
-        console.log(data);
+        //console.log(data);
         var obj = jQuery.parseJSON(data);
 
         if(obj["results"].toUpperCase()=='SUCCESS'){
@@ -1320,7 +1320,7 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID='', sh
                 
                 tfggSetCartLinkQty(addItemQty);
             }else{
-                console.log('here');
+                //console.log('here');
                 window.location.reload();
             }
             //location.href = jQuery('#tfgg_scp_cart_link').attr('href');
@@ -1448,6 +1448,7 @@ function tfgg_scp_sage_cart_merchant_session_key(callback){
 function confirmChangeCartStore(){
     var currentQty = jQuery('#tfgg_scp_cart_qty').text();
     currentQty = currentQty.trim().replace(/\(|\)/g, '');
+    console.dir(currentQty);
     
     if(currentQty!=''){
         jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');  

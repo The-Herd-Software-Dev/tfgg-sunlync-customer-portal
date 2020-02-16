@@ -221,7 +221,7 @@
         $viewCartURL=esc_url(site_url(get_option('tfgg_scp_cart_slug')));
 
         ?>
-        <div class="modal fade" id="tfgg_scp_cart_add" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_cart_add" aria-hidden="true">
+        <div <?php if(tfgg_ae_detect_ie()){?>style="z-index: 10000 !important; margin-top:25%"<?php } ?> class="modal fade" id="tfgg_scp_cart_add" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_cart_add" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                 <div class="modal-body" id="tfgg_scp_cart_add_message">
@@ -550,7 +550,7 @@
     }
 
     function tfgg_scp_display_services_for_sale(){
-        ob_start();        
+        ob_start();     
 
         tfgg_scp_display_store_service_selection();
 
@@ -649,7 +649,7 @@
                
 
                     <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup ">
-                        <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1')" class="btn btn-sm btn-light" value="BUY NOW"/>         
+                        <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW"/>         
                     </div>
                     
                 </div>
@@ -729,13 +729,13 @@
                     </div>
 
                     <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup">
-                        <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1')" class="btn btn-sm btn-light" value="BUY NOW" />       
+                        <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW" />       
                     
                     
                     </div>
                 </div>
 
-
+            
             <?php
                
             }//foreach
@@ -756,7 +756,7 @@
                 $selected = $_SESSION['tfgg_scp_cart_store'];
             }else{
                 if((isset($_SESSION['clientHomeStore']))&&($_SESSION['clientHomeStore']<>'')){
-                    echo 'here';
+                    //echo 'here';
                     $selected=$_SESSION['clientHomeStore'];
                 }else{
                     $_SESSION['tfgg_scp_cart_store']=$storeList[0]->store_id;;
@@ -792,7 +792,7 @@
                 <br/><br/>
             </div>
 
-            <div class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
+                    <div <?php if(tfgg_ae_detect_ie()){?>style="z-index: 10000 !important; margin-top:25%"<?php } ?> class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                     <div class="modal-body" id="tfgg_scp_store_purchasing_selection_confirm_message">
@@ -810,6 +810,15 @@
             jQuery('.js-example-basic-single').select2();
             </script>
             <?php
+        }
+    }
+
+    function tfgg_ae_detect_ie(){
+        $ua = htmlentities($_SERVER['HTTP_USER_AGENT'], ENT_QUOTES, 'UTF-8');
+        if (preg_match('~MSIE|Internet Explorer~i', $ua) || (strpos($ua, 'Trident/7.0') !== false && strpos($ua, 'rv:11.0') !== false)) {
+            return true;
+        }else{
+            return false;
         }
     }
 

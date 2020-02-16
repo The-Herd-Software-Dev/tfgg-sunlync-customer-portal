@@ -212,7 +212,7 @@
 										<tr class="account_overview_row account_overview_row_footer">
 									   		<td></td>
 									   		<td>
-												<button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfggPostCartItem('P','<?php echo $details->package_number;?>','1');">BUY AGAIN</button>						
+												<button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfggPostCartItem('P','<?php echo $details->package_number;?>','1','',true);">BUY AGAIN</button>						
 											</td>
 										</tr>
 
@@ -263,7 +263,7 @@
 										<tr class="account_overview_row account_overview_row_footer">
 									   		<td></td>
 									   		<td>
-											   <button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfggPostCartItem('M','<?php echo $details->membership_number;?>','1');">BUY AGAIN</button>					
+											   <button type="button" class="account-overview-button cart-standard-button-paynow account-overview-appt-cancel-button" onclick="tfggPostCartItem('M','<?php echo $details->membership_number;?>','1','',true);">BUY AGAIN</button>					
 											</td>
 										</tr>
 
