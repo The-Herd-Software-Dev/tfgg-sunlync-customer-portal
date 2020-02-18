@@ -209,6 +209,9 @@
         register_setting("tfgg_service_selection_section","tfgg_scp_membership_free_text");
 
         //cart options
+        add_settings_field("tfgg_scp_enable_cart","Enable Cart:","display_tfgg_enable_cart", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_enable_cart");
+
         add_settings_field("tfgg_scp_cart_slug","Cart Slug:","display_tfgg_cart_slug", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_slug");
 

@@ -1801,6 +1801,7 @@
     }
 
     function tfgg_scp_can_service_be_purchased($serviceType, $serviceNumber, $allowedServiceList){
+        if(get_option('tfgg_scp_enable_cart',0)==0){return false;}//2020-02-17 CB V1.2.4.17
         if($allowedServiceList==''){return false;}
 
         foreach($allowedServiceList as &$allowedServiceDetails){
@@ -2611,6 +2612,7 @@
     add_filter('wp_nav_menu_items', 'tfgg_add_cart_link', 8, 2 );
     function tfgg_add_cart_link($items, $args){
         //add the account overview link to the nav bar
+        if(get_option('tfgg_scp_enable_cart',0)==0){return $items;}//2020-02-17 CB V1.2.4.17
         $sunlyncuser = tfgg_cp_get_sunlync_client();
         //$link=get_option('tfgg_scp_cart_menu_link_text','Pay Now')." <span id=\"tfgg_scp_cart_qty\">";
         $link = '<i class="fa fa-shopping-cart"></i> <span id="tfgg_scp_cart_qty">';

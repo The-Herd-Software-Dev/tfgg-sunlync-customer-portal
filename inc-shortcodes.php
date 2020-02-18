@@ -105,12 +105,13 @@ function tfgg_cp_sunlync_cart(){
     }else{
         return tfgg_scp_display_services_for_sale();
     }*/
-
+    if(get_option('tfgg_scp_enable_cart',0)==0){return false;}//2020-02-17 CB V1.2.4.17
     return tfgg_scp_display_cart();
 }
 add_shortcode('cp_sunlync_cart','tfgg_cp_sunlync_cart');
 
 function tfgg_cp_sunlync_cart_services_sale(){
+    if(get_option('tfgg_scp_enable_cart',0)==0){return false;}//2020-02-17 CB V1.2.4.17
     return tfgg_scp_display_services_for_sale();
 }
 add_shortcode('cp_sunlync_cart_services','tfgg_cp_sunlync_cart_services_sale');
