@@ -179,7 +179,7 @@ function FormatTimeToUK(time){
         hour12: true
     }; 
     formattedTime = formattedTime.toLocaleString('en-GB', options);
-    //console.log(formattedTime);
+    console.log(formattedTime);
     return formattedTime;
 }
 
@@ -1019,18 +1019,23 @@ function bookAppt(){
 
         if(returnData["results"]==='success'){
             //console.log('success');
-            var countdown = '<span style="font-size:x-small;">Redirecting in: <span id="redirectcountdown">31</span> seconds</span>';
-            jQuery('#appt-booking-success').append(countdown);
-            jQuery('#appt-booking-success').show(); 
-
-            timer(15000,
-            function(timeleft){
-                jQuery('#redirectcountdown').html(timeleft);
-            },
-            function(){
-                //2020-02-16 cb V1.2.4.16 - window.location.href=localAccess.acctOverview;
+            if(localAccess.apptRedirect.length>0){//2020-02-16 cb V1.2.4.16 - if this is set, go this one first
+                jQuery('#appt-booking-success').show(); 
                 window.location.href=localAccess.apptRedirect;
-            }); 
+            }else{
+                var countdown = '<span style="font-size:x-small;">Redirecting in: <span id="redirectcountdown">31</span> seconds</span>';
+                jQuery('#appt-booking-success').append(countdown);
+                jQuery('#appt-booking-success').show(); 
+
+                timer(15000,
+                function(timeleft){
+                    jQuery('#redirectcountdown').html(timeleft);
+                },
+                function(){
+                    window.location.href=localAccess.acctOverview;
+                }); 
+            }
+            
         }else{            
             //console.log('fail');
             jQuery('#appt-booking-fail').show();
