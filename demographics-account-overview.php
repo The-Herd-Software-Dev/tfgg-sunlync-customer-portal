@@ -155,19 +155,33 @@
 					
 					if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}
 					//2020-02-09 CB V1.2.4.15 - need this here as well to validate from and to dates
-					$packageList = json_decode(tfgg_scp_get_packages_from_api(tfgg_scp_get_packages_selected_for_api(), $browsingStore));
-        
-					if(StrToUpper($packageList->results) === 'SUCCESS'){
-						$packageList = $packageList->packages;
+
+					//2020-02-20 CB V1.2.4.18 - if no packages selected, no services for sale
+					$allowedPackages=tfgg_scp_get_packages_selected_for_api();
+					if($allowedPackages<>''){
+
+						$packageList = json_decode(tfgg_scp_get_packages_from_api($allowedPackages, $browsingStore));
+			
+						if(StrToUpper($packageList->results) === 'SUCCESS'){
+							$packageList = $packageList->packages;
+						}else{
+							$packageList = '';    
+						}
 					}else{
-						$packageList = '';    
+						$packageList='';
 					}
 
-					$membershipList = json_decode(tfgg_scp_get_memberships_from_api(tfgg_scp_get_memberships_selected_for_api(), $browsingStore));
-					if(StrToUpper($membershipList->results) === 'SUCCESS'){
-						$membershipList = $membershipList->memberships;
+					//2020-02-20 CB V1.2.4.18 - if no memberhsips selected, no services for sale
+					$allowedMemberships = tfgg_scp_get_memberships_selected_for_api();
+					if($allowedMemberships<>''){
+						$membershipList = json_decode(tfgg_scp_get_memberships_from_api($allowedMemberships, $browsingStore));
+						if(StrToUpper($membershipList->results) === 'SUCCESS'){
+							$membershipList = $membershipList->memberships;
+						}else{
+							$membershipList = '';    
+						}
 					}else{
-						$membershipList = '';    
+						$membershipList='';
 					}
 		    		if(StrToUpper($clientPkgs->results) === 'SUCCESS'){
 		    			$clientPkgs = $clientPkgs->clientPackages;

@@ -2332,8 +2332,16 @@
 
         $curl = curl_init();
 
+        //2020-02-20 CB V1.2.4.18 - switch the url
+        if(get_option('tfgg_scp_cart_sage_pay_sandbox','1')=='1'){
+            $sageURL="https://pi-test.sagepay.com/api/v1/merchant-session-keys";
+        }else{
+            $sageURL="https://pi-test.sagepay.com/api/v1/merchant-session-keys";
+        }
+
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://pi-test.sagepay.com/api/v1/merchant-session-keys",
+            //CURLOPT_URL => "https://pi-test.sagepay.com/api/v1/merchant-session-keys",
+            CURLOPT_URL => $sageURL, 
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => '{ "vendorName": "'.get_option('tfgg_scp_cart_sage_vendor_name').'" }',

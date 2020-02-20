@@ -1438,7 +1438,7 @@ function tfgg_scp_sage_cart_merchant_session_key(callback){
 		'dataType'  : 'json',
 		'pathname'  : pathname
     },function(data){
-        //console.log(data);
+        console.log(data);
         var obj = jQuery.parseJSON(data);
         if(obj["results"].toUpperCase()=='SUCCESS'){
             callback(obj["sageMerchantSession"]);

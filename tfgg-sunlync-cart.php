@@ -169,9 +169,11 @@
                     <div class="overlay-button-container">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group d-flex" role="group" aria-label="Second group" style="width:100%;">
-                                <button type="button" class="btn account-overview-button account-overview-standard-button-active overlay-checkout-group-button"
+                                <button <?php if(get_option('tfgg_scp_cart_allow_sage_payment',0)==0){echo('style="display:none;"');}?>
+                                type="button" class="btn account-overview-button account-overview-standard-button-active overlay-checkout-group-button"
                                 id="sagepayCartPayment" onclick="tfgg_scp_toggle_cart_payment('sage');">Credit/Debit Card</button>
-                                <button type="button" class="btn account-overview-button paypal-standard-button overlay-checkout-group-button"
+                                <button <?php if(get_option('tfgg_scp_cart_allow_paypal_payment',0)==0){echo('style="display:none;"');}?>
+                                type="button" class="btn account-overview-button paypal-standard-button overlay-checkout-group-button"
                                 id="paypalCartPayment" onclick="tfgg_scp_toggle_cart_payment('paypal');" ></button>
                             </div>
                         </div>
@@ -263,6 +265,9 @@
     }
 
     function tfgg_scp_display_sage_entry_form(){
+        if(get_option('tfgg_scp_cart_allow_sage_payment',0)==0){
+            return false;
+        }
         $demographics = json_decode(tfgg_api_get_client_demographics(tfgg_cp_get_sunlync_client()));
         $demographics = $demographics->demographics[0];
 
@@ -327,7 +332,7 @@
                             </div>   
                         </div>
 
-                        <div class="registration-container" <?php if(($commPref->allow==='1')||(get_option('tfgg_scp_cart_save_demographics')=='')){echo 'style="display:none"';} ?>>
+                        <div class="registration-container" <?php if(($commPref->allow==='0')||(get_option('tfgg_scp_cart_save_commpref')=='')){echo 'style="display:none"';} ?>>
                             <div class="account-overview-input-single">
                             <input name="tfgg_cp_update_comm_pref" id="tfgg_cp_update_comm_pref" class="account-overview-survey-input" type="checkbox"/>
                             <label for="tfgg_cp_update_comm_pref" style="color:#F16631; font-weight:700px; padding-left: 5px;"><?php echo get_option('tfgg_scp_cart_save_commpref_label') ?></label>	
@@ -362,6 +367,9 @@
                                 <input data-card-details="security-code" data-alertpnl="tfgg_cart_card_cvc_alertpnl" id="tfgg_cp_sage_card_cvc" class="required account-overview-input" type="text" placeholder="000"/>
                                 <div style="display:none" id="tfgg_cart_card_cvc_alertpnl" class="reg_alert"></div>
                             </div>
+                        </div>
+                        <div style="display:none" class="registration-container reg-alert" id="tfgg_cart_card_gen_error">
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -431,12 +439,16 @@
                                         //alert(errors);
                                         //console.log(result.errors);
                                         result.errors.forEach(function(thisError){
+                                            console.log(thisError);
                                             if(thisError.message.indexOf('card number')>0){
                                                 var pnl=document.getElementById('tfgg_cart_card_number_alertpnl');  
                                             }else if(thisError.message.indexOf('security code')>0){
                                                 var pnl=document.getElementById('tfgg_cart_card_cvc_alertpnl');
                                             }else if(thisError.message.indexOf('expiry')>0){
                                                 var pnl=document.getElementById('tfgg_cart_card_expiry_alertpnl');
+                                            }else{
+                                                //2020-02-20 CB V1.2.4.18
+                                                var pnl=document.getElementById('tfgg_cart_card_gen_error');    
                                             }
                                             pnl.innerHTML=pnl.innerHTML+'<br/>'+thisError.message;
                                             pnl.style.display=''; 
@@ -549,199 +561,227 @@
         return $exp;
     }
 
+    function tfgg_scp_display_no_services_warning(){
+        ?>
+        
+        <br/<br/><br/><br/>
+        <div id="" class="alert alert-warning" >
+                <p> 
+                    There are no items are currently configured for sale
+                </p>
+            </div>
+        <br/><br/>
+        <?php   
+    }
+
     function tfgg_scp_display_services_for_sale(){
         ob_start();     
 
+        //2020-02-20 CB V1.2.4.20 - if no services selected, don't show any at all
+        $membershipsForSale =tfgg_scp_get_memberships_selected_for_api();
+        $packagesForSale = tfgg_scp_get_packages_selected_for_api();
+
+        if(($membershipsForSale=='')&&($packagesForSale=='')){
+            tfgg_scp_display_no_services_warning();
+            return false;
+        }
+
+
         tfgg_scp_display_store_service_selection();
 
-        if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}
+        if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}        
         
-        //$packageList = json_decode(tfgg_scp_get_packages_from_api(tfgg_scp_get_packages_selected_for_api()));
-        $packageList = json_decode(tfgg_scp_get_packages_from_api(tfgg_scp_get_packages_selected_for_api(), $browsingStore));
-        
-        if(StrToUpper($packageList->results) === 'SUCCESS'){
-            $packageList = $packageList->packages;
-        }else{
-            $packageList = '';    
-        }
-
-        $membershipList = json_decode(tfgg_scp_get_memberships_from_api(tfgg_scp_get_memberships_selected_for_api(), $browsingStore));
-        if(StrToUpper($membershipList->results) === 'SUCCESS'){
-            $membershipList = $membershipList->memberships;
-        }else{
-            $membershipList = '';    
-        }
-        
-        if($packageList<>''){
-            ?>
-            <div style="display:block;">
-                <h4><?php echo get_option('tfgg_scp_package_header_label');?></h4>
-                <hr />
-            </div>
-            <?php
-                if(get_option('tfgg_scp_package_allow_search')==1){
-            ?>
-            <div>
-                <label for="tfgg_cart_package_filter" class="account-overview-label"><?php _e('Filter by name'); ?></label>
-                <input id="tfgg_cart_package_filter" name="tfgg_cart_package_filter" class="account-overview-input" type="text"/>							
-            </div>
-            <br/>
-            <div id="tfgg_package_search_warning" class="alert alert-warning" style="display: none;">
-                <p> 
-                    No items match your search
-                </p>
-            </div>
-            <br/>
-            <?php
-                }//allow search
-
-            //loop through the allowed services and output
-            $rowCounter = 1;
-            echo '<div id="tfgg_scp_package_for_sale_list" class="row" style="padding: 10px">';
-                
-            foreach($packageList as &$packageDetails){
-
-                //2020-02-09 CB V1.2.4.15
-                if(!tfgg_scp_validate_service_dates($packageDetails->available_from, $packageDetails->available_to)){
-                    continue;
-                }
-                
-                
-                switch(StrToUpper($packageDetails->unit_type)){
-                    case 'M':$unitType = get_option('tfgg_scp_package_unit_minutes');
-                    case 'S':$unitType = get_option('tfgg_scp_package_unit_sessions');
-                    case 'C':$unitType = get_option('tfgg_scp_package_unit_credits');
-                }
-
+        if($packagesForSale<>''){
+            $packageList = json_decode(tfgg_scp_get_packages_from_api($packagesForSale, $browsingStore));
+            
+            if(StrToUpper($packageList->results) === 'SUCCESS'){
+                $packageList = $packageList->packages;
+            }else{
+                $packageList = '';    
+            }
+            if($packageList<>''){
                 ?>
-
-                <div class="col-lg-4 services-items-item pack-sale-container" id="tfgg_scp_pack_sale_<?php echo $packageDetails->package_id;?>"
-                    data-packagenumber="<?php echo $packageDetails->package_id;?>"
-                    data-packagename="<?php echo $packageDetails->description;?>">
-
-                    <span class="overlay-items-item-description"><?php echo $packageDetails->alias;?></span>
-                    <span class="overlay-items-item-price">&#163;<?php echo number_format($packageDetails->price,2,'.',','); ?></span>
-                    <br />
-
-                    <div class="services-item-details-container">
-
-                        <?php if ($packageDetails->img != "") {?>
-                        <div class="services-image-container">
-                            <img src="<?php echo $packageDetails->img;?>" class="service-image"/>
-                        </div>
-
-                        <?php 
-                        }
-                        ?>
-
-                        <div class="services-details-container">
-                            <span class="overlay-items-item-quantity-label">Units:</span>
-                            <span class="overlay-items-item-quantity-value"><?php echo $packageDetails->num_units.' ('.$packageDetails->unit_type.')'; ?></span>
-                            <br />
-                            <span class="overlay-items-item-quantity-label"> Expiration:</span>
-                            <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($packageDetails->exp_days, $packageDetails->exp_date, $packageDetails->open_ended); ?></span>
-                            <br />
-                            <span class="overlay-items-item-quantity-label"><?php echo $packageDetails->freeText; ?></span>
-                            <br />
-                        </div>
-
-                        </div>
-               
-
-                    <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup ">
-                        <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW"/>         
-                    </div>
-                    
+                <div style="display:block;">
+                    <h4><?php echo get_option('tfgg_scp_package_header_label');?></h4>
+                    <hr />
                 </div>
-
-
-            <?php
-
-
-            }//foreach
-            echo '</div></div>';
-            //before anything else, we will add some padding here
-            echo '<br/><br/>';        
-        }//packageList<>''
-
-        if($membershipList<>''){
-            ?>
-            <div style="display:block;">
-                <h4><?php echo get_option('tfgg_scp_membership_header_label');?></h4>
-                <hr />
-            </div>
-            <?php
-                if(get_option('tfgg_scp_membership_allow_search')==1){
-            ?>
-            <div>
-                <label for="tfgg_cart_membership_filter" class="account-overview-label"><?php _e('Filter by name'); ?></label>
-                <input id="tfgg_cart_membership_filter" name="tfgg_cart_membership_filter" class="account-overview-input" type="text"/>							
-            </div>
-            <br/>
-            <div id="tfgg_membership_search_warning" class="alert alert-warning" style="display: none;">
-                <p> 
-                    No items match your search
-                </p>
-            </div>
-            <br/>
-            <?php   
-                }//allow search
+                <?php
+                    if(get_option('tfgg_scp_package_allow_search')==1){
+                ?>
+                <div>
+                    <label for="tfgg_cart_package_filter" class="account-overview-label"><?php _e('Filter by name'); ?></label>
+                    <input id="tfgg_cart_package_filter" name="tfgg_cart_package_filter" class="account-overview-input" type="text"/>							
+                </div>
+                <br/>
+                <div id="tfgg_package_search_warning" class="alert alert-warning" style="display: none;">
+                    <p> 
+                        No items match your search
+                    </p>
+                </div>
+                <br/>
+                <?php
+                    }//allow search
 
                 //loop through the allowed services and output
-            $rowCounter = 1;
-            echo '<div id="tfgg_membership_for_sale_list" class="row" style="padding: 10px">';
+                $rowCounter = 1;
+                echo '<div id="tfgg_scp_package_for_sale_list" class="row" style="padding: 10px">';
+                    
+                foreach($packageList as &$packageDetails){
+
+                    //2020-02-09 CB V1.2.4.15
+                    if(!tfgg_scp_validate_service_dates($packageDetails->available_from, $packageDetails->available_to)){
+                        continue;
+                    }
+                    
+                    
+                    switch(StrToUpper($packageDetails->unit_type)){
+                        case 'M':$unitType = get_option('tfgg_scp_package_unit_minutes');
+                        case 'S':$unitType = get_option('tfgg_scp_package_unit_sessions');
+                        case 'C':$unitType = get_option('tfgg_scp_package_unit_credits');
+                    }
+
+                    ?>
+
+                    <div class="col-lg-4 services-items-item pack-sale-container" id="tfgg_scp_pack_sale_<?php echo $packageDetails->package_id;?>"
+                        data-packagenumber="<?php echo $packageDetails->package_id;?>"
+                        data-packagename="<?php echo $packageDetails->description;?>">
+
+                        <span class="overlay-items-item-description"><?php echo $packageDetails->alias;?></span>
+                        <span class="overlay-items-item-price">&#163;<?php echo number_format($packageDetails->price,2,'.',','); ?></span>
+                        <br />
+
+                        <div class="services-item-details-container">
+
+                            <?php if ($packageDetails->img != "") {?>
+                            <div class="services-image-container">
+                                <img src="<?php echo $packageDetails->img;?>" class="service-image"/>
+                            </div>
+
+                            <?php 
+                            }
+                            ?>
+
+                            <div class="services-details-container">
+                                <span class="overlay-items-item-quantity-label">Units:</span>
+                                <span class="overlay-items-item-quantity-value"><?php echo $packageDetails->num_units.' ('.$packageDetails->unit_type.')'; ?></span>
+                                <br />
+                                <span class="overlay-items-item-quantity-label"> Expiration:</span>
+                                <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($packageDetails->exp_days, $packageDetails->exp_date, $packageDetails->open_ended); ?></span>
+                                <br />
+                                <span class="overlay-items-item-quantity-label"><?php echo $packageDetails->freeText; ?></span>
+                                <br />
+                            </div>
+
+                            </div>
+                
+
+                        <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup ">
+                            <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW"/>         
+                        </div>
+                        
+                    </div>
 
 
-            foreach($membershipList as &$membershipDetails){
-                //2020-02-09 CB V1.2.4.15
-                if(!tfgg_scp_validate_service_dates($membershipDetails->available_from, $membershipDetails->available_to)){
-                    continue;
-                }
+                <?php
+
+
+                }//foreach
+                echo '</div></div>';
+                //before anything else, we will add some padding here
+                echo '<br/><br/>';        
+            }//packageList<>''
+        }//if $packagesForSale<>''        
+
+        if($membershipsForSale<>''){
+
+            $membershipList = json_decode(tfgg_scp_get_memberships_from_api($membershipsForSale, $browsingStore));
+            if(StrToUpper($membershipList->results) === 'SUCCESS'){
+                $membershipList = $membershipList->memberships;
+            }else{
+                $membershipList = '';    
+            }
+            
+            
+
+            if($membershipList<>''){
                 ?>
-
-                <div class="col-lg-4 services-items-membership mems-sale-container" id="tfgg_scp_pack_sale_<?php echo $membershipDetails->membership_id;?>"
-                    data-membershipnumber="<?php echo $membershipDetails->membership_id;?>"
-                    data-membershipname="<?php echo $membershipDetails->description;?>">
-
-                    <span class="overlay-items-item-description"><?php echo $membershipDetails->alias;?></span>
-                    <span class="overlay-items-item-price">&#163;<?php echo number_format($membershipDetails->price,2,'.',','); ?></span>
-                    <br />
-
-                    <div class="services-item-details-container">
-
-                    <?php if ($membershipDetails->img != "") {?>
-                        <div class="services-image-container">
-                            <img src="<?php echo $membershipDetails->img;?>" class="service-image"/>
-                        </div>
-                        <?php 
-                        }
-                        ?>
-            
-
-                        <div class="services-details-container">
-                            <span class="overlay-items-item-quantity-label"> Expiration:</span>
-                            <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($membershipDetails->exp_days, $membershipDetails->exp_date, $membershipDetails->open_ended); ?></span>
-                            <br />
-                            <span class="overlay-items-item-quantity-label"><?php echo $membershipDetails->freeText; ?></span>
-                            <br />
-                            <br />
-                        </div>
-                    </div>
-
-                    <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup">
-                        <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW" />       
-                    
-                    
-                    </div>
+                <div style="display:block;">
+                    <h4><?php echo get_option('tfgg_scp_membership_header_label');?></h4>
+                    <hr />
                 </div>
+                <?php
+                    if(get_option('tfgg_scp_membership_allow_search')==1){
+                ?>
+                <div>
+                    <label for="tfgg_cart_membership_filter" class="account-overview-label"><?php _e('Filter by name'); ?></label>
+                    <input id="tfgg_cart_membership_filter" name="tfgg_cart_membership_filter" class="account-overview-input" type="text"/>							
+                </div>
+                <br/>
+                <div id="tfgg_membership_search_warning" class="alert alert-warning" style="display: none;">
+                    <p> 
+                        No items match your search
+                    </p>
+                </div>
+                <br/>
+                <?php   
+                    }//allow search
 
-            
-            <?php
-               
-            }//foreach
-            echo '</div></div>';
-            
-        }//membershipList<>''
+                    //loop through the allowed services and output
+                $rowCounter = 1;
+                echo '<div id="tfgg_membership_for_sale_list" class="row" style="padding: 10px">';
+
+
+                foreach($membershipList as &$membershipDetails){
+                    //2020-02-09 CB V1.2.4.15
+                    if(!tfgg_scp_validate_service_dates($membershipDetails->available_from, $membershipDetails->available_to)){
+                        continue;
+                    }
+                    ?>
+
+                    <div class="col-lg-4 services-items-membership mems-sale-container" id="tfgg_scp_pack_sale_<?php echo $membershipDetails->membership_id;?>"
+                        data-membershipnumber="<?php echo $membershipDetails->membership_id;?>"
+                        data-membershipname="<?php echo $membershipDetails->description;?>">
+
+                        <span class="overlay-items-item-description"><?php echo $membershipDetails->alias;?></span>
+                        <span class="overlay-items-item-price">&#163;<?php echo number_format($membershipDetails->price,2,'.',','); ?></span>
+                        <br />
+
+                        <div class="services-item-details-container">
+
+                        <?php if ($membershipDetails->img != "") {?>
+                            <div class="services-image-container">
+                                <img src="<?php echo $membershipDetails->img;?>" class="service-image"/>
+                            </div>
+                            <?php 
+                            }
+                            ?>
+                
+
+                            <div class="services-details-container">
+                                <span class="overlay-items-item-quantity-label"> Expiration:</span>
+                                <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($membershipDetails->exp_days, $membershipDetails->exp_date, $membershipDetails->open_ended); ?></span>
+                                <br />
+                                <span class="overlay-items-item-quantity-label"><?php echo $membershipDetails->freeText; ?></span>
+                                <br />
+                                <br />
+                            </div>
+                        </div>
+
+                        <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup">
+                            <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW" />       
+                        
+                        
+                        </div>
+                    </div>
+
+                
+                <?php
+                
+                }//foreach
+                echo '</div></div>';
+                
+            }//membershipList<>''
+        }
         
         tfgg_scp_display_cart_successful_add();
         return ob_get_clean();
