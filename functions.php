@@ -2327,6 +2327,7 @@
 
     function tfgg_scp_sagepay_generate_merchant_session_key(){
 
+        //$auth = base64_encode(get_option('tfgg_scp_cart_sage_key').':'.get_option('tfgg_scp_cart_sage_pass'));
         $auth = get_option('tfgg_scp_cart_sage_key').':'.get_option('tfgg_scp_cart_sage_pass');
         //echo $auth;
 
@@ -2370,6 +2371,13 @@
                 $result = array('results'=>'success',
                 'sageMerchantSession'=>$response->merchantSessionKey,
                 'sageMerchantSessionExp'=>$response->expiry);
+            break;
+            default:
+                log_me('sage merchant session fetch error '.$httpcode.': '.$response);
+                $response = json_decode($response); 
+                $result = array('results'=>'error',
+                'response'=>$response,
+                'auth'=>$auth);  
             break;
         }
 

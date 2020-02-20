@@ -393,6 +393,11 @@
                         jQuery('#tfgg_scp_cart_complete').text('PROCESSING...');
                         var validateResult = true;
                         
+                        //2020-02-20 CB V1.2.4.18 - removing any spaces
+                        var cardNum = document.getElementById('tfgg_cp_sage_card_number').value;
+                        cardNum = cardNum.replace(/\s/g,"");
+                        jQuery('#tfgg_cp_sage_card_number').val(cardNum);
+
                         var alertPanels = document.querySelectorAll('.reg_alert');
                         //reset the warnings
                         alertPanels.forEach(function(alertPnl){
