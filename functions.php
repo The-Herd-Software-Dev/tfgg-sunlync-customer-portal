@@ -2337,7 +2337,7 @@
         if(get_option('tfgg_scp_cart_sage_pay_sandbox','1')=='1'){
             $sageURL="https://pi-test.sagepay.com/api/v1/merchant-session-keys";
         }else{
-            $sageURL="https://pi-test.sagepay.com/api/v1/merchant-session-keys";
+            $sageURL="https://pi-live.sagepay.com/api/v1/merchant-session-keys";
         }
 
         curl_setopt_array($curl, array(
@@ -2419,9 +2419,17 @@
 
             log_me('POSTING to SagePay as '.$vendorCode.' for '.$_POST['cartid']);
 
+            //2020-02-20 CB V1.2.4.18 - switch the url
+            if(get_option('tfgg_scp_cart_sage_pay_sandbox','1')=='1'){
+                $sageURL="https://pi-test.sagepay.com/api/v1/transactions";
+            }else{
+                $sageURL="https://pi-live.sagepay.com/api/v1/transactions";
+            }
+
             $curl = curl_init();
             curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://pi-test.sagepay.com/api/v1/transactions",
+            //CURLOPT_URL => "https://pi-test.sagepay.com/api/v1/transactions",
+            CURLOPT_URL => $sageURL,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_POSTFIELDS => '{' .
