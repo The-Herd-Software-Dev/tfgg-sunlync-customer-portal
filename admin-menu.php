@@ -101,6 +101,7 @@
         //2019-10-23 CB V1.1.2.1 - new fields
         add_settings_field("tfgg_scp_store_selection","Stores For Use:","display_tfgg_store_selection", "tfgg-store-selection", "tfgg_store_selection_section");
         register_setting("tfgg_store_selection_section","tfgg_scp_store_selection");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_appts_selection");
 
         //misc section
         add_settings_field("tfgg_scp_customer_service_email", "Customer Service E-Mail:", "display_customer_service_email", "tfgg-misc-options", "tfgg_misc_options_section");

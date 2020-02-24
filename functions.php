@@ -815,14 +815,25 @@
 		}    
     }
 
+    function tfgg_scp_get_appt_stores_selected_for_api(){
+        //2020-02-24 CB V1.2.4.20
+        $stores = get_option('tfgg_scp_store_appts_selection');
+        if($stores<>''){
+            $storesSelected = join('","',$stores);   
+            return '"'.$storesSelected.'"';    
+        }else{
+            return '';
+        }
+    }
+
     function tfgg_api_get_stores_for_appts(){
         //2019-10-01 CB V1.0.0.8 - new method added to retrieve stores
         //based on day selected from appt-control
         
         $apptDay = $_GET['data']['apptDay'];
         $url= tfgg_get_api_url().'TSunLyncAPI/TFGG_GetStoresAndHours/sStoreCode/nInAppts/nApptDay';
-        
-        $url=str_replace('sStoreCode',tfgg_scp_get_stores_selected_for_api(),$url);
+
+        $url=str_replace('sStoreCode',tfgg_scp_get_appt_stores_selected_for_api(),$url);
         $url=str_replace('nInAppts','1',$url);
         $url=str_replace('nApptDay',$apptDay,$url);
 
