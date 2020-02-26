@@ -1225,7 +1225,9 @@
         //$promo = get_option('tfgg_scp_reg_promo');
         //$pkg = '';
 
-        if($pkg==''){$pkg='0000000000';}
+        if($pkg==''){$pkg='0000000000';} 
+
+        if($promo==''){$promo='0000000000';} 
             
         $url=str_replace('sFirstName',$demographics['firstname'],$url);
         $url=str_replace('sLastName',$demographics['lastname'],$url);

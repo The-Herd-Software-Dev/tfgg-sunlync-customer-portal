@@ -151,11 +151,52 @@
         }
     }
 
+    function display_reg_package_online(){
+        display_reg_package(true);    
+    }
+
+    function display_reg_package_instore(){
+        display_reg_package(false);    
+    }
+
+    function display_reg_package($isOnline){
+        //2020-02-25 CB V1.2.4.21 - enabling packages for registration
+        $packageList = json_decode(tfgg_scp_get_packages_from_api(''));
+
+        if($isOnline){
+            $pkg = get_option('tfgg_scp_reg_package');
+            $name = 'tfgg_scp_reg_package';
+        }else{
+            $promo = get_option('tfgg_scp_reg_package_instore');
+            $name = 'tfgg_scp_reg_package_instopre';
+        }
+
+        if(StrToUpper($packageList->results)==='SUCCESS'){
+            $packageList = $packageList->packages;
+            ?>
+            <select name="<?php echo $name; ?>" style="width: 60%">
+                <option value="">Please Select...</option>
+            <?php
+                foreach($packageList as &$details){
+                    $output='<option value="'.$details->package_id.'" '.($details->package_id === $pkg ? "selected" : "").'>'.$details->description.'</option>';
+                    echo $output; 
+                }
+            ?>
+            </select>
+            <?php            
+
+        }else{
+            $alert = "<div class=\"notice notice-error\">Unable to retrieve your package list, please ensure your API credentials are setup</div>";
+            echo $alert;
+        }
+    }
+
     function display_reg_online_recaptcha_req(){
         ?>
         <input type="checkbox" name="tfgg_scp_online_reg_recaptcha_req" value="1" <?php if(get_option('tfgg_scp_online_reg_recaptcha_req','1')==1){echo 'checked';} ?>/>
         <?php
     }
+
     function display_reg_instore_recaptcha_req(){
         ?>
         <input type="checkbox" name="tfgg_scp_instore_reg_recaptcha_req" value="1" <?php if(get_option('tfgg_scp_instore_reg_recaptcha_req','1')==1){echo 'checked';} ?>/>

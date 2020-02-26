@@ -544,7 +544,11 @@
 			}else{
 				//no user in SunLync, insert as a new user
 
-				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,get_option('tfgg_scp_reg_promo_instore'), ''));
+				//2020-02-25 CB V1.2.4.21 - updated to include reg promo and pkg
+				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
+				get_option('tfgg_scp_reg_promo_instore','0000000000'),
+				get_option('tfgg_scp_reg_package_instore','0000000000')));
+				
 				if(strtoupper($reg_result->results)=='SUCCESS'){
 					//now set the password
 					tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
