@@ -165,8 +165,8 @@
         add_settings_field("tfgg_scp_reg_promo_instore", "Promo For Registration:", "display_reg_promo_instore", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
         register_setting("tfgg_registration_options_section_instore", "tfgg_scp_reg_promo_instore");
 
-        add_settings_field("tfgg_scp_reg_package_instore", "Package For Registration:", "display_reg_package_instore", "tfgg-registration-options", "tfgg_registration_options_section");
-        register_setting("tfgg_registration_options_section", "tfgg_scp_reg_package_instore");
+        add_settings_field("tfgg_scp_reg_package_instore", "Package For Registration:", "display_reg_package_instore", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
+        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_reg_package_instore");
 
         add_settings_field("tfgg_scp_instore_reg_recaptcha_req", "Google Recaptcha Required:", "display_reg_instore_recaptcha_req", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
         register_setting("tfgg_registration_options_section_instore", "tfgg_scp_instore_reg_recaptcha_req");
