@@ -1504,3 +1504,7 @@ function tfgg_sortServiceDisplayOrder(parent){
         thisChild.children().each(function(){thisChild.prepend(jQuery(this))});
     });
 }
+
+function tfgg_input_strip_nonumeric(elem){
+    jQuery('#'+elem).val(jQuery('#'+elem).val().replace(/\D/g,''));
+}

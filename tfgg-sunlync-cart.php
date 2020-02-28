@@ -365,12 +365,16 @@
                         <div class="registration-container">
                             <div class="account-overview-input-double">
                                 <label for="tfgg_cp_sage_card_expiry" class="account-overview-label"><?php _e('Expiry MMYY'); ?></label>
-                                <input data-card-details="expiry-date" data-alertpnl="tfgg_cart_card_expiry_alertpnl" id="tfgg_cp_sage_card_expiry" class="required account-overview-input" type="text" placeholder="MMYY"/>
+                                <input data-card-details="expiry-date" data-alertpnl="tfgg_cart_card_expiry_alertpnl" 
+                                id="tfgg_cp_sage_card_expiry" class="required account-overview-input" type="text" placeholder="MMYY" maxlength="4"
+                                onkeyup="tfgg_input_strip_nonumeric('tfgg_cp_sage_card_expiry');"/>
                                 <div style="display:none" id="tfgg_cart_card_expiry_alertpnl" class="reg_alert"></div>
                             </div>
                             <div class="account-overview-input-single">
                                 <label for="tfgg_cp_sage_card_cvc" class="account-overview-label"><?php _e('CVC'); ?></label>
-                                <input data-card-details="security-code" data-alertpnl="tfgg_cart_card_cvc_alertpnl" id="tfgg_cp_sage_card_cvc" class="required account-overview-input" type="text" placeholder="000"/>
+                                <input data-card-details="security-code" data-alertpnl="tfgg_cart_card_cvc_alertpnl" 
+                                id="tfgg_cp_sage_card_cvc" class="required account-overview-input" type="text" placeholder="000" maxlength="3"
+                                onkeyup="tfgg_input_strip_nonumeric('tfgg_cp_sage_card_cvc');"/>
                                 <div style="display:none" id="tfgg_cart_card_cvc_alertpnl" class="reg_alert"></div>
                             </div>
                         </div>
