@@ -6,6 +6,12 @@ function tfgg_scp_store_selction_description(){
     echo '<p>If no stores are selected, all stores returned from the API will be used (barring stores containing "CLOSED" and "DELETED" in their description</p>';
 }
 
+function display_tfgg_store_cart_details_page(){
+    ?>
+    <input type="text" name="tfgg_scp_store_cart_details_page" value="<?php echo get_option('tfgg_scp_store_cart_details_page'); ?>" style="width: 60%" />
+    <?php
+}
+
 function display_tfgg_store_selection(){
     //first thing we need to do is actually display all the stores the API returns
 
@@ -37,12 +43,18 @@ function display_tfgg_store_selection(){
         echo '</div>';//container*/
 
         $apptStores = (array)get_option('tfgg_scp_store_appts_selection');
+        $storeCartDetailsID = (array)get_option('tfgg_scp_store_cart_details_id');
+        
         $rowCounter=1;
 
         echo '<div class="container border rounded" style="padding: 10px; margin-left:unset"><div class="row">';
         foreach($storeList as &$storeDetails){
+
             if(in_array($storeDetails->store_id, $selectedStores)){ $useInCart = 'checked="checked"'; }else{ $useInCart = ''; }
             if(in_array($storeDetails->store_id, $apptStores)){ $useInAppts = 'checked="checked"'; }else{ $useInAppts = ''; }
+
+            if((array_key_exists($storeDetails->store_id, $storeCartDetailsID))&&
+            ($storeCartDetailsID[$storeDetails->store_id]<>'')){ $freeText = $storeCartDetailsID[$storeDetails->store_id]; }else{ $freeText = ''; } 
 
             echo '<div class="col-lg-4 admin-service-item">'.
 
@@ -50,6 +62,7 @@ function display_tfgg_store_selection(){
             '<div class="admin-service-detail">'.
             '<div><input type="checkbox" value="'.$storeDetails->store_id.'" name="tfgg_scp_store_appts_selection[]" '.$useInAppts.' /><label> Appointments</label></div>'.
             '<div><input type="checkbox" value="'.$storeDetails->store_id.'" name="tfgg_scp_store_selection[]" '.$useInCart.' /><Label> Cart</label></div>'.
+            '<div><label class="admin-service-label">Cart Details ID: </label><input type="text" class="admin-service-value" name="tfgg_scp_store_cart_details_id['.$storeDetails->store_id.']" value="'.$freeText.'"/></div>'.
             '<br />'.
             '</div></div>';	
 

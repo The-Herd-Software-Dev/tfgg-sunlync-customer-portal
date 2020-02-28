@@ -98,10 +98,16 @@
         add_settings_field("tfgg_scp_email_pass_reset", "Password Reset Email:", "display_email_pass_rest", "tfgg-messages-options", "tfgg_messages_section");
         register_setting("tfgg_messages_section", "tfgg_scp_email_pass_reset");*/
 
+        add_settings_field("tfgg_scp_store_cart_details_page","Store Cart Details Content:","display_tfgg_store_cart_details_page", "tfgg-store-selection", "tfgg_store_selection_section");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_cart_details_page");
+
         //2019-10-23 CB V1.1.2.1 - new fields
         add_settings_field("tfgg_scp_store_selection","Stores For Use:","display_tfgg_store_selection", "tfgg-store-selection", "tfgg_store_selection_section");
         register_setting("tfgg_store_selection_section","tfgg_scp_store_selection");
         register_setting("tfgg_store_selection_section","tfgg_scp_store_appts_selection");
+
+        //2020-02-27 CB V1.2.4.23 - new field
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_cart_details_id");
 
         //misc section
         add_settings_field("tfgg_scp_customer_service_email", "Customer Service E-Mail:", "display_customer_service_email", "tfgg-misc-options", "tfgg_misc_options_section");

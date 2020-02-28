@@ -1497,3 +1497,10 @@ function tfggCartPaypalTandCDialog(){
 function closeCartPayPalTandC(){
     jQuery('#tfgg_cp_paypal_tandc_dialog').dialog('close');
 }
+
+function tfgg_sortServiceDisplayOrder(parent){
+    return jQuery('#'+parent).each(function(){
+        var thisChild=jQuery(this);
+        thisChild.children().each(function(){thisChild.prepend(jQuery(this))});
+    });
+}

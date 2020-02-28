@@ -874,6 +874,10 @@
     function tfgg_order_service_by_name($a,$b){
         return strcmp($a->description, $b->description);
     }
+
+    function tfgg_order_service_by_price($a,$b){
+        return $b->price > $a->price ? 1 : -1;
+    }
     
     function tfgg_api_get_equip_type_appt_slots(){
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetApptSlotForEquipType/sStoreCode/sEquipType/sDate/nApptLen';
@@ -1718,7 +1722,9 @@
             usort($result["packages"],'tfgg_order_service_by_name');*/
 
             $packages = array_slice($data,1,-1);
-            usort($packages,'tfgg_order_service_by_name');
+            //2020-02-27 CB V1.2.4.24 - changed to order by price
+            //usort($packages,'tfgg_order_service_by_name');
+            usort($packages, 'tfgg_order_service_by_price');
 
             $packageAlias = (array)get_option('tfgg_scp_package_alias',array());
             $packageImg = get_option('tfgg_scp_package_img',array());
@@ -1779,7 +1785,9 @@
             $result["results"]="success";
 
             $memberships=array_slice($data,1,-1);
-            usort($memberships,'tfgg_order_service_by_name'); 
+            //2020-02-27 CB V1.2.4.24 - changed to order by price
+            //usort($memberships,'tfgg_order_service_by_name'); 
+            usort($memberhsips, 'tfgg_order_service_by_price');
 
             $membershipAlias = (array)get_option('tfgg_scp_membership_alias',array());
             $membershipImg = get_option('tfgg_scp_membership_img',array());

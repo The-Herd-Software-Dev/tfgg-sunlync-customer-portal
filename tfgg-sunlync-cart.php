@@ -54,7 +54,7 @@
             ?>
                 <div class="overlay-items-item-container" id="tfgg_cart_item_row_<?php echo $i;?>">
                     <div class="cart-items-item">
-                        <span class="overlay-items-item-description"><?php echo $details->alias; ?></span>
+                        <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$details->alias); ?></span>
                         <span class="overlay-items-item-price">&#163;<?php echo number_format(($details->Qty*$details->PPU),2,'.',',');?></span>
                         <br />
                         <span class="overlay-items-item-quantity-label">Quantity:</span>
@@ -164,8 +164,14 @@
                     }
                     ?>
                     
-        
+                    <?php
+                        if ((get_option('tfgg_scp_cart_allow_paypal_payment',0)==1)&&
+                        (get_option('tfgg_scp_cart_allow_sage_payment',0)==1)){
+                    ?>
                     <h4><?php _e('Please select your payment type');?></h4>
+                    <?php
+                        }
+                    ?>
                     <div class="overlay-button-container">
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group d-flex" role="group" aria-label="Second group" style="width:100%;">
@@ -358,7 +364,7 @@
                         </div>
                         <div class="registration-container">
                             <div class="account-overview-input-double">
-                                <label for="tfgg_cp_sage_card_expiry" class="account-overview-label"><?php _e('Expiry'); ?></label>
+                                <label for="tfgg_cp_sage_card_expiry" class="account-overview-label"><?php _e('Expiry MMYY'); ?></label>
                                 <input data-card-details="expiry-date" data-alertpnl="tfgg_cart_card_expiry_alertpnl" id="tfgg_cp_sage_card_expiry" class="required account-overview-input" type="text" placeholder="MMYY"/>
                                 <div style="display:none" id="tfgg_cart_card_expiry_alertpnl" class="reg_alert"></div>
                             </div>
@@ -626,6 +632,15 @@
                 <br/>
                 <?php
                     }//allow search
+                ?>
+                <div>
+                    <label for="tfgg_package_sort_order"><?php _e("Sort By");?></label>
+                    <select id="tfgg_package_sort_order" onchange="tfgg_sortServiceDisplayOrder('tfgg_scp_package_for_sale_list');">
+                        <option value="0">Price: High to Low</option>
+                        <option value="1">Price: Low to High</option>
+                    </select>
+                </div>
+                <?php
 
                 //loop through the allowed services and output
                 $rowCounter = 1;
@@ -651,7 +666,7 @@
                         data-packagenumber="<?php echo $packageDetails->package_id;?>"
                         data-packagename="<?php echo $packageDetails->description;?>">
 
-                        <span class="overlay-items-item-description"><?php echo $packageDetails->alias;?></span>
+                        <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$packageDetails->alias);?></span>
                         <span class="overlay-items-item-price">&#163;<?php echo number_format($packageDetails->price,2,'.',','); ?></span>
                         <br />
 
@@ -730,7 +745,15 @@
                 <br/>
                 <?php   
                     }//allow search
-
+                    ?>
+                    <div>
+                        <label for="tfgg_package_sort_order"><?php _e("Sort By");?></label>
+                        <select id="tfgg_package_sort_order" onchange="tfgg_sortServiceDisplayOrder('tfgg_membership_for_sale_list');">
+                            <option value="0">Price: High to Low</option>
+                            <option value="1">Price: Low to High</option>
+                        </select>
+                    </div>
+                    <?php   
                     //loop through the allowed services and output
                 $rowCounter = 1;
                 echo '<div id="tfgg_membership_for_sale_list" class="row" style="padding: 10px">';
@@ -747,7 +770,7 @@
                         data-membershipnumber="<?php echo $membershipDetails->membership_id;?>"
                         data-membershipname="<?php echo $membershipDetails->description;?>">
 
-                        <span class="overlay-items-item-description"><?php echo $membershipDetails->alias;?></span>
+                        <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$membershipDetails->alias);?></span>
                         <span class="overlay-items-item-price">&#163;<?php echo number_format($membershipDetails->price,2,'.',','); ?></span>
                         <br />
 
@@ -815,29 +838,24 @@
                 $onclick = 'confirmChangeCartStore();';
             }
             ?>
-            <div class="account-overview-input-double demo2-container">
-                <div class="account-overview-input-single" style="margin-bottom: 1em;">
-                    <label for="tfgg_scp_store_purchasing_selection"><?php _e('You are viewing packages and services offered by '); ?></label>
-                    <div class="select-container">
-                    <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" style="max-width: 30%" class="js-example-basic-single account-overview-input">
+            <div class="registration-container">
+                <div class="account-overview-input-double">
+                    <label for="tfgg_select_store" class="account-overview-label"><?php _e('You are viewing packages and services offered by'); ?></label>
+                    <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" class="js-example-basic-single account-overview-input">
                     <?php
-
-                        echo 'selected: "'.$selected.'" ;';
+                        //echo 'selected: "'.$selected.'" ;';
                         foreach($storeList as &$details){
                             $output='<option value="'.$details->store_id.'" '.($details->store_id === $selected ? "selected" : "").'>'.$details->store_loc.'</option>';
                             echo $output; 
                         }
                     ?>
-                    </select>
-                    </div>
-                    <div style="display:inline; float:right; margin-top:5px;">
-                    <button type="button" class="account-overview-button account-overview-standard-button" onclick="<?php echo $onclick;?>">Change Store Selection</button>
-                    </div>
+                    </select>                    
                 </div>
-                <br/><br/>
-            </div>
-
-                    <div <?php if(tfgg_ae_detect_ie()){?>style="z-index: 10000 !important; margin-top:25%"<?php } ?> class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
+                <div class="account-overview-input-single" style="padding-top:23px">
+                    <button type="button" class="account-overview-button account-overview-standard-button" onclick="<?php echo $onclick;?>">Change Store Selection</button>
+                </div>
+            </div><?php //<div class="registration-container"><?>
+            <div <?php if(tfgg_ae_detect_ie()){?>style="z-index: 10000 !important; margin-top:25%"<?php } ?> class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                     <div class="modal-body" id="tfgg_scp_store_purchasing_selection_confirm_message">
@@ -849,12 +867,12 @@
                     </div>
                     </div>
                 </div>
-            </div>
-
+            </div><?php //tfgg_ae_detect_ie ?>
             <script>
             jQuery('.js-example-basic-single').select2();
             </script>
             <?php
+            display_store_cart_details($selected);
         }
     }
 
@@ -865,6 +883,24 @@
         }else{
             return false;
         }
+    }
+
+    function display_store_cart_details($store){
+        //get_post('post_content',url_to_postid(site_url(get_option('tfgg_scp_tandc_slug_instore'))))
+        echo get_post_field('post_content',url_to_postid(site_url(get_option('tfgg_scp_store_cart_details_page'))),'display');
+        $storeCartDetailsID = (array)get_option('tfgg_scp_store_cart_details_id');
+        
+        if((array_key_exists($store, $storeCartDetailsID))&&
+            ($storeCartDetailsID[$store]<>'')){ $storeDetailsID = $storeCartDetailsID[$store]; }else{ $storeDetailsID = ''; } 
+
+        if($storeDetailsID<>''){
+        ?>
+        <br/><br/>
+        <script>
+            jQuery('#<?php echo $storeDetailsID;?>').show();
+        </script>
+        <?php
+        }//if
     }
 
 ?>
