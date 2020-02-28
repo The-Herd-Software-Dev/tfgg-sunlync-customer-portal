@@ -603,7 +603,7 @@
         if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}        
         
         if($packagesForSale<>''){
-            $packageList = json_decode(tfgg_scp_get_packages_from_api($packagesForSale, $browsingStore));
+            $packageList = json_decode(tfgg_scp_get_packages_from_api($packagesForSale, $browsingStore, false));
             
             if(StrToUpper($packageList->results) === 'SUCCESS'){
                 $packageList = $packageList->packages;
@@ -714,7 +714,7 @@
 
         if($membershipsForSale<>''){
 
-            $membershipList = json_decode(tfgg_scp_get_memberships_from_api($membershipsForSale, $browsingStore));
+            $membershipList = json_decode(tfgg_scp_get_memberships_from_api($membershipsForSale, $browsingStore, false));
             if(StrToUpper($membershipList->results) === 'SUCCESS'){
                 $membershipList = $membershipList->memberships;
             }else{

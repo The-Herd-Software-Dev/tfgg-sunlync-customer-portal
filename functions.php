@@ -1690,7 +1690,7 @@
         }    
     }
 
-    function tfgg_scp_get_packages_from_api($allowedPackageList='', $affiliatedStore=''){
+    function tfgg_scp_get_packages_from_api($allowedPackageList='', $affiliatedStore='', $sortByName=true){
         /*CIPGetPackages(sPackageList, sStoreCode:String; mrktCode*/
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetPackages/sPackageList/sStoreCode';
         
@@ -1723,8 +1723,11 @@
 
             $packages = array_slice($data,1,-1);
             //2020-02-27 CB V1.2.4.24 - changed to order by price
-            //usort($packages,'tfgg_order_service_by_name');
-            usort($packages, 'tfgg_order_service_by_price');
+            if($sortByName){
+                usort($packages,'tfgg_order_service_by_name');
+            }else{
+                usort($packages, 'tfgg_order_service_by_price');
+            }
 
             $packageAlias = (array)get_option('tfgg_scp_package_alias',array());
             $packageImg = get_option('tfgg_scp_package_img',array());
@@ -1756,7 +1759,7 @@
 		}  
     }
 
-    function tfgg_scp_get_memberships_from_api($allowedMembershipList='', $affiliatedStore=''){
+    function tfgg_scp_get_memberships_from_api($allowedMembershipList='', $affiliatedStore='', $sortByName=true){
         $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetMemberships/sMembershipList/sStoreCode';
         
         $url=str_replace('sMembershipList',$allowedMembershipList,$url);
@@ -1786,8 +1789,11 @@
 
             $memberships=array_slice($data,1,-1);
             //2020-02-27 CB V1.2.4.24 - changed to order by price
-            //usort($memberships,'tfgg_order_service_by_name'); 
-            usort($memberhsips, 'tfgg_order_service_by_price');
+            if($sortByName){
+                usort($memberships,'tfgg_order_service_by_name'); 
+            }else{
+                usort($memberhsips, 'tfgg_order_service_by_price');
+            }
 
             $membershipAlias = (array)get_option('tfgg_scp_membership_alias',array());
             $membershipImg = get_option('tfgg_scp_membership_img',array());
