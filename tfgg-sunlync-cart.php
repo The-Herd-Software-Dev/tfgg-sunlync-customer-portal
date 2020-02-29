@@ -670,37 +670,41 @@
                         data-packagenumber="<?php echo $packageDetails->package_id;?>"
                         data-packagename="<?php echo $packageDetails->description;?>">
 
-                        <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$packageDetails->alias);?></span>
-                        <span class="overlay-items-item-price">&#163;<?php echo number_format($packageDetails->price,2,'.',','); ?></span>
-                        <br />
+                        <div class="services-inner-container">
 
-                        <div class="services-item-details-container">
+                            <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$packageDetails->alias);?></span>
+                            <span class="overlay-items-item-price">&#163;<?php echo number_format($packageDetails->price,2,'.',','); ?></span>
+                            <br />
 
-                            <?php if ($packageDetails->img != "") {?>
-                            <div class="services-image-container">
-                                <img src="<?php echo $packageDetails->img;?>" class="service-image"/>
+                            <div class="services-item-details-container">
+
+                                <?php if ($packageDetails->img != "") {?>
+                                <div class="services-image-container">
+                                    <img src="<?php echo $packageDetails->img;?>" class="service-image"/>
+                                </div>
+
+                                <?php 
+                                }
+                                ?>
+
+                                <div class="services-details-container">
+                                    <span class="overlay-items-item-quantity-label">Units:</span>
+                                    <span class="overlay-items-item-quantity-value"><?php echo $packageDetails->num_units.' ('.$packageDetails->unit_type.')'; ?></span>
+                                    <br />
+                                    <span class="overlay-items-item-quantity-label"> Expiration:</span>
+                                    <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($packageDetails->exp_days, $packageDetails->exp_date, $packageDetails->open_ended); ?></span>
+                                    <br />
+                                    <span class="overlay-items-item-quantity-label"><?php echo $packageDetails->freeText; ?></span>
+                                    <br />
+                                </div>
+
+                                </div>
+                    
+
+                            <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup ">
+                                <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW"/>         
                             </div>
 
-                            <?php 
-                            }
-                            ?>
-
-                            <div class="services-details-container">
-                                <span class="overlay-items-item-quantity-label">Units:</span>
-                                <span class="overlay-items-item-quantity-value"><?php echo $packageDetails->num_units.' ('.$packageDetails->unit_type.')'; ?></span>
-                                <br />
-                                <span class="overlay-items-item-quantity-label"> Expiration:</span>
-                                <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($packageDetails->exp_days, $packageDetails->exp_date, $packageDetails->open_ended); ?></span>
-                                <br />
-                                <span class="overlay-items-item-quantity-label"><?php echo $packageDetails->freeText; ?></span>
-                                <br />
-                            </div>
-
-                            </div>
-                
-
-                        <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup ">
-                            <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW"/>         
                         </div>
                         
                     </div>
@@ -770,39 +774,43 @@
                     }
                     ?>
 
-                    <div class="col-lg-4 services-items-membership mems-sale-container" id="tfgg_scp_pack_sale_<?php echo $membershipDetails->membership_id;?>"
+                    <div class="col-lg-4 services-items-item mems-sale-container" id="tfgg_scp_pack_sale_<?php echo $membershipDetails->membership_id;?>"
                         data-membershipnumber="<?php echo $membershipDetails->membership_id;?>"
                         data-membershipname="<?php echo $membershipDetails->description;?>">
 
-                        <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$membershipDetails->alias);?></span>
-                        <span class="overlay-items-item-price">&#163;<?php echo number_format($membershipDetails->price,2,'.',','); ?></span>
-                        <br />
+                        <div class="services-inner-container">
 
-                        <div class="services-item-details-container">
+                            <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$membershipDetails->alias);?></span>
+                            <span class="overlay-items-item-price">&#163;<?php echo number_format($membershipDetails->price,2,'.',','); ?></span>
+                            <br />
 
-                        <?php if ($membershipDetails->img != "") {?>
-                            <div class="services-image-container">
-                                <img src="<?php echo $membershipDetails->img;?>" class="service-image"/>
+                            <div class="services-item-details-container">
+
+                            <?php if ($membershipDetails->img != "") {?>
+                                <div class="services-image-container">
+                                    <img src="<?php echo $membershipDetails->img;?>" class="service-image"/>
+                                </div>
+                                <?php 
+                                }
+                                ?>
+                    
+
+                                <div class="services-details-container">
+                                    <span class="overlay-items-item-quantity-label"> Expiration:</span>
+                                    <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($membershipDetails->exp_days, $membershipDetails->exp_date, $membershipDetails->open_ended); ?></span>
+                                    <br />
+                                    <span class="overlay-items-item-quantity-label"><?php echo $membershipDetails->freeText; ?></span>
+                                    <br />
+                                    <br />
+                                </div>
                             </div>
-                            <?php 
-                            }
-                            ?>
-                
 
-                            <div class="services-details-container">
-                                <span class="overlay-items-item-quantity-label"> Expiration:</span>
-                                <span class="overlay-items-item-quantity-value"><?php echo tfgg_scp_service_exp_date($membershipDetails->exp_days, $membershipDetails->exp_date, $membershipDetails->open_ended); ?></span>
-                                <br />
-                                <span class="overlay-items-item-quantity-label"><?php echo $membershipDetails->freeText; ?></span>
-                                <br />
-                                <br />
+                            <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup">
+                                <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW" />       
+                            
+                            
                             </div>
-                        </div>
 
-                        <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup">
-                            <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW" />       
-                        
-                        
                         </div>
                     </div>
 

@@ -934,15 +934,14 @@ tr.account_overview_row > td {
 
 .overlay-items-item-buttongroup {
   float:right;
-    
-
 }
 
 .overlay-items-item-service-buttongroup {
     position: absolute;
     bottom: 0;
     right:0;
-    margin:5px;
+    margin-right:15px;
+    margin-bottom:15px;
 }
 
 .overlay-items-item-link {
@@ -1030,15 +1029,26 @@ tr.account_overview_row > td {
 }
 
 .services-items-item{
-    background-color: #fff;  
-    
+
+   margin:0px;
+    padding:0px !important;
+}
+
+.services-inner-container {
+    background-color: #fff;    
     -moz-border-radius:3px;
     -webkit-border-radius:3px;
     border-radius:3px; 
     padding:10px;
     border: solid 1px rgb(194, 194, 194);
-   box-sizing: border-box;
-   margin:5px;
+    box-sizing: border-box;
+    margin:5px;
+    width: -webkit-calc(100% - 10px);
+    width:    -moz-calc(100% - 10px);
+    width:         calc(100% - 10px);
+    height: -webkit-calc(100% - 10px);
+    height:    -moz-calc(100% - 10px);
+    height:         calc(100% - 10px);
 
 }
 
@@ -1051,7 +1061,7 @@ tr.account_overview_row > td {
     padding:10px;
     border: solid 1px rgb(194, 194, 194);
    box-sizing: border-box;
-   margin:5px;
+   margin:0px;
 }
 
 .cart-banner {
