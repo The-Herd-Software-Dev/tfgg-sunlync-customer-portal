@@ -754,7 +754,16 @@
                     
 
                             <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup ">
-                                <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW"/>         
+                                <select id="tfgg_scp_post_item_qty_P<?php echo $packageDetails->package_id;?>">
+                                    <?php
+                                    for($j=1; $j<(get_option('tfgg_scp_cart_max_item_count',10)+1); $j++){
+                                        if($j==1){$selected='selected';}else{$selected='';}
+        
+                                        echo '<option value="'.$j.'" '.$selected.'>'.$j.'</option>';
+                                    }
+                                    ?>
+                                </select>
+                                <input type="button" onclick="tfggPostCartItem('P','<?php echo $packageDetails->package_id;?>','1','',true, true)" class="btn btn-sm btn-light" value="BUY NOW"/>         
                             </div>
 
                         </div>
@@ -858,9 +867,16 @@
                             </div>
 
                             <div class="overlay-items-item-buttongroup overlay-items-item-service-buttongroup">
-                                <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1','',true)" class="btn btn-sm btn-light" value="BUY NOW" />       
-                            
-                            
+                                <select id="tfgg_scp_post_item_qty_M<?php echo $packageDetails->membership_id;?>">
+                                    <?php
+                                    for($j=1; $j<(get_option('tfgg_scp_cart_max_item_count',10)+1); $j++){
+                                        if($j==1){$selected='selected';}else{$selected='';}
+        
+                                        echo '<option value="'.$j.'" '.$selected.'>'.$j.'</option>';
+                                    }
+                                    ?>
+                                </select>
+                                <input type="button" onclick="tfggPostCartItem('M','<?php echo $membershipDetails->membership_id;?>','1','',true, true)" class="btn btn-sm btn-light" value="BUY NOW" />                                   
                             </div>
 
                         </div>
@@ -916,9 +932,13 @@
                     ?>
                     </select>                    
                 </div>
+                <?php
+                /*2020-03-02 CB V1.2.5.4 - removing button
                 <div class="account-overview-input-single" style="padding-top:23px">
                     <button type="button" class="account-overview-button account-overview-standard-button" onclick="<?php echo $onclick;?>">Change Store Selection</button>
                 </div>
+                */
+                ?>
             </div><?php //<div class="registration-container"><?>
             <div <?php if(tfgg_ae_detect_ie()){?>style="z-index: 10000 !important; margin-top:25%"<?php } ?> class="modal fade" id="tfgg_scp_store_purchasing_selection_confirm" tabindex="-1" role="dialog" aria-labelledby="tfgg_scp_store_purchasing_selection_confirm" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">

@@ -223,7 +223,7 @@
             log_me('is a sunlync user');
             if(is_page(array($login, $registration))){
                 log_me('page exists in array - redirecting');
-                
+
                 //2020-03-02 CB V1.2.5.4 - redirect back to cart if customer came from cart to login page
                 if((array_key_exists('sendBackToCart',$_SESSION))&&($_SESSION['sendBackToCart']===true)){
                     unset($_SESSION['sendBackToCart']);
@@ -1808,7 +1808,7 @@
             if($sortByName){
                 usort($memberships,'tfgg_order_service_by_name'); 
             }else{
-                usort($memberhsips, 'tfgg_order_service_by_price');
+                usort($memberships, 'tfgg_order_service_by_price');
             }
 
             $membershipAlias = (array)get_option('tfgg_scp_membership_alias',array());

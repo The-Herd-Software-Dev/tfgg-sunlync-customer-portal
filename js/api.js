@@ -152,7 +152,7 @@ jQuery(function(){
             return true;
         }else{
             //post update
-            tfggPostCartItem(itemtype, keyvalue, newQty, id, false);
+            tfggPostCartItem(itemtype, keyvalue, newQty, id, false, false);
         }
         
     });
@@ -1295,8 +1295,13 @@ function tfggSCPTogglePassword(){
     } 
 }
 
-function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID, showDialog){
+function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID, showDialog, fromPurchasePage){
     var pathname = window.location.pathname;
+
+    //2020-03-02 CB V.1.2.5.4 - changing where we get qty from
+    if(fromPurchasePage){
+        addItemQty = jQuery('#tfgg_scp_post_item_qty_'+addItemType+addItemNumnber).val();
+    }
 
     jQuery.post(localAccess.adminAjaxURL,{
         'action'    : 'tfgg_scp_post_cart_item',
