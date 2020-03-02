@@ -2,7 +2,7 @@
     function login_form_display(){
         
 		ob_start(); 
-        
+		
         echo "<hr /><br />";
         
         if(isset($_GET['login'])&&($_GET['login']='reset')){

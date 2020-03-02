@@ -144,11 +144,15 @@
 				$errors = tfgg_cp_errors()->get_error_messages();
 				
 				if(empty($errors)) {
-					$user = wp_signon(array('user_login'=>$_POST['tfgg_cp_user_login'],'user_password'=>$_POST['tfgg_cp_user_pass']));
+					//$user = wp_signon(array('user_login'=>$_POST['tfgg_cp_user_login'],'user_password'=>$_POST['tfgg_cp_user_pass']));
 					/*wp_set_auth_cookie($_POST['tfgg_cp_user_login'], false);
 					wp_set_current_user($user->ID, $user->display_name);	
 					do_action( 'wp_login', $user->user_login, $user);*/
-					tfgg_cp_redirect_after_login();
+					if(array_key_exists('',$_SESSION)){
+						tfgg_cp_redirect_after_login(false, true);
+					}else{
+						tfgg_cp_redirect_after_login();
+					}
 					
 				}
     		}

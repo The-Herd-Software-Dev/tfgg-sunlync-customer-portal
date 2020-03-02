@@ -158,14 +158,18 @@
     
     add_action('init','tfgg_cp_get_sunlync_client');
 
-    function tfgg_cp_redirect_after_login($existingUser=false){
+    function tfgg_cp_redirect_after_login($existingUser=false, $redirectToCart=false){
         if(get_option('tfgg_scp_cplogin_page_success')==''){
 			wp_redirect(home_url());exit;
 		}else{
 		    if($existingUser){
 		        wp_redirect(get_option('tfgg_scp_cplogin_page_success').'?existingUser='.$existingUser);exit;    
 		    }else{
-			    wp_redirect(get_option('tfgg_scp_cplogin_page_success'));exit;
+                if($redirectToCart){
+                    wp_redirect(get_option('tfgg_scp_cart_slug'));exit;
+                }else{
+                    wp_redirect(get_option('tfgg_scp_cplogin_page_success'));exit;
+                }
 		    }
 		}
     }
@@ -218,14 +222,26 @@
         if($sunlyncUser){
             log_me('is a sunlync user');
             if(is_page(array($login, $registration))){
-                log_me('page exists in array - redirecting to acctOverview');
-                wp_redirect( $acctOverview ); 
+                log_me('page exists in array - redirecting');
+                
+                //2020-03-02 CB V1.2.5.4 - redirect back to cart if customer came from cart to login page
+                if((array_key_exists('sendBackToCart',$_SESSION))&&($_SESSION['sendBackToCart']===true)){
+                    unset($_SESSION['sendBackToCart']);
+                    wp_redirect( $servicesSale ); 
+                }else{
+                    wp_redirect( $acctOverview ); 
+                }
                 exit;
             }
         }else{
             log_me('not a sunlync user');
-            if(is_page(array($acctOverview,$apptBooking,$cart, $servicesSale))){
-                log_me('page exists in array - redirecting to login');
+            if(is_page(array($acctOverview,$apptBooking,$cart,$servicesSale))){
+                log_me('page exists in array - redirecting to login');       
+                unset($_SESSION['sendBackToCart']);//just in case
+                if($wp->request==$servicesSale){
+                    $_SESSION['sendBackToCart']=true;
+                }
+
                 wp_redirect( $login ); 
                 exit;
             }    
@@ -2782,9 +2798,20 @@
 
         $link.="</span>";
 
+        $link2 = '<i class="fa fa-shopping-cart"></i> <span id="tfgg_scp_cart_qty_primary">';
+        if((isset($_SESSION['tfgg_scp_cart_qty']))&&($_SESSION['tfgg_scp_cart_qty']>0)){
+            $link2.=' ('.$_SESSION['tfgg_scp_cart_qty'].')';
+        }
+
+        $link2.="</span>";
+
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
             //$items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
             $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>';
+        }
+        if($sunlyncuser && $args->theme_location=='primary-menu'){
+            //$items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
+            $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))) .'" id="tfgg_scp_cart_link_primary">'.$link2.'</a></li>';
         }
         return $items;
     }

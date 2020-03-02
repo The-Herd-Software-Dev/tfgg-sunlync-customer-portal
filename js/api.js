@@ -1365,8 +1365,10 @@ function tfggRemoveCartItem(cartItemID, removeItemID){
 function tfggSetCartLinkQty(qty){
     if(parseInt(qty)==0){
         jQuery('#tfgg_scp_cart_qty').text(''); 
+        jQuery('#tfgg_scp_cart_qty_primary').text(''); 
     }else{
         jQuery('#tfgg_scp_cart_qty').text('('+qty+')'); 
+        jQuery('#tfgg_scp_cart_qty_primary').text('('+qty+')'); 
     }       
 }
 
