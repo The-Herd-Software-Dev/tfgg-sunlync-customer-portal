@@ -167,8 +167,8 @@
             $pkg = get_option('tfgg_scp_reg_package');
             $name = 'tfgg_scp_reg_package';
         }else{
-            $promo = get_option('tfgg_scp_reg_package_instore');
-            $name = 'tfgg_scp_reg_package_instopre';
+            $pkg = get_option('tfgg_scp_reg_package_instore');
+            $name = 'tfgg_scp_reg_package_instore';
         }
 
         if(StrToUpper($packageList->results)==='SUCCESS'){

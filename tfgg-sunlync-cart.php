@@ -897,7 +897,7 @@
             }
             
             if((isset($_SESSION['tfgg_cp_cart_warning']))&&($_SESSION['tfgg_cp_cart_warning']=='1')){
-                $onclick = 'changeCartStore();';
+                $onclick = 'changeCartStore();';                
             }else{
                 $onclick = 'confirmChangeCartStore();';
             }
@@ -905,7 +905,8 @@
             <div class="registration-container">
                 <div class="account-overview-input-double">
                     <label for="tfgg_select_store" class="account-overview-label"><?php _e('You are viewing packages and services offered by'); ?></label>
-                    <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" class="js-example-basic-single account-overview-input">
+                    <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" onchange="<?php echo $onclick;?>"
+                    class="js-example-basic-single account-overview-input">
                     <?php
                         //echo 'selected: "'.$selected.'" ;';
                         foreach($storeList as &$details){
