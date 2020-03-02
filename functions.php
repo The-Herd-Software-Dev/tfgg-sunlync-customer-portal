@@ -1976,6 +1976,111 @@
         return json_encode($result);
     }
 
+    function tfgg_scp_get_processed_cart_contents($receiptNo){
+
+        $url=tfgg_get_api_url().'TAPICart/ProcessedCartDetails/sReceiptNo';
+        
+        $url=str_replace('sReceiptNo',$receiptNo,$url);
+
+        try{
+            $data = tfgg_execute_api_request('GET',$url,'');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        $returned=$data->result[0][0]; 
+        
+        if((array_key_exists('WARNING',$returned))||(array_key_exists('ERROR',$returned))){
+            if(array_key_exists('ERROR',$returned)){
+				$result=array("results"=>"FAIL",
+					"response"=>$returned->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+                    "response"=>$returned->WARNING);
+            }                
+
+            return json_encode($result);
+        }
+
+        $cartHeader = $data->result[0][0][0];
+        $cartHeader = $cartHeader->header[0];//there is only ever 1 header record
+
+        $cartItems= $data->result[0][0][1];
+        $cartItems = $cartItems->lineitems;//this could be an array of items
+
+        $paymentItems= $data->result[0][0][2];
+        $paymentItems = $paymentItems->paymentitems;//this could be an array of items
+
+        $result["results"]="success";
+        $result["header"]=$cartHeader;
+        $result["lineItems"]=$cartItems;
+
+        $packageAlias = get_option('tfgg_scp_package_alias',array());
+        $packageImg = get_option('tfgg_scp_package_img',array());
+        $packageText = get_option('tfgg_scp_package_free_text',array());
+
+        $membershipAlias = get_option('tfgg_scp_membership_alias',array());
+        $membershipImg = get_option('tfgg_scp_membership_img',array());
+        $membershipText = get_option('tfgg_scp_membership_free_text',array());
+
+        foreach($result["lineItems"] as &$itemDetails){
+            if($itemDetails->ItemType=='P'){
+                if((is_array($packageAlias))&&(array_key_exists($itemDetails->KeyValue,$packageAlias))&&
+                ($packageAlias[$itemDetails->KeyValue]<>'')){
+                    $itemDetails->alias = $packageAlias[$itemDetails->KeyValue];
+                }else{
+                    $itemDetails->alias = $itemDetails->Description;
+                }
+
+                if((is_array($packageImg))&&(array_key_exists($itemDetails->KeyValue, $packageImg))&&
+                ($packageImg[$itemDetails->KeyValue]<>'')){ 
+                    $itemDetails->img = $packageImg[$itemDetails->KeyValue]; 
+                }else{ 
+                    $itemDetails->img = '';
+                }
+
+                if((is_array($packageText))&&(array_key_exists($itemDetails->KeyValue, $packageText))&&
+                ($packageText[$itemDetails->KeyValue]<>'')){ 
+                    $itemDetails->freeText = $packageText[$itemDetails->KeyValue]; 
+                }else{ 
+                    $itemDetails->freeText = '';
+                }
+            }else{
+                if((is_array($membershipAlias))&&(array_key_exists($itemDetails->KeyValue,$membershipAlias))&&
+                ($membershipAlias[$itemDetails->KeyValue]<>'')){
+                    $itemDetails->alias = $membershipAlias[$itemDetails->KeyValue];
+                }else{
+                    $itemDetails->alias = $itemDetails->Description;
+                }
+
+                if((is_array($membershipImg))&&(array_key_exists($itemDetails->KeyValue,$membershipImg))&&
+                ($membershipImg[$itemDetails->KeyValue]<>'')){
+                    $itemDetails->img = $membershipImg[$itemDetails->KeyValue];
+                }else{
+                    $itemDetails->img = '';
+                }
+
+                if((is_array($membershipText))&&(array_key_exists($itemDetails->KeyValue,$membershipText))&&
+                ($membershipText[$itemDetails->KeyValue]<>'')){
+                    $itemDetails->freeText = $membershipText[$itemDetails->KeyValue];
+                }else{
+                    $itemDetails->freeText = '';
+                }
+                
+            }
+        }
+
+        $result["paymentItems"]=$paymentItems;
+        
+        if(!isset($_SESSION['tfgg_scp_cartid'])){
+            $_SESSION['tfgg_scp_cartid']=$result["header"]->cartID;
+        }
+
+        return json_encode($result);    
+    }
+
     function tfgg_scp_post_cart_item(){
         /*
         the API is expecting the following JSON format
@@ -2513,6 +2618,10 @@
                     $msg = str_replace('!@#receiptnumber#@!',$cartFinal->receipt, $msg);
 
                     tfgg_cp_errors()->add('success', __($msg));
+                    
+                    //2020-03-01 CB V1.2.5.1 - need this to output gsat tags
+                    $_SESSION['processedCartReceipt']=$cartFinal->receipt;
+
                 }else{
                     tfgg_scp_process_sage_pay_refund($vendorCode, (($cartHeader->total)*100), 
                     $response->transactionId, $cartHeader->processingStoreName.' Services');

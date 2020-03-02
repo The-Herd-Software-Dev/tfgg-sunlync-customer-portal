@@ -128,6 +128,58 @@
         <?php  
             tfgg_sunlync_cp_show_error_messages();
             tfgg_scp_cart_continue_shopping();
+
+            //2020-03-01 CB V1.2.5.1 - new code to output gsat tag
+            if(array_key_exists('processedCartReceipt',$_SESSION)){
+                $cartContents = json_decode(tfgg_scp_get_processed_cart_contents($_SESSION['processedCartReceipt']));
+                if(StrToUpper($cartContents->results) === 'SUCCESS'){
+                    /*
+                    gtag('event', 'purchase', {
+                    "transaction_id": "REFERENCE NUMBER",
+                    "affiliation": "The Tanning Shop",
+                    "value": 23.07,
+                    "currency": "GBP",
+                    "tax": 0.00,
+                    "shipping": 0,
+                    "items": [
+                    {
+                        "id": "PACKAGE ID",
+                        "name": "PACKAGE NAME",
+                        "list_name": "Search Results",
+                        "brand": "The Tanning Shop",
+                        "category": "Tanning",
+                        "variant": "Tan",
+                        "quantity": 2,
+                        "price": '2.0'
+                    },
+                    */
+                    $gtag = 'gtag(\'event\', \'purchase\', {
+                        "transaction_id": "'.$cartContents->header->receipt.'",
+                        "affiliation": "The Tanning Shop",
+                        "value": '.$cartContents->header->total.',
+                        "currency": "GBP",
+                        "tax": 0.00,
+                        "shipping": 0,
+                        "items": [';
+                        
+                    foreach($cartContents->lineItems as &$details){
+                        $gtag.='{"id": "'.$details->KeyValue.'",
+                            "name": "'.$details->Description.'",
+                            "list_name": "Search Results",
+                            "brand": "The Tanning Shop",
+                            "category": "Tanning",
+                            "variant": "Tan",
+                            "quantity": '.$details->Qty.',
+                            "price": '.$details->Total.'},';                    
+                    }
+                    $gtag=rtrim($gtag,",");
+                    $gtag.=']});';
+
+                    echo ('<script>'.$gtag.'</script>');
+                    unset($_SESSION['processedCartReceipt']);
+                }
+            }
+
         ?>
         <br/><br/>
         <?php
