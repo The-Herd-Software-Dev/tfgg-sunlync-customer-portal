@@ -50,9 +50,9 @@
         ?>
         <h3 class="header"><?php _e('Login');?></h3>
         <?php
-            tfgg_sunlync_cp_show_error_messages();
+			tfgg_sunlync_cp_show_error_messages();
         ?>
-        <form method="POST" id="tfgg_cp_api_login">
+        <form method="POST" id="tfgg_cp_api_login" action="">
             <div class="login-container">
 				<div class="account-overview-input-single">
 					<label for="tfgg_cp_user_login"  class="account-overview-label"><?php _e('Email'); ?></label>

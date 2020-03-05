@@ -211,12 +211,16 @@
         $sunlyncUser = tfgg_cp_get_sunlync_client();
         if($sunlyncUser<>false){$sunlyncUser=true;}
         
+        $siteurl=get_site_url().'/';
+
         $acctOverview = tfgg_scp_remove_slashes(get_option('tfgg_scp_acct_overview'));
         $apptBooking = tfgg_scp_remove_slashes(get_option('tfgg_scp_cpappt_page'));
         $login = tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page'));
         $registration = tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_page'));
         $cart = tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_slug'));
         $servicesSale = tfgg_scp_remove_slashes(get_option('tfgg_scp_services_sale_slug'));
+
+        //2020-03-05 CB V1.2.5.7 - appended full site url
 
         //I am purposely leaving this broken out to make management easier
         if($sunlyncUser){
@@ -227,9 +231,9 @@
                 //2020-03-02 CB V1.2.5.4 - redirect back to cart if customer came from cart to login page
                 if((array_key_exists('sendBackToCart',$_SESSION))&&($_SESSION['sendBackToCart']===true)){
                     unset($_SESSION['sendBackToCart']);
-                    wp_redirect( $servicesSale ); 
+                    wp_redirect( $siteurl.$servicesSale.'/' ); 
                 }else{
-                    wp_redirect( $acctOverview ); 
+                    wp_redirect( $siteurl.$acctOverview.'/' ); 
                 }
                 exit;
             }
@@ -242,7 +246,7 @@
                     $_SESSION['sendBackToCart']=true;
                 }
 
-                wp_redirect( $login ); 
+                wp_redirect( $siteurl.$login.'/'); 
                 exit;
             }    
         }
