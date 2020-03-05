@@ -688,7 +688,7 @@
                 <br/>
                 <?php
                     }//allow search
-                ?>
+                /*2020-03-04 CB V1.2.5.5 - removed at customers request
                 <div>
                     <label for="tfgg_package_sort_order"><?php _e("Sort By");?></label>
                     <select id="tfgg_package_sort_order" onchange="tfgg_sortServiceDisplayOrder('tfgg_scp_package_for_sale_list');">
@@ -696,7 +696,7 @@
                         <option value="1">Price: Low to High</option>
                     </select>
                 </div>
-                <?php
+                */
 
                 //loop through the allowed services and output
                 $rowCounter = 1;
@@ -814,7 +814,7 @@
                 <br/>
                 <?php   
                     }//allow search
-                    ?>
+                    /*2020-03-04 CB V1.2.5.5 - removed at customers request
                     <div>
                         <label for="tfgg_package_sort_order"><?php _e("Sort By");?></label>
                         <select id="tfgg_package_sort_order" onchange="tfgg_sortServiceDisplayOrder('tfgg_membership_for_sale_list');">
@@ -822,7 +822,7 @@
                             <option value="1">Price: Low to High</option>
                         </select>
                     </div>
-                    <?php   
+                    */   
                     //loop through the allowed services and output
                 $rowCounter = 1;
                 echo '<div id="tfgg_membership_for_sale_list" class="row" style="padding: 10px">';
