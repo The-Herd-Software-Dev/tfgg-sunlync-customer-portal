@@ -206,7 +206,7 @@
     }
 
     function tfgg_redirect_from_user_req_pages(){
-        global $wp;
+        global $wp;        
         log_me('requested page: '.$wp->request);
         $sunlyncUser = tfgg_cp_get_sunlync_client();
         if($sunlyncUser<>false){$sunlyncUser=true;}

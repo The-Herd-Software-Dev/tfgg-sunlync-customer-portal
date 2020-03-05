@@ -1458,11 +1458,12 @@ function tfgg_scp_sage_cart_merchant_session_key(callback){
 }
 
 function confirmChangeCartStore(){
-    var currentQty = jQuery('#tfgg_scp_cart_qty').text();
+    var selected = jQuery('#tfgg_scp_store_purchasing_selection option:selected').val();
+    var currentQty = jQuery('#tfgg_scp_cart_qty').text();    
     currentQty = currentQty.trim().replace(/\(|\)/g, '');
     console.dir(currentQty);
     
-    if(currentQty!=''){
+    if((currentQty!='')&&(selected!='xxxxxxxxxx')){
         jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');  
     }else{
         //cart is empty, go ahead and change
@@ -1475,7 +1476,9 @@ function changeCartStore(){
     //jQuery('#tfgg_scp_store_purchasing_selection_confirm').modal('toggle');
     
     var selected = jQuery('#tfgg_scp_store_purchasing_selection option:selected').val();
-
+    if(selected=='xxxxxxxxxx'){
+        return false;
+    }
     var pathname = window.location.pathname; 
 
     jQuery.post(localAccess.adminAjaxURL,{

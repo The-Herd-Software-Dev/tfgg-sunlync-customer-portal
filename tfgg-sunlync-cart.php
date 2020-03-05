@@ -644,9 +644,9 @@
     function tfgg_scp_display_services_for_sale(){
         ob_start();     
 
-        //2020-02-20 CB V1.2.4.20 - if no services selected, don't show any at all
-        $membershipsForSale =tfgg_scp_get_memberships_selected_for_api();
-        $packagesForSale = tfgg_scp_get_packages_selected_for_api();
+         //2020-02-20 CB V1.2.4.20 - if no services selected, don't show any at all
+         $membershipsForSale =tfgg_scp_get_memberships_selected_for_api();
+         $packagesForSale = tfgg_scp_get_packages_selected_for_api();
 
         if(($membershipsForSale=='')&&($packagesForSale=='')){
             tfgg_scp_display_no_services_warning();
@@ -654,7 +654,9 @@
         }
 
 
-        tfgg_scp_display_store_service_selection();
+        if(!tfgg_scp_display_store_service_selection()){
+            return false;
+        }
 
         if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}        
         
@@ -900,15 +902,18 @@
         if(StrToUpper($storeList->results)==='SUCCESS'){
             $storeList = $storeList->stores;
 
+            //2020-03-05 CB V1.2.5.8 - either viewing their 'shopping' store, or, force selection
             if(isset($_SESSION['tfgg_scp_cart_store'])){
                 $selected = $_SESSION['tfgg_scp_cart_store'];
-            }else{
+            }else{                
                 if((isset($_SESSION['clientHomeStore']))&&($_SESSION['clientHomeStore']<>'')){
                     //echo 'here';
                     $selected=$_SESSION['clientHomeStore'];
                 }else{
-                    $_SESSION['tfgg_scp_cart_store']=$storeList[0]->store_id;;
-                    $selected=$_SESSION['tfgg_scp_cart_store'];
+                    //2020-03-05 CB V1.2.5.8 - changed to default to a 'Please select...' option
+                    $selected='xxxxxxxxxx';
+                    //$_SESSION['tfgg_scp_cart_store']=$storeList[0]->store_id;;
+                    //$selected=$_SESSION['tfgg_scp_cart_store'];
                 }
             }
             
@@ -923,6 +928,7 @@
                     <label for="tfgg_select_store" class="account-overview-label"><?php _e('You are viewing packages and services offered by'); ?></label>
                     <select name="tfgg_scp_store_purchasing_selection" id="tfgg_scp_store_purchasing_selection" onchange="<?php echo $onclick;?>"
                     class="js-example-basic-single account-overview-input">
+                    <option value="xxxxxxxxxx" <?php if('xxxxxxxxxx'===$selected){echo 'selected';}?> >Please select a store....</option>
                     <?php
                         //echo 'selected: "'.$selected.'" ;';
                         foreach($storeList as &$details){
@@ -958,6 +964,11 @@
             </script>
             <?php
             display_store_cart_details($selected);
+            if($selected==='xxxxxxxxxx'){
+                return false;
+            }else{
+                return true;
+            }
         }
     }
 
@@ -973,10 +984,14 @@
     function display_store_cart_details($store){
         //get_post('post_content',url_to_postid(site_url(get_option('tfgg_scp_tandc_slug_instore'))))
         echo get_post_field('post_content',url_to_postid(site_url(get_option('tfgg_scp_store_cart_details_page'))),'display');
-        $storeCartDetailsID = (array)get_option('tfgg_scp_store_cart_details_id');
         
-        if((array_key_exists($store, $storeCartDetailsID))&&
-            ($storeCartDetailsID[$store]<>'')){ $storeDetailsID = $storeCartDetailsID[$store]; }else{ $storeDetailsID = ''; } 
+        if($store!='xxxxxxxxxx'){
+            $storeCartDetailsID = (array)get_option('tfgg_scp_store_cart_details_id');
+            if((array_key_exists($store, $storeCartDetailsID))&&
+                ($storeCartDetailsID[$store]<>'')){ $storeDetailsID = $storeCartDetailsID[$store]; }else{ $storeDetailsID = ''; } 
+        }else{
+            $storeDetailsID='xxxxxxxxxx';
+        }
 
         if($storeDetailsID<>''){
         ?>
