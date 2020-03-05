@@ -1676,7 +1676,8 @@
         if($fromDate=='1899-12-30'){$fromDate = new DateTime();}
         if($toDate=='1899-12-30'){$toDatenew = new DateTime();}
 
-        if(($fromDate>new DateTime())||($toDate<new DateTime())){
+        //2020-03-04 CB V1.2.5.5 - fixed date time comparison
+        if((new DateTime($fromDate)>new DateTime())||(new DateTime($toDate)<new DateTime())){
             //from date is in the future or
             //to date is in the past
             return false;
