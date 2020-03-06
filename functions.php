@@ -1680,15 +1680,25 @@
         if($fromDate=='1899-12-30'){$fromDate = new DateTime();}
         if($toDate=='1899-12-30'){$toDatenew = new DateTime();}
 
-        //2020-03-04 CB V1.2.5.5 - fixed date time comparison
+        //2020-03-04 CB V1.2.5.5 - fixed date time comparison 
         //2020-03-06 CB V1.2.5.10 - changed comaprisons to be inclusive
-        if((new DateTime($fromDate)>=new DateTime())||(new DateTime($toDate)<=new DateTime())){
+        /*if((new DateTime($fromDate)<new DateTime())||(new DateTime($toDate)>new DateTime())){        
             //from date is in the future or
             //to date is in the past
             return false;
         }else{
             return true;
         }
+        */
+
+        //2020-03-06 CB V1.2.5.11 - new DateTime was adding a 'time' to the date, added 'today'
+        if(new DateTime($fromDate)>new DateTime('today')){
+			return false;//doesn't start until a future date
+		}elseif(new DateTime('today')>new DateTime($toDate)){
+			return false;//it ended in the past
+		}else{
+			return true;
+		}
                 
     }
 
