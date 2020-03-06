@@ -451,6 +451,7 @@
                 document.getElementById('tfgg_scp_cart_complete')
                     .addEventListener('click', function(e) {
                         event.preventDefault();
+                        jQuery('#tfgg_scp_cart_complete').prop('disabled',true);
                         //validate data entry
                         jQuery('#tfgg_scp_cart_complete').text('PROCESSING...');
                         var validateResult = true;
@@ -482,7 +483,8 @@
                         });
 
                         if(!validateResult){
-                            jQuery('#tfgg_scp_cart_complete').text('COMPLETE PURCHASE');                            
+                            jQuery('#tfgg_scp_cart_complete').text('COMPLETE PURCHASE');   
+                            jQuery('#tfgg_scp_cart_complete').prop('disabled',false);                         
                             return false
                         };
 
@@ -520,6 +522,7 @@
                                             pnl.innerHTML=pnl.innerHTML+'<br/>'+thisError.message;
                                             pnl.style.display=''; 
                                             jQuery('#tfgg_scp_cart_complete').text('COMPLETE PURCHASE');//2020-02-07 CB
+                                            jQuery('#tfgg_scp_cart_complete').prop('disabled',false);
                                         });
                                     }
                                 }
