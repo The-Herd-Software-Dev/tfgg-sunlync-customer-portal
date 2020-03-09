@@ -48,13 +48,15 @@
             <div class="cart-items-header"><h4>ITEMS</h4></div>
 
             <?php
-                $i=0;
+                $i=0;                
                 foreach($lineItems as &$details){
                     $i++;
             ?>
                 <div class="overlay-items-item-container" id="tfgg_cart_item_row_<?php echo $i;?>">
                     <div class="cart-items-item">
-                        <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$details->alias); ?></span>
+                        <span class="overlay-items-item-description">
+                        <?php echo (tfgg_delete_all_between('(',')',$details->alias).' ('.tfgg_delete_all_between('(',')',$header->processingStoreName)).')'; ?>
+                        </span>
                         <span class="overlay-items-item-price">&#163;<?php echo number_format(($details->Qty*$details->PPU),2,'.',',');?></span>
                         <br />
                         <span class="overlay-items-item-quantity-label">Quantity:</span>
