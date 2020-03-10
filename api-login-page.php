@@ -37,9 +37,9 @@
 				
 				<br />
 					
-				<a class="registration-link" href="<?php echo(get_option('tfgg_scp_cplogin_page'));?>"><?php _e('Retrun to login page'); ?></a>
+				<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')));?>"><?php _e('Retrun to login page'); ?></a>
 				<br />
-				<a class="registration-link"  href="<?php echo(get_option('tfgg_scp_cpnewuser_page')); ?>"><?php _e('Never used the site before? Register!'); ?></a>
+				<a class="registration-link"  href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_page'))); ?>"><?php _e('Never used the site before? Register!'); ?></a>
 				
 				<?php } ?>
 			
@@ -81,7 +81,7 @@
 				
 				<div class="login-container">
 					<div class="account-overview-input-double">
-						<a class="registration-link" href="<?php echo(get_option('tfgg_scp_cplogin_page'));?>?login=reset"><?php _e('Forgot Password?'); ?></a>
+						<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')));?>?login=reset"><?php _e('Forgot Password?'); ?></a>
 						<?php /*<a class="registration-link" href="<?php echo wp_lostpassword_url();?>">Forgot Password?</a>*/ ?>
 					</div>
 				
@@ -90,7 +90,7 @@
 					if(get_option('tfgg_scp_cpnewuser_page')!=''){
 				?>
 					<div class="account-overview-input-single">
-						<a class="registration-link"  href="<?php echo(get_option('tfgg_scp_cpnewuser_page')); ?>" ><?php _e('Never used this site before? Register!'); ?></a>
+						<a class="registration-link"  href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_page'))); ?>" ><?php _e('Never used this site before? Register!'); ?></a>
 					</div>
 
 				<?php } ?>
