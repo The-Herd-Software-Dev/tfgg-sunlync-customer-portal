@@ -60,7 +60,7 @@
 							<h4>Booked Appointments</h4>
 						</div>
 						<div style="">
-							<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-book-button" onclick="location.href='<?php echo get_option('tfgg_scp_cpappt_page'); ?>'">Book Appointment</button>
+							<button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-book-button" onclick="location.href='<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cpappt_page')).'/');?>'">Book Appointment</button>
 						</div>
 					</div>
 					<br/>

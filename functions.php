@@ -2796,7 +2796,7 @@
         //if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='secondary-menu'){
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
         //2019-10-09 CB V1.0.1.3 - added full site URL
-          $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_acct_overview') .'">Account Overview</a></li>';  
+          $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_acct_overview') .'/">Account Overview</a></li>';  
         }
         return $items;
     }
@@ -2823,11 +2823,11 @@
 
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
             //$items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
-            $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>';
+            $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))).'/" id="tfgg_scp_cart_link">'.$link.'</a></li>';
         }
         if($sunlyncuser && $args->theme_location=='primary-menu'){
             //$items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
-            $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))) .'" id="tfgg_scp_cart_link_primary">'.$link2.'</a></li>';
+            $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))) .'/" id="tfgg_scp_cart_link_primary">'.$link2.'</a></li>';
         }
         return $items;
     }
@@ -2840,7 +2840,7 @@
             $sunlyncuser = tfgg_cp_get_sunlync_client();
             if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='primary-menu'){
                 //2019-10-09 CB V1.0.1.3 - added full site URL
-                $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_cpappt_page') .'">Book Appointment</a></li>';  
+                $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_cpappt_page') .'/">Book Appointment</a></li>';  
             }            
         }
         return $items;
