@@ -2285,6 +2285,7 @@
         switch(StrToUpper($postBody["externalDesc"])){
             case 'PAYPAL':$postBody['keyValue'] = get_option('tfgg_scp_cart_paypal_payment','0000000001');
             case 'SAGE':$postBody['keyVaue'] = get_option('tfgg_scp_cart_sage_payment','0000000001');
+            case 'SUNLYNC_PROMO':$postBody['keyValue']='0000000008';
         }
 
         $postBody = json_encode($postBody);

@@ -40,6 +40,24 @@
         return ob_get_clean();
     }
 
+    function tfgg_scp_cart_display_promo_entry(){
+    //2020-03-15 CB V1.2.6.1 - new method to allow promo entry
+    ?>
+    <hr />
+    <div class="registration-container">
+        <div class="account-overview-input-single">
+            <label for="tfgg_cp_promo_entry" class="account-overview-label"><?php _e('Have a Discount Code?'); ?></label>
+            <input name="tfgg_cp_promo_entry" id="tfgg_cp_promo_entry" class="account-overview-input" type="text" value=""/>
+            <div class="reg_alert">Only one discount code can be used at a time</div> 
+            <div id="tfgg_cp_promo_entry_err_pnl" style="display:none" class="reg_alert"></div> 
+            <div style="float:right">
+                <button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-book-button" onclick="tfgg_scp_cart_promo_add();">Add Discount</button>
+            </div>
+        </div>
+    </div>   
+    <?php   
+    }
+
     function tfgg_scp_cart_items_display($header, $lineItems){
         ?>
 
@@ -48,7 +66,8 @@
             <div class="cart-items-header"><h4>ITEMS</h4></div>
 
             <?php
-                $i=0;                
+                $i=0;  
+                //var_dump($lineItems);              
                 foreach($lineItems as &$details){
                     $i++;
             ?>
@@ -58,6 +77,18 @@
                         <?php echo (tfgg_delete_all_between('(',')',$details->alias).' ('.tfgg_delete_all_between('(',')',$header->processingStoreName)).')'; ?>
                         </span>
                         <span class="overlay-items-item-price">&#163;<?php echo number_format(($details->Qty*$details->PPU),2,'.',',');?></span>
+                        <?php
+                        if($details->PromoValue>0.00){
+                        ?>
+                        <br/>
+                        <span class="overlay-items-item-description small">Discount: <?php echo $details->PromoDesc;?></span>
+                        <span class="overlay-items-item-price small">-&#163;<?php echo number_format(($details->PromoValue),2,'.',',');?></span>
+                        <br/>
+                        <span class="overlay-items-item-description small">Item Total: </span>
+                        <span class="overlay-items-item-price small">-&#163;<?php echo number_format(($details->Total),2,'.',',');?></span>
+                        <?php
+                        }
+                        ?>
                         <br />
                         <span class="overlay-items-item-quantity-label">Quantity:</span>
                         <span class="overlay-items-item-quantity-value"><select class="tfgg_scp_cart_qty_select"
@@ -74,9 +105,9 @@
                         ?></select> @ &#163;<?php echo number_format($details->PPU,2,'.',','); ?></span>
                         <br />
                         <div class="overlay-items-item-buttongroup">
-                            <a href="javascript:  tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')" class="overlay-items-item-link">REMOVE</a>
+                            <a href="javascript:tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')" class="overlay-items-item-link">REMOVE</a>
                             <br />
-                        </div>             
+                        </div>          
                     </div>
                 </div>
 
@@ -84,7 +115,7 @@
             <?php 
                 }
             ?>
-
+                <?php tfgg_scp_cart_display_promo_entry();?>
             <hr />
             <br />
             <div class="cart-items-header"><h4>ORDER SUMMARY</h4></div>

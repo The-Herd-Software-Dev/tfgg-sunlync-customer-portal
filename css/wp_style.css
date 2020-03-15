@@ -895,8 +895,11 @@ tr.account_overview_row > td {
   }
 
   .overlay-items-item-container {
+      display:flex;
+      flex-direction:column;
+      flex-wrap:nowrap;
       width:100%;
-      height:110px;
+      min-height:110px;
       padding:0px 10px 10px 10px;
   }
 

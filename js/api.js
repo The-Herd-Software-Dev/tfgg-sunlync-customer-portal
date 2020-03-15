@@ -1518,3 +1518,38 @@ function tfgg_sortServiceDisplayOrder(parent){
 function tfgg_input_strip_nonumeric(elem){
     jQuery('#'+elem).val(jQuery('#'+elem).val().replace(/\D/g,''));
 }
+
+function tfgg_scp_cart_promo_add(){
+    //2020-03-15 CB V1.2.6.1 - add promo code to cart
+
+    jQuery('#tfgg_cp_promo_entry_err_pnl').hide();
+    jQuery('#tfgg_cp_promo_entry_err_pnl').html();
+
+    var promoCode = jQuery('#tfgg_cp_promo_entry').val();
+    if(promoCode.length===0){
+        jQuery('#tfgg_cp_promo_entry_err_pnl').html('Please enter a discount code to use');
+        jQuery('#tfgg_cp_promo_entry_err_pnl').show();
+        return false;
+    }
+    var pathname = window.location.pathname;
+    jQuery.post(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_scp_post_payment_item',
+        'dataType'  : 'json',
+        'data'      :{'keyValue':'0000000008',
+            'amt':'0',
+            'externalID':promoCode,
+            'externalDesc':'SUNLYNC_PROMO'
+        },
+        'pathname':pathname
+    },function(data){
+        var obj = jQuery.parseJSON(data);
+        if(obj["results"].toUpperCase()=='SUCCESS'){
+            jQuery('#tfgg_cp_promo_entry_err_pnl').html('Discount code added');
+            jQuery('#tfgg_cp_promo_entry_err_pnl').show();
+            window.location.reload();
+        }else{
+            jQuery('#tfgg_cp_promo_entry_err_pnl').html(obj["response"].replace('Promotion','Discount'));
+            jQuery('#tfgg_cp_promo_entry_err_pnl').show();            
+        }
+    });
+}
