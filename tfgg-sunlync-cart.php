@@ -85,7 +85,7 @@
                         <span class="overlay-items-item-price small">-&#163;<?php echo number_format(($details->PromoValue),2,'.',',');?></span>
                         <br/>
                         <span class="overlay-items-item-description small">Item Total: </span>
-                        <span class="overlay-items-item-price small">-&#163;<?php echo number_format(($details->Total),2,'.',',');?></span>
+                        <span class="overlay-items-item-price small">&#163;<?php echo number_format(($details->Total),2,'.',',');?></span>
                         <?php
                         }
                         ?>
