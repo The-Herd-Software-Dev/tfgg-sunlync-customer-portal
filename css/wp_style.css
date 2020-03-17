@@ -894,6 +894,11 @@ tr.account_overview_row > td {
       height:         calc(100% - 260px);
   }
 
+  .promo-code-entry-label{
+      cursor:pointer;
+      text-decoration: underline;
+  }
+
   .overlay-items-item-container {
       display:flex;
       flex-direction:column;

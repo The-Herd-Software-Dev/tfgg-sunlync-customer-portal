@@ -46,12 +46,14 @@
     <hr />
     <div class="registration-container">
         <div class="account-overview-input-single">
-            <label for="tfgg_cp_promo_entry" class="account-overview-label"><?php _e('Have a Discount Code?'); ?></label>
-            <input name="tfgg_cp_promo_entry" id="tfgg_cp_promo_entry" class="account-overview-input" type="text" value=""/>
-            <div class="reg_alert">Only one discount code can be used at a time</div> 
-            <div id="tfgg_cp_promo_entry_err_pnl" style="display:none" class="reg_alert"></div> 
-            <div style="float:right">
-                <button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-book-button" onclick="tfgg_scp_cart_promo_add();">Add Discount</button>
+            <label for="tfgg_cp_promo_entry" class="account-overview-label promo-code-entry-label"><?php _e('Have a Promotion Code?'); ?></label>
+            <div id="tfgg_scp_promo_code_entry_box" style="display:none" onclick="tfgg_scp_toggle_promo_entry();">
+                <input name="tfgg_cp_promo_entry" id="tfgg_cp_promo_entry" class="account-overview-input" type="text" value=""/>
+                <div class="reg_alert">Only one discount code can be used at a time</div> 
+                <div id="tfgg_cp_promo_entry_err_pnl" style="display:none" class="reg_alert"></div> 
+                <div style="float:right">
+                    <button type="button" class="account-overview-button account-overview-standard-button account-overview-appt-book-button" onclick="tfgg_scp_cart_promo_add();">Add Discount</button>
+                </div>
             </div>
         </div>
     </div>   
@@ -81,7 +83,7 @@
                         if($details->PromoValue>0.00){
                         ?>
                         <br/>
-                        <span class="overlay-items-item-description small">Discount: <?php echo $details->PromoDesc;?></span>
+                        <span class="overlay-items-item-description small">Promotion: <?php echo $details->PromoDesc;?></span>
                         <span class="overlay-items-item-price small">-&#163;<?php echo number_format(($details->PromoValue),2,'.',',');?></span>
                         <br/>
                         <span class="overlay-items-item-description small">Item Total: </span>

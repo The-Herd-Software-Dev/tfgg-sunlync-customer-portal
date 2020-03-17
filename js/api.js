@@ -1548,8 +1548,12 @@ function tfgg_scp_cart_promo_add(){
             jQuery('#tfgg_cp_promo_entry_err_pnl').show();
             window.location.reload();
         }else{
-            jQuery('#tfgg_cp_promo_entry_err_pnl').html(obj["response"].replace('Promotion','Discount'));
+            jQuery('#tfgg_cp_promo_entry_err_pnl').html(obj["response"]);
             jQuery('#tfgg_cp_promo_entry_err_pnl').show();            
         }
     });
+}
+
+function tfgg_scp_toggle_promo_entry(){
+    jQuery('#tfgg_scp_promo_code_entry_box').toggle();
 }
