@@ -3,7 +3,7 @@
     function reg_form_display_new(){
         ob_start(); 
         
-        $storeList = json_decode(tfgg_api_get_stores());
+        $storeList = json_decode(tfgg_api_get_reg_stores());
         if(StrToUpper($storeList->results)==='SUCCESS'){
         	$storeList = $storeList->stores;	
 		}
@@ -161,7 +161,7 @@
 							<select data-alertpnl="new_reg_skin_type_alertpnl" name="tfgg_cp_skin_type" id="tfgg_cp_skin_type" class="required account-overview-input">
 								<option value="please select">Please Select...</option>
 								<?php
-									if(($repopulate)&&(array_key_exists('tfgg_cp_store',$_POST))){
+									if(($repopulate)&&(array_key_exists('tfgg_cp_skin_type',$_POST))){
 										$selectedSkin = $_POST['tfgg_cp_skin_type'];
 									}else{
 										$selectedSkin = '';
@@ -390,7 +390,9 @@
 		return ob_get_clean();
         //return ob_get_contents();
     }
-    
+	
+	
+	//THIS IS DEPRECATED!!!!!
     function tfgg_sunlync_client_registration(){
 		//2019-10-12 CB V1.1.1.1 - DEPRECATED!!
 		return true;//force exit in case we somehow ended up here

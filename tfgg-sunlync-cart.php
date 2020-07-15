@@ -2,7 +2,7 @@
 
     function tfgg_scp_display_cart(){
         ob_start();
-
+        
         $cartContents = json_decode(tfgg_scp_get_cart_contents());
         //var_dump($cartContents);
         if(StrToUpper($cartContents->results) === 'SUCCESS'){
@@ -46,8 +46,8 @@
     <hr />
     <div class="registration-container">
         <div class="account-overview-input-single">
-            <label for="tfgg_cp_promo_entry" class="account-overview-label promo-code-entry-label"><?php _e('Have a Promotion Code?'); ?></label>
-            <div id="tfgg_scp_promo_code_entry_box" style="display:none" onclick="tfgg_scp_toggle_promo_entry();">
+            <label for="tfgg_cp_promo_entry" class="account-overview-label promo-code-entry-label"  onclick="tfgg_scp_toggle_promo_entry();"><?php _e('Have a Promotion Code?'); ?></label>
+            <div id="tfgg_scp_promo_code_entry_box" style="display:none">
                 <input name="tfgg_cp_promo_entry" id="tfgg_cp_promo_entry" class="account-overview-input" type="text" value=""/>
                 <div class="reg_alert">Only one discount code can be used at a time</div> 
                 <div id="tfgg_cp_promo_entry_err_pnl" style="display:none" class="reg_alert"></div> 
@@ -78,16 +78,16 @@
                         <span class="overlay-items-item-description">
                         <?php echo (tfgg_delete_all_between('(',')',$details->alias).' ('.tfgg_delete_all_between('(',')',$header->processingStoreName)).')'; ?>
                         </span>
-                        <span class="overlay-items-item-price">&#163;<?php echo number_format(($details->Qty*$details->PPU),2,'.',',');?></span>
+                        <span class="overlay-items-item-price"><?php echo tfgg_display_currency_symbol();?><?php echo number_format(($details->Qty*$details->PPU),2,'.',',');?></span>
                         <?php
                         if($details->PromoValue>0.00){
                         ?>
                         <br/>
                         <span class="overlay-items-item-description small">Promotion: <?php echo $details->PromoDesc;?></span>
-                        <span class="overlay-items-item-price small">-&#163;<?php echo number_format(($details->PromoValue),2,'.',',');?></span>
+                        <span class="overlay-items-item-price small">-<?php echo tfgg_display_currency_symbol();?><?php echo number_format(($details->PromoValue),2,'.',',');?></span>
                         <br/>
                         <span class="overlay-items-item-description small">Item Total: </span>
-                        <span class="overlay-items-item-price small">&#163;<?php echo number_format(($details->Total),2,'.',',');?></span>
+                        <span class="overlay-items-item-price small"><?php echo tfgg_display_currency_symbol();?><?php echo number_format(($details->Total),2,'.',',');?></span>
                         <?php
                         }
                         ?>
@@ -104,7 +104,7 @@
 
                                 echo '<option value="'.$j.'" '.$selected.'>'.$j.'</option>';
                             }
-                        ?></select> @ &#163;<?php echo number_format($details->PPU,2,'.',','); ?></span>
+                        ?></select> @ <?php echo tfgg_display_currency_symbol();?><?php echo number_format($details->PPU,2,'.',','); ?></span>
                         <br />
                         <div class="overlay-items-item-buttongroup">
                             <a href="javascript:tfggRemoveCartItem('<?php echo $details->ID;?>','tfgg_cart_item_row_<?php echo $i;?>')" class="overlay-items-item-link">REMOVE</a>
@@ -147,7 +147,7 @@
             ?>
             <br/>
             <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
-            <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo number_format(($header->total - $header->totalPayments),2,'.',','); ?></span>
+            <span class="cart-totals-content-value overlay-totals-content-total-line"><?php echo tfgg_display_currency_symbol();?><?php echo number_format(($header->total - $header->totalPayments),2,'.',','); ?></span>
 
             </div>
 
@@ -212,6 +212,7 @@
 
                     echo ('<script>'.$gtag.'</script>');
                     unset($_SESSION['processedCartReceipt']);
+                    unset($_SESSION['tfgg_scp_cartid']); 
                 }
             }
 
@@ -238,7 +239,7 @@
                         foreach($paymentItems as &$details){
                         ?>
                             <span class="cart-totals-content-label overlay-totals-content-total-line"><?php echo $details->ExternalDesc;?>: </span>
-                            <span class="cart-totals-content-value overlay-totals-content-total-line">&#163;<?php echo $details->Amt?></span>
+                            <span class="cart-totals-content-value overlay-totals-content-total-line"><?php echo tfgg_display_currency_symbol();?><?php echo $details->Amt?></span>
 
                             <br />    
                         <?php
@@ -765,7 +766,7 @@
                         <div class="services-inner-container">
 
                             <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$packageDetails->alias);?></span>
-                            <span class="overlay-items-item-price">&#163;<?php echo number_format($packageDetails->price,2,'.',','); ?></span>
+                            <span class="overlay-items-item-price"><?php echo tfgg_display_currency_symbol();?><?php echo number_format($packageDetails->price,2,'.',','); ?></span>
                             <br />
 
                             <div class="services-item-details-container">
@@ -882,7 +883,7 @@
                         <div class="services-inner-container">
 
                             <span class="overlay-items-item-description"><?php echo tfgg_delete_all_between('(',')',$membershipDetails->alias);?></span>
-                            <span class="overlay-items-item-price">&#163;<?php echo number_format($membershipDetails->price,2,'.',','); ?></span>
+                            <span class="overlay-items-item-price"><?php echo tfgg_display_currency_symbol();?><?php echo number_format($membershipDetails->price,2,'.',','); ?></span>
                             <br />
 
                             <div class="services-item-details-container">

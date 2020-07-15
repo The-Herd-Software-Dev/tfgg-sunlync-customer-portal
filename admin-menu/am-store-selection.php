@@ -42,6 +42,9 @@ function display_tfgg_store_selection(){
         }//foreach
         echo '</div>';//container*/
 
+        //2020-07-15 CB V1.2.6.5 - new array
+        $regStores = (array)get_option('tfgg_scp_store_registration_selection');
+
         $apptStores = (array)get_option('tfgg_scp_store_appts_selection');
         $storeCartDetailsID = (array)get_option('tfgg_scp_store_cart_details_id');
         
@@ -49,6 +52,9 @@ function display_tfgg_store_selection(){
 
         echo '<div class="container border rounded" style="padding: 10px; margin-left:unset"><div class="row">';
         foreach($storeList as &$storeDetails){
+
+            //2020-07-15 CB V1.2.6.5
+            if(in_array($storeDetails->store_id, $regStores)){ $useInReg = 'checked="checked"'; }else{ $useInReg = ''; }
 
             if(in_array($storeDetails->store_id, $selectedStores)){ $useInCart = 'checked="checked"'; }else{ $useInCart = ''; }
             if(in_array($storeDetails->store_id, $apptStores)){ $useInAppts = 'checked="checked"'; }else{ $useInAppts = ''; }
@@ -60,6 +66,7 @@ function display_tfgg_store_selection(){
 
             '<div class="admin-service-description"><strong>'.$storeDetails->store_loc.'</strong></div>'.
             '<div class="admin-service-detail">'.
+            '<div><input type="checkbox" value="'.$storeDetails->store_id.'" name="tfgg_scp_store_registration_selection[]" '.$useInReg.' /><Label> Registration</label></div>'.
             '<div><input type="checkbox" value="'.$storeDetails->store_id.'" name="tfgg_scp_store_appts_selection[]" '.$useInAppts.' /><label> Appointments</label></div>'.
             '<div><input type="checkbox" value="'.$storeDetails->store_id.'" name="tfgg_scp_store_selection[]" '.$useInCart.' /><Label> Cart</label></div>'.
             '<div><label class="admin-service-label">Cart Details ID: </label><input type="text" class="admin-service-value" name="tfgg_scp_store_cart_details_id['.$storeDetails->store_id.']" value="'.$freeText.'"/></div>'.

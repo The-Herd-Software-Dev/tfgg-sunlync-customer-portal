@@ -1164,3 +1164,11 @@ tr.account_overview_row > td {
     width:         calc(100% - 50px);
 
 }
+
+.tfgg-card-log-results{
+    cursor:pointer;    
+}
+
+.tfgg-card-log-results:hover{
+    text-decoration:underline;
+}

@@ -72,6 +72,8 @@
 
     function tfgg_cp_unset_sunlync_client(){
         unset($_SESSION['sunlync_client']);
+        unset($_SESSION['sunlync_firstname']);
+        unset($_SESSION['sunlync_lastname']);
     }
 
     function tfgg_cp_portal_logout(){
@@ -401,6 +403,8 @@
             //var_dump($demo);
             //default purchasing store if the cart is empty
             $_SESSION['clientHomeStore'] = $demo->homeStore;
+            $_SESSION['sunlync_firstname'] = $demo->first_name;
+            $_SESSION['sunlync_lastname'] = $demo->last_name;
 
             if(!isset($_SESSION['tfgg_scp_cartid'])){
                 unset($_SESSION['tfgg_scp_cartid']);
@@ -800,6 +804,44 @@
     add_action( 'wp_ajax_tfgg_api_get_stores', 'tfgg_api_get_stores' );
     add_action( 'wp_ajax_nopriv_tfgg_api_get_stores', 'tfgg_api_get_stores' );
 
+    function tfgg_api_get_reg_stores(){
+        //2020-07-15 CB V1.2.6.5 - new
+        $url= tfgg_get_api_url().'TSunLyncAPI/CIPGetStoreDemoApptInfo/sStoreCode/nInAppts';
+        
+        //$url=str_replace('sStoreCode',tfgg_scp_get_stores_selected_for_api(),$url);
+        $url=str_replace('sStoreCode',tfgg_scp_get_stores_selected_for_reg(),$url);
+        $url=str_replace('nInAppts','',$url);
+        
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+        
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            $result["stores"]=array_slice($data,1,-1);
+            usort($result["stores"],"tfgg_store_store_by_name");//2019-09-30 CB V1.0.0.6 - the new api call is not sorted alphabetically
+            return json_encode($result);
+		}
+        
+    }
+    add_action( 'wp_ajax_tfgg_api_get_reg_stores', 'tfgg_api_get_reg_stores' );
+    add_action( 'wp_ajax_nopriv_tfgg_api_get_reg_stores', 'tfgg_api_get_reg_stores' );
+
     function tfgg_api_get_unfiltered_stores(){
         //2019-09-30 CB V1.0.0.6 - changed to use store demo appt info
         //$url=tfgg_get_api_url().'TSunLyncAPI/ApptGetStoreSettings/sStoreCode';
@@ -933,7 +975,8 @@
         //TFGG_SyncPassword(sclientNumber, sEmpNo, sNewPass
         $employeenumber = get_option('tfgg_scp_update_employee');
         
-        $password = wp_hash_password($password);
+        //$password = wp_hash_password($password);
+        $password = tfgg_cp_hash_password($password);
 
         $url=tfgg_get_api_url().'TSunLyncAPI/TFGG_SyncPassword/sclientNumber/sEmpNo/sNewPass';
         
@@ -1643,6 +1686,8 @@
     //hardcoded to 18 months at present
     function tfgg_purchased_within_acceptable_period($purchase_date){
         //return true;
+
+        //echo $purchase_date;
         if((($_SERVER['HTTP_HOST']!='localhost:8888')&&
         ($_SERVER['HTTP_HOST']!='tfgg-portal.theherdsoftware.com'))||
         (get_option('tfgg_scp_api_url')=='188.95.206.202')){  
@@ -1650,13 +1695,17 @@
         }
         
         $purchase_date = new DateTime($purchase_date);
-
+        //echo $purchase_date->format('Y-m-d');
         $now = new DateTime();
-
+        //echo ' '.$now->format('Y-m-d');
         $diff = $purchase_date->diff($now); // Returns DateInterval
+        //echo $diff->format('%R%a days');
+        //echo (12*$diff->y+$diff->m);
 
-        $lessThanMonths = $diff->y === 0 && $diff->m < 18;//18 is hardcoded
-        return $lessThanMonths;
+        //2020-07-11 CB - this wasn't working, changed to monthsSincePurchase
+        //$lessThanMonths = $diff->y === 0 && $diff->m < 18;//18 is hardcoded
+        $monthsSincePurchase = (12*$diff->y+$diff->m);
+        return $monthsSincePurchase<=18 ? true : false;
     }
 
     //2019-10-23 CB V1.1.2.1 - new function to return the stores selected as a 'useable' string for the API
@@ -1667,6 +1716,26 @@
             return '"'.$storesSelected.'"';    
         }else{
             return '';
+        }
+    }
+
+    //2019-10-23 CB V1.2.6.5 - new function to return the stores selected for registration pages as a 'useable' string for the API
+    function tfgg_scp_get_stores_selected_for_reg(){
+        $stores = get_option('tfgg_scp_store_registration_selection');
+        if($stores<>''){
+            $storesSelected = join('","',$stores);   
+            return '"'.$storesSelected.'"';    
+        }else{
+            return '';
+        }
+    }
+
+    //2019-10-23 CB V1.2.6.5
+    function tfgg_display_currency_symbol(){
+        switch (get_option('tfgg_scp_cart_currency_symbol','1')){
+            case 2: return '&euro;';
+            break;
+            default: return '&#163;';            
         }
     }
 
@@ -2500,8 +2569,10 @@
 
         //2020-02-20 CB V1.2.4.18 - switch the url
         if(get_option('tfgg_scp_cart_sage_pay_sandbox','1')=='1'){
+            $isSandbox=1;
             $sageURL="https://pi-test.sagepay.com/api/v1/merchant-session-keys";
         }else{
+            $isSandbox=0;
             $sageURL="https://pi-live.sagepay.com/api/v1/merchant-session-keys";
         }
 
@@ -2532,7 +2603,6 @@
             break;
             case 201:
                 $response = json_decode($response);
-                
                 $result = array('results'=>'success',
                 'sageMerchantSession'=>$response->merchantSessionKey,
                 'sageMerchantSessionExp'=>$response->expiry);
@@ -2545,6 +2615,8 @@
                 'auth'=>$auth);  
             break;
         }
+
+        //tfgg_scp_write_card_transaction_log($_SESSION["tfgg_scp_cartid"], 'SagePay', 'Generate Session Key', $isSandbox, $result);
 
         exit(json_encode($result));
 
@@ -2586,8 +2658,10 @@
 
             //2020-02-20 CB V1.2.4.18 - switch the url
             if(get_option('tfgg_scp_cart_sage_pay_sandbox','1')=='1'){
+                $isSandbox=1;
                 $sageURL="https://pi-test.sagepay.com/api/v1/transactions";
             }else{
+                $isSandbox=0;
                 $sageURL="https://pi-live.sagepay.com/api/v1/transactions";
             }
 
@@ -2631,8 +2705,11 @@
 
             $response = curl_exec($curl);
             $err = curl_error($curl);
-            log_me($response);
+            log_me($response);            
             curl_close($curl);
+
+            tfgg_scp_write_card_transaction_log($_POST['cartid'], 'SagePay', 'Process Transaction', $isSandbox, json_decode($response,true));
+
             $response = json_decode($response);
             
             //var_dump($response);
@@ -2643,6 +2720,8 @@
                 $cartHeader->total,
                 $response->retrievalReference,
                 'SAGE'));
+
+                tfgg_scp_write_card_transaction_log($_POST['cartid'], 'SagePay', 'Post API Payment', $isSandbox, $postPayment);
 
                 if($postPayment->results=='success'){
                     $cartFinal = json_decode(tfgg_api_finalize_cart_manual($_POST['cartid']));
@@ -3126,6 +3205,104 @@
             }
     
             return $result;
+        }
+    }
+
+//2020-03-22 CB V1.2.6.3 - added new code too display a log of SagePay / PayPal transaction staging and results
+
+    function tfgg_scp_logging_check(){
+
+        if( !function_exists('get_plugin_data') ){
+            require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+        }
+        
+        $pluginData = get_plugin_data(plugin_dir_path(__FILE__).'tfgg-sunlync-customer-portal.php');        
+
+        if($pluginData['Version']=='1.2.6.3'){
+            //only run this is the user is activating v1.2.6.3
+            tfgg_scp_upgrade_portal_tables();       
+        };
+
+    }  
+
+
+    function tfgg_scp_upgrade_portal_tables(){
+
+        global $wpdb;
+
+        $charset_collate = $wpdb->get_charset_collate();
+
+        $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->base_prefix}tfgg_card_tran_log`(
+            id int(11) auto_increment primary key,
+            entrylogged timestamp default current_timestamp,
+            cart_id varchar(191) not null,
+            clientnumber varchar(10) not null,
+            firstname varchar(50) not null,
+            lastname varchar(50) not null,
+            card_processor varchar(20) not null,
+            process varchar(100),
+            sandbox tinyint(1) not null default 0,
+            result text)$charset_collate;";
+
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        dbDelta($sql);
+        $success = empty($wpdb->last_error);
+
+        if(!$success){
+           add_action('admin_notices','tfgg_scp_card_log_error'); 
+        }
+
+    }
+
+    function tfgg_scp_card_log_error(){
+        ?>
+        <div class="update-nag notice">
+            <p><?php _e('There was an error generating the card transaction log data for the SunLync portal'); ?></p>
+        </div>    
+        <?php
+    }
+
+    function tfgg_scp_write_card_transaction_log($cart_id, $processor, $process, $isSandbox, $result){
+        global $wpdb;
+        
+        $postResult = http_build_query($result,'',', ');
+        
+        $wpdb->insert("{$wpdb->base_prefix}tfgg_card_tran_log",array(
+            'cart_id' => $cart_id,
+            'clientnumber' => $_SESSION['sunlync_client'],
+            'firstname' => $_SESSION['sunlync_firstname'],
+            'lastname' => $_SESSION['sunlync_lastname'],
+            'card_processor' => $processor,
+            'process' => $process,
+            'sandbox' => $isSandbox,
+            'result' => $postResult
+        ));
+    }
+
+    function tfgg_scp_read_card_transaction_log($clientNumber, $rangeStart, $rangeEnd){
+        
+        global $wpdb;
+
+        $sql = "SELECT * FROM {$wpdb->base_prefix}tfgg_card_tran_log";
+        $conditions=array();
+
+        if($clientNumber<>''){
+            $sql.=" WHERE clientnumber = %s";
+            array_push($conditions,$clientNumber);
+        }
+
+        $sql.=" ORDER BY entrylogged ASC LIMIT %d, %d";
+        array_push($conditions,$rangeStart,$rangeEnd);
+
+        $results = $wpdb->get_results(
+            $wpdb->prepare($sql,$conditions)
+        );
+        //$results = $wpdb->get_results($sql);
+
+        if($wpdb->num_rows==0){
+            return false;
+        }else{
+            return $results;    
         }
     }
     

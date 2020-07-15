@@ -420,7 +420,7 @@
 	function set_storecode_display(){
 		ob_start(); 
         
-        $storeList = json_decode(tfgg_api_get_stores());
+        $storeList = json_decode(tfgg_api_get_reg_stores());
         if(StrToUpper($storeList->results)==='SUCCESS'){
         	$storeList = $storeList->stores;	
 		}

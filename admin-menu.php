@@ -109,6 +109,9 @@
         //2020-02-27 CB V1.2.4.23 - new field
         register_setting("tfgg_store_selection_section","tfgg_scp_store_cart_details_id");
 
+        //2020-07-15 CB V1.2.6.5 - new field
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_registration_selection");
+
         //misc section
         add_settings_field("tfgg_scp_customer_service_email", "Customer Service E-Mail:", "display_customer_service_email", "tfgg-misc-options", "tfgg_misc_options_section");
         register_setting("tfgg_misc_options_section", "tfgg_scp_customer_service_email");
@@ -231,6 +234,10 @@
         add_settings_field("tfgg_scp_cart_menu_link_text","Cart Menu Link Label:","display_tfgg_menu_link_label", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_menu_link_text");
 
+        //2020-07-15 CB V1.2.6.5 - new currency symbol option
+        add_settings_field("tfgg_scp_cart_currency_symbol","Currency Symbol:","display_tfgg_cart_currency_symbol", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_currency_symbol");
+
         add_settings_field("tfgg_scp_cart_employee","Process Transactions As:","display_tfgg_cart_employee", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_employee");
 
@@ -300,6 +307,7 @@
     include('admin-menu/am-store-selection.php');
     include('admin-menu/am-services.php');
     include('admin-menu/am-cart.php');
+    include('admin-menu/am-card-tran-log.php');//2020-03-22 CB V1.2.6.3 - added
 
     function tfgg_sunlync_cp_admin_menu_option(){
         add_menu_page('Sunlync Customer Portal','Sunlync CP','manage_options','tfgg-sunlync-cp-admin-menu','tfgg_sunlync_cp_page','',5);
@@ -365,10 +373,14 @@
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-messages-options" class="nav-tab <?php echo $active_tab == 'tfgg-messages-options' ? 'nav-tab-active' : ''; ?>">Message Text</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-service-options" class="nav-tab <?php echo $active_tab == 'tfgg-service-options' ? 'nav-tab-active' : ''; ?>">Services For Sale</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-cart-options" class="nav-tab <?php echo $active_tab == 'tfgg-cart-options' ? 'nav-tab-active' : ''; ?>">Cart</a>
+                <?php
+                /*<a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-cart-card-log" class="nav-tab <?php echo $active_tab == 'tfgg-cart-card-log' ? 'nav-tab-active' : ''; ?>">Card Log</a>*/
+                ?>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-misc-options" class="nav-tab <?php echo $active_tab == 'tfgg-misc-options' ? 'nav-tab-active' : ''; ?>">Misc.</a>
             </div>
             <form method="POST" action="options.php">
             <?php
+                $hideSubmitButton = '';
                 switch($active_tab){
                     case 'tfgg-shortcodes':
                         list_out_shortcodes();
@@ -429,9 +441,14 @@
                         settings_fields('tfgg_cart_section');
                         do_settings_sections('tfgg-cart-options');
                         break;
+                    //2020-03-22 CB V1.2.6.3 - added
+                    case 'tfgg-cart-card-log':
+                        display_tfgg_card_data_log();
+                        $hideSubmitButton = 'style="display:none"';
+                        break;
                 }//switch
             ?>
-            <input type="submit" class="button button-primary" value="Save Changes"/>
+            <input type="submit" class="button button-primary" <?php echo $hideSubmitButton; ?> value="Save Changes"/>
             </form>
             <?php
             if(($active_tab=='tfgg-api-options')&&

@@ -16,6 +16,16 @@ function display_tfgg_cart_slug(){
     <?php
 }
 
+function display_tfgg_cart_currency_symbol(){
+    $selected = get_option('tfgg_scp_cart_currency_symbol','1');
+    ?>
+    <input type="radio" id="currency_sterling" name="tfgg_scp_cart_currency_symbol" value="1" <?php echo(($selected=='1')? 'checked':''); ?>/>
+    <label for="currency_sterling">&#163;</label><br>
+    <input type="radio" id="currency_euro" name="tfgg_scp_cart_currency_symbol" value="2" <?php echo(($selected=='2')?'checked':''); ?>/>
+    <label for="currency_euro">&euro;</label><br>
+    <?php
+}
+
 function display_tfgg_menu_link_label(){
     ?>
     <input type="text" name="tfgg_scp_cart_menu_link_text" value="<?php echo get_option('tfgg_scp_cart_menu_link_text','Pay Now'); ?>" style="width: 60%" />

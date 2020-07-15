@@ -157,6 +157,11 @@ jQuery(function(){
         
     });
 
+    jQuery('.tfgg-card-log-results').click(function(){        
+        jQuery('#tfgg_scp_card_data_result_content').html(jQuery(this).data('fullresult'));
+        jQuery('#tfgg_scp_card_data_results').modal('toggle');
+    });
+
     /*jQuery('#tfgg_cp_paypal_tandc_confirm_label').click(function(){
         jQuery('#tfgg_cp_paypal_tandc_confirm').click();
     });*/
@@ -179,7 +184,7 @@ function FormatTimeToUK(time){
         hour12: true
     }; 
     formattedTime = formattedTime.toLocaleString('en-GB', options);
-    console.log(formattedTime);
+    //console.log(formattedTime);
     return formattedTime;
 }
 
@@ -199,7 +204,7 @@ function TestAPICredentials(){
     },function(data){
         //console.log(data);
         var obj = jQuery.parseJSON(data);
-        console.log(obj);
+        //console.log(obj);
 
         if(obj["results"]=='success'){
             jQuery("#tfgg-api-options-test-api-response").addClass('notice-success');
@@ -427,7 +432,7 @@ function ValidateNewReg(isOnline){
             grecaptcha.reset();//reset the reCaptcha
         } */
         if(jQuery('#tfgg_scp_reg_recaptcha').children().length!=0){
-            console.log('still not empty');
+            //console.log('still not empty');
             grecaptcha.reset();//reset the reCaptcha 
             jQuery('#registrationSubmitButton').attr('disabled','true');   
         }       
@@ -480,7 +485,15 @@ function isValidPass(pass){
 }
 
 function isValidPostcode(postCode){
-    var postRegex = new RegExp("^([A-Za-z][A-Ha-hK-Yk-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$");
+    //2020-07-01 CB V1.2.6.4
+    if(location.host.indexOf('.ie/')>0){
+        var postRegex = new RegExp(/[AC-FHKNPRTV-Y]{1}[0-9]{2}\s{0,1}[AC-FHKNPRTV-Y]{2}[0-9]{2}/gi);
+        console.log('ie regex');
+    }else{
+        //uk regex
+        var postRegex = new RegExp("^([A-Za-z][A-Ha-hK-Yk-y]?[0-9][A-Za-z0-9]? ?[0-9][A-Za-z]{2}|[Gg][Ii][Rr] ?0[Aa]{2})$");
+        console.log('uk regex');
+    }   
     return postRegex.test(postCode);
 }
 
@@ -1347,7 +1360,7 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID, showD
 function tfggRemoveCartItem(cartItemID, removeItemID){
     var pathname = window.location.pathname;
 
-    console.log(cartItemID+', '+removeItemID);
+    //console.log(cartItemID+', '+removeItemID);
 
     jQuery.post(localAccess.adminAjaxURL,{
         'action'    : 'tfgg_scp_delete_cart_item',
@@ -1355,7 +1368,7 @@ function tfggRemoveCartItem(cartItemID, removeItemID){
 		'dataType'  : 'json',
 		'pathname'  : pathname
     },function(data){
-        console.log(data);
+        //console.log(data);
         var obj = jQuery.parseJSON(data);
         if(obj["results"].toUpperCase()=='SUCCESS'){
             jQuery('#'+removeItemID).remove();
@@ -1445,7 +1458,7 @@ function tfgg_scp_sage_cart_merchant_session_key(callback){
 		'dataType'  : 'json',
 		'pathname'  : pathname
     },function(data){
-        console.log(data);
+        //console.log(data);
         var obj = jQuery.parseJSON(data);
         if(obj["results"].toUpperCase()=='SUCCESS'){
             callback(obj["sageMerchantSession"]);

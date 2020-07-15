@@ -11,7 +11,6 @@
             if(isset($_SESSION['tfgg_scp_cart_qty'])){
 				?>
 				<script>
-				console.log(<?php echo $_SESSION['tfgg_scp_cart_qty'];?>);
 				tfggSetCartLinkQty(<?php echo $_SESSION['tfgg_scp_cart_qty'];?>);
 				</script>
 				<?php

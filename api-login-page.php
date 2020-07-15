@@ -118,14 +118,15 @@
     		}
     		
             $errors = tfgg_cp_errors()->get_error_messages();
-            
+			
+			//2020-07-13 CB - added trim() to the password
             if(empty($errors)){
-                $loginResponse = json_decode(tfgg_cp_api_client_login($_POST['tfgg_cp_user_login'],$_POST['tfgg_cp_user_pass']));
+                $loginResponse = json_decode(tfgg_cp_api_client_login($_POST['tfgg_cp_user_login'],trim($_POST['tfgg_cp_user_pass'])));
 				
                 if(strToUpper($loginResponse->results)=='SUCCESS'){
                     tfgg_cp_errors()->add('success_login', __('Success! Logging into account'));
                     $data = $loginResponse->data[0];
-                    tfgg_cp_set_sunlync_client($data->clientnumber);
+					tfgg_cp_set_sunlync_client($data->clientnumber);
                 }else{
                     tfgg_cp_errors()->add('error_no_matching_user', __('Email and/or password is incorrect, please try again'));
                 }

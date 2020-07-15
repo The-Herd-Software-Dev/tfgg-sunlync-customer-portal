@@ -62,7 +62,7 @@
         wp_enqueue_script( 'select2-script' );
         
         //2019-11-24 CB
-        if(get_option('tfgg_scp_cart_paypal_clientid')!=''){
+        if((get_option('tfgg_scp_cart_paypal_clientid')!='')&&(get_option('tfgg_scp_cart_allow_paypal_payment','0')==1)){
             wp_register_script('paypal-script','https://www.paypal.com/sdk/js?currency=GBP&client-id='.get_option('tfgg_scp_cart_paypal_clientid'),'',null);
             wp_enqueue_script('paypal-script');
         }
