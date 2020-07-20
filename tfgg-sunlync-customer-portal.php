@@ -3,7 +3,7 @@
 /**
  * Plugin Name: TFGG Sunlync Customer Portal
  * Description: Customer portal for TFGG Sunlync customers to manage demographic information and appointments
- * Version:     1.2.6.5
+ * Version:     1.2.6.6
  * Author:      The Herd llc.
  */
     //ob_start();

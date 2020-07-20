@@ -175,15 +175,8 @@ function FormatTimeToUK(time){
     //we are just using this to generate a valid Date()
     //2019-10-12 CB V1.0.1.5 - changed code to manually split and recreate for Safari
     time = time.split(':');
-    //var formattedTime = new Date('2000-01-01'+time);
-    var formattedTime = new Date('2000','01','01', time[0], time[1], time[2]);
-    //console.log(formattedTime);
-    var options = {
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-    }; 
-    formattedTime = formattedTime.toLocaleString('en-GB', options);
+    var formattedTime = new Date('2000','01','01', time[0], time[1], time[2]);    
+    formattedTime = formattedTime.toLocaleString([],{hour: "2-digit",minute:"2-digit", hour12:true});//2020-07-20 CB V1.2.6.6 - removed locale
     //console.log(formattedTime);
     return formattedTime;
 }
@@ -869,7 +862,7 @@ function LoadEquipTimeSlots(){
            var i=0; 
            var earliestDate = returnData["earlistApptDate"].split('-');
            var earliestTime = returnData["earlistApptTime"].split(':');
-
+           
            var earliestAppt = (new Date(earliestDate[0], earliestDate[1]-1, earliestDate[2], earliestTime[0], earliestTime[1], earliestTime[2]));
            jQuery.each(returnData["availableSlots"], function(key,details){
                 if(details['roomnumber']!=0){
