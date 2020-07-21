@@ -173,7 +173,7 @@ var selectedStorePanel = "";
 function FormatTimeToUK(time){
     time = time.split(':');
     var formattedTime = new Date('2000','01','01', time[0], time[1], time[2]);    
-    formattedTime = formattedTime.toLocaleString(['en-US'],{hour: "2-digit",minute:"2-digit", hour12:true});//2020-07-20 CB V1.2.6.6 - removed locale
+    formattedTime = formattedTime.toLocaleTimeString('en-US', {hour:"numeric",minute:"numeric"});//2020-07-20 CB V1.2.6.9 - hiding seconds
     return formattedTime;
 }
 
