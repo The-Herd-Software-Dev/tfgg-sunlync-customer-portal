@@ -171,13 +171,9 @@ jQuery(function(){
 var selectedStorePanel = "";
 
 function FormatTimeToUK(time){
-    //note the 2000 date - this is arbitrary,
-    //we are just using this to generate a valid Date()
-    //2019-10-12 CB V1.0.1.5 - changed code to manually split and recreate for Safari
     time = time.split(':');
     var formattedTime = new Date('2000','01','01', time[0], time[1], time[2]);    
-    formattedTime = formattedTime.toLocaleString([],{hour: "2-digit",minute:"2-digit", hour12:true});//2020-07-20 CB V1.2.6.6 - removed locale
-    //console.log(formattedTime);
+    formattedTime = formattedTime.toLocaleString(['en-US'],{hour: "2-digit",minute:"2-digit", hour12:true});//2020-07-20 CB V1.2.6.6 - removed locale
     return formattedTime;
 }
 
@@ -864,7 +860,7 @@ function LoadEquipTimeSlots(){
            var earliestTime = returnData["earlistApptTime"].split(':');
            
            var earliestAppt = (new Date(earliestDate[0], earliestDate[1]-1, earliestDate[2], earliestTime[0], earliestTime[1], earliestTime[2]));
-           console.log(earliestAppt);
+           
            jQuery.each(returnData["availableSlots"], function(key,details){
                 if(details['roomnumber']!=0){
                     i++;
@@ -877,11 +873,12 @@ function LoadEquipTimeSlots(){
                     }
                     if (ApptDoesNotConflict(details['start_time'],apptdate)){
                         var pnlName="'timePnl"+i+"'";
-                    
+                        var displaytime_start = FormatTimeToUK(details['start_time']);
+                        var displaytime_end = FormatTimeToUK(details['end_time']);
                         var pnl='<div class="appts-timeslot-selector timeSlotPnl" name="timePnl'+i+'" id="timePnl'+i+'" onclick="highlightTimeSlot('+pnlName+')" style="cursor: pointer;" '+
                         'data-roomnumber="'+details['roomnumber']+'" data-starttime="'+details['start_time']+'"> '+ //DO NOT FORMAT THIS TIME!!!
-                                    '<span class="appts-timeslot">Start Time: '+FormatTimeToUK(details['start_time'])+'</span><br/> '+
-                                    '<span class="appts-timeslot">End Time: '+FormatTimeToUK(details['end_time'])+'</span> '+
+                                    '<span class="appts-timeslot">Start Time: '+displaytime_start+'</span><br/> '+
+                                    '<span class="appts-timeslot">End Time: '+displaytime_end+'</span> '+
                                 '</div>';
                         
                         jQuery('#appts-timeslot-container').append(pnl);
