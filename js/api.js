@@ -864,6 +864,7 @@ function LoadEquipTimeSlots(){
            var earliestTime = returnData["earlistApptTime"].split(':');
            
            var earliestAppt = (new Date(earliestDate[0], earliestDate[1]-1, earliestDate[2], earliestTime[0], earliestTime[1], earliestTime[2]));
+           console.log(earliestAppt);
            jQuery.each(returnData["availableSlots"], function(key,details){
                 if(details['roomnumber']!=0){
                     i++;

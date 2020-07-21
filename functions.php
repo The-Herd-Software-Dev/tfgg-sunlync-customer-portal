@@ -959,6 +959,7 @@
         $result["results"]="success";
         
         $currentDateBuffer=new DateTime();
+        $currentDateBuffer->setTimezone(new DateTimeZone('Europe/London'));//2020-07-20 CB V1.2.6.7 - setting the timezone
         $currentDateBuffer->add(new DateInterval('PT'.get_option('tfgg_scp_appointments_allowed_hrs').'H'));
         $result["availableSlots"]=array_slice($data,1,-1);
         //2019-10-12 CB V1.0.1.5 - changed date formatting for increased Safari support
