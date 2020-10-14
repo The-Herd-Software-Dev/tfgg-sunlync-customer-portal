@@ -10,6 +10,7 @@
            // echo '<br/><br/><br/><br/>';
             tfgg_sunlync_cp_show_error_messages();
             echo'<div class="row" id="tfgg_scp_cart_contents" >';
+            
                 tfgg_scp_cart_items_display($cartContents->header, $cartContents->lineItems);
                 tfgg_scp_cart_header_display($cartContents->header, $cartContents->paymentItems);
             echo '</div>';//row
@@ -40,6 +41,39 @@
         return ob_get_clean();
     }
 
+    function tfgg_scp_cart_display_countdown(){
+        //2020-10-08 CB V1.2.7.1 - new code to refresh the page, preventing 'expired' promotions from being used
+        ?>
+        <script type="text/javascript">
+            function checklength(i) {
+                if (i < 10) {
+                    i = "0" + i;
+                }
+                return i;
+            }
+            var minutes, seconds, count, counter, timer;
+            count = 601; //seconds
+            counter = setInterval(timer, 1000);
+
+            function timer() {
+                count = count - 1;
+                minutes = checklength(Math.floor(count / 60));
+                seconds = checklength(count - minutes * 60);
+                if (count < 0) {
+                    clearInterval(counter);
+                    return;
+                }
+                document.getElementById("timer").innerHTML = minutes + ':' + seconds ;
+                if (count === 0) {
+                    location.reload();
+                }
+            }
+
+        </script>
+        <span id="cart_countdown">Cart will refresh in: <span id="timer"></span></span>
+        <?php
+    }
+
     function tfgg_scp_cart_display_promo_entry(){
     //2020-03-15 CB V1.2.6.1 - new method to allow promo entry
     ?>
@@ -62,9 +96,9 @@
 
     function tfgg_scp_cart_items_display($header, $lineItems){
         ?>
-
+        
         <div id="cart-items-left" class="col-lg-4">
-
+        
             <div class="cart-items-header"><h4>ITEMS</h4></div>
 
             <?php
@@ -149,8 +183,9 @@
             <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
             <span class="cart-totals-content-value overlay-totals-content-total-line"><?php echo tfgg_display_currency_symbol();?><?php echo number_format(($header->total - $header->totalPayments),2,'.',','); ?></span>
 
+            
             </div>
-
+            <?php tfgg_scp_cart_display_countdown();?>
         </div>
 
         <?php

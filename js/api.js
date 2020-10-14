@@ -1341,7 +1341,7 @@ function tfggPostCartItem(addItemType, addItemNumnber, addItemQty, itemID, showD
             
         }else{
             //console.log(obj);
-            jQuery('#tfgg_scp_cart_add_message').html('Unable to add membership to your cart: <br/><br/>'+obj["response"]);
+            jQuery('#tfgg_scp_cart_add_message').html('Unable to add item to your cart: <br/><br/>'+obj["response"]);
             jQuery('#tfgg_scp_cart_add_pay_btn').css('display','none');
             jQuery('#tfgg_scp_cart_add').modal('toggle');  
         }

@@ -239,7 +239,7 @@
                         jQuery('#tfgg_appt_set_date').val(formatted[2]+'-'+formatted[1]+'-'+formatted[0]);                        
                         getApptStores(formatted[2]+'-'+formatted[1]+'-'+formatted[0]);
                     }
-                },
+                }
                 );
             } );
         </script>
