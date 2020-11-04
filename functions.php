@@ -634,8 +634,8 @@
 		if(($result===FALSE)||($result=='')){
 			throw new Exception("ERROR: Invalid URL");
 			exit;
-		}
-		
+        }
+        
         $result=str_replace('{"result":[','',$result);
         $result=str_replace(']}','',$result);
         $result=json_decode($result);
@@ -3307,4 +3307,178 @@
         }
     }
     
+    function tfgg_cp_api_employee_login($login, $pass){
+        $url = tfgg_get_api_url();
+        $url.='TSunLyncAPI/CIPValidateSecurity//sLoginID/sLoginPass//';
+
+        $url=str_replace('sLoginID',tfgg_cp_hash_password($login),$url);
+        $url=str_replace('sLoginPass',tfgg_cp_hash_password($pass),$url);       
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+            if(array_key_exists('ERROR',$data[0])){
+                $result=array("results"=>"FAIL",
+                    "response"=>$data[0]->ERROR);
+            }else{
+                $result=array("results"=>"FAIL",
+                    "response"=>$data[0]->WARNING);
+            }
+            
+            return json_encode($result);
+        }else{
+                
+            $result["results"]="success";
+            $result["data"]=array_slice($data,1,-1);
+
+            $_SESSION['sunlync_employee']['employee_number'] = $data[0]->emp_no;
+            $_SESSION['sunlync_employee']['first_name'] = $data[0]->firstname;
+            $_SESSION['sunlync_employee']['last_name'] = $data[0]->lastname;
+
+            tfgg_scp_get_emp_stores($_SESSION['sunlync_employee']['employee_number']);
+
+            return json_encode($result);
+        }
+    }
+
+    function tfgg_scp_api_store_clock_ins($date){
+        $url = tfgg_get_api_url();
+        $url.='TSunLyncAPI/TFGG_GetStoresClockIns/sStoreList/sDate';
+
+        $url=str_replace('sStoreList',tfgg_scp_get_formatted_employee_storecodes(),$url);
+        $url=str_replace('sDate',$_GET['data']['date'],$url);
+
+        /*$url = tfgg_get_api_url();
+        $url.='TSunLyncAPI/AWEBEmpStores/sEmpNo';
+
+        $url=str_replace('sEmpNo',$_SESSION['sunlync_employee']['employee_number'],$url);*/
+
+        if(!strpos($url,'GenericGetAPIVersion')){
+            $url.='/'.get_option('tfgg_scp_api_mrkt'); 
+        }
+        $ch = curl_init($url);
+		$ch_options=array(
+			CURLOPT_RETURNTRANSFER=> true,
+			CURLOPT_USERPWD=>get_option('tfgg_scp_api_user').":".get_option('tfgg_scp_api_pass'),
+			CURLOPT_HTTPHEADER=>array('Content-type: application/json')
+		);
+
+		curl_setopt_array($ch,$ch_options);
+		$data=curl_exec($ch);
+		curl_close($ch);
+		if(($data===FALSE)||($data=='')){
+			throw new Exception("ERROR: Invalid URL");
+			exit;
+        }
+        
+        $data=str_replace('{"result":[','',$data);
+        $data=str_replace(']]}',']',$data);
+        $data=json_decode($data);
+
+        $result["results"]="success";
+        $result["data"]=array_slice($data,1,-1);
+
+        exit(json_encode($result));
+
+    }
+    add_action('wp_ajax_tfgg_scp_api_store_clock_ins','tfgg_scp_api_store_clock_ins');
+    add_action('wp_ajax_nopriv_tfgg_scp_api_store_clock_ins','tfgg_scp_api_store_clock_ins');
+
+    function tfgg_scp_get_emp_stores($employeenumber){
+        //AWEBEmpStores
+        $url = tfgg_get_api_url();
+        $url.='TSunLyncAPI/AWEBEmpStores/sEmpNo';
+
+        $url=str_replace('sEmpNo',$employeenumber,$url);
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage();
+            return json_encode($result);
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+            if(array_key_exists('ERROR',$data[0])){
+                $result=array("results"=>"FAIL",
+                    "response"=>$data[0]->ERROR);
+            }else{
+                $result=array("results"=>"FAIL",
+                    "response"=>$data[0]->WARNING);
+            }
+            
+            return json_encode($result);
+        }else{
+            array_pop($data);//remove the request id
+
+            $_SESSION['sunlync_employee']['storelist'] = array();//initialize the storelist array
+            foreach($data as $store){
+    
+                $storeInfo = array("storecode"=>$store->storecode,
+                "location"=>$store->storeloc);
+                
+                array_push($_SESSION['sunlync_employee']['storelist'],$storeInfo);
+            }        
+        }
+    }
+
+    function tfgg_cp_set_sunlync_employee($employeenumber){
+        $_SESSION['sunlync_employee'] = $employeenumber;
+    }
+
+    function tfgg_scp_get_formatted_employee_storecodes(){
+        $storelist="";
+        foreach($_SESSION['sunlync_employee']['storelist'] as $store){
+            $storelist.='"'.$store["storecode"].'",';
+        }
+        return substr($storelist,0,-1);//remove the last comma
+    }
+
+    function tfgg_cp_employee_dashboard_logout(){
+        tfgg_cp_unset_sunlync_employee();
+        
+        $result["logout"]=site_url();//possible configurable option
+        exit(json_encode($result));
+        
+    }
+    add_action( 'wp_ajax_tfgg_cp_employee_dashboard_logout', 'tfgg_cp_employee_dashboard_logout' );
+    add_action( 'wp_ajax_nopriv_tfgg_cp_employee_dashboard_logout', 'tfgg_cp_employee_dashboard_logout' );
+
+    function tfgg_cp_unset_sunlync_employee(){
+        unset($_SESSION['sunlync_employee']);
+    }
+    add_filter('wp_nav_menu_items', 'tfgg_add_logout_employee_link', 10, 2 );
+
+    function tfgg_add_logout_employee_link($items, $args){
+        //add a logout link to the small menu bar (secondary-menu) at the top of the screen
+        if(tfgg_is_sunlync_emplopyee_logged_in() && $args->theme_location=='secondary-menu'){
+          $items .='<li><a href="" onclick="endEmplopyeeDashboardSession();">Log Out</a></li>';  
+        }
+        return $items;
+    }
+
+    function tfgg_cp_get_sunlync_employee(){
+        if(array_key_exists('sunlync_employee',$_SESSION)){
+            return $_SESSION['sunlync_employee']['employee_number'];
+        }else{
+            return false;
+        }
+
+    }
+
+    function tfgg_is_sunlync_emplopyee_logged_in(){
+        if(!tfgg_cp_get_sunlync_employee()){
+            return false;
+        }else{
+            return true;
+        }    
+    }
+
 ?>

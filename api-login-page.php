@@ -73,7 +73,7 @@
 				<div class="login-container">
 					<div class="account-overview-input-double">
 						<input type="hidden" name="tfgg_cp_login_nonce" id="tfgg_cp_login_nonce" value="<?php echo wp_create_nonce('tfgg-cp-login-nonce'); ?>"/>
-						<button id="tfgg_cp_login_submit" type="submit" class="account-overview-button account-overview-standard-button" onclick="portalLogin();"><?php _e('LOGIN'); ?></button>
+						<button id="tfgg_cp_login_submit" type="submit" class="account-overview-button account-overview-standard-button" onclick="portalLogin('tfgg_cp_api_login');"><?php _e('LOGIN'); ?></button>
 					</div>
 				</div>
 				

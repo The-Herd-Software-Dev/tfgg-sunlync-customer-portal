@@ -116,4 +116,13 @@ function tfgg_cp_sunlync_cart_services_sale(){
 }
 add_shortcode('cp_sunlync_cart_services','tfgg_cp_sunlync_cart_services_sale');
 
+
+function tfgg_cp_sunlync_emp_dashboard(){
+    //CB V1.2.7.2 - new shortcode
+    if ( !is_user_logged_in() ) {
+    	auth_redirect();
+	} 
+    return tfgg_scp_display_emp_dashboard();
+}
+add_shortcode('cp_sunlync_emp_dashboard','tfgg_cp_sunlync_emp_dashboard');
 ?>

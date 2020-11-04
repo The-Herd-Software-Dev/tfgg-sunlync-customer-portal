@@ -1228,12 +1228,12 @@ function ValidateLoginResetData(){
     return bResult;
 }
 
-function portalLogin(){
+function portalLogin(formID){
     ResetRegValidation();//we can use this as we are using the same class
     event.preventDefault();
 
     if(ValidateLoginData()){
-        jQuery('#tfgg_cp_api_login').submit();
+        jQuery('#'+formID).submit();
     }
 }
 
@@ -1250,6 +1250,19 @@ function endPortalSession(){
     event.preventDefault();
     jQuery.get(localAccess.adminAjaxURL,{
         'action'    : 'tfgg_cp_portal_logout',
+        'dataType'  : 'json',
+		'pathname'  : window.location.pathname
+    },function(data){
+        var obj = jQuery.parseJSON(data);
+        window.location.replace(obj["logout"]);
+    });
+    
+}
+
+function endEmplopyeeDashboardSession(){
+    event.preventDefault();
+    jQuery.get(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_cp_employee_dashboard_logout',
         'dataType'  : 'json',
 		'pathname'  : window.location.pathname
     },function(data){
@@ -1560,4 +1573,84 @@ function tfgg_scp_cart_promo_add(){
 
 function tfgg_scp_toggle_promo_entry(){
     jQuery('#tfgg_scp_promo_code_entry_box').toggle();
+}
+
+function emp_dash_show_busy(){
+    jQuery('#tfgg_scp_emp_dash_stat_select').hide();
+    jQuery('#tfgg_scp_emp_dash_store_clock_in_state').hide();
+    jQuery('#tfgg_scp_emp_dash_busy').show();
+}
+
+function EmpDash_StoreClockIn(){
+    emp_dash_show_busy();
+    jQuery('#tfgg_scp_emp_dash_store_clock_in_store_card').html('');//clear any existing content
+    //get the employee stores
+    var dataDate = new Date().toJSON().substring(0,10);
+    
+    var pathname = window.location.pathname;
+    jQuery.get(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_scp_api_store_clock_ins',
+        'dataType'  : 'json',
+        'data'      :{'date':dataDate},
+        'pathname':pathname
+    },function(data){
+        
+        var returnData = jQuery.parseJSON(data);
+        if(returnData["results"].toUpperCase()=='SUCCESS'){
+            //var parent = jQuery('#tfgg_scp_emp_dash_store_clock_in_store_card');
+            var i=1;
+            var output=''
+            jQuery.each(returnData["data"], function(key,details){
+                //we are going to put 3 elements per row
+                if((details['earliest_clockin']=='23:59:59')&&
+                (details['open']==1)){
+                    var opentime = new Date("1/1/1900 "+details['open_time']);
+                    /*var warningtime = new Date(opentime);
+                    warningtime.setMinutes(warningtime.getMinutes()+10);*/
+                    var earliest = new Date("1/1/1900 "+details['earliest_clockin']);
+
+                    if(i==1){
+                        output+='<div class="row" style="margin-bottom:1em">';
+                    }
+
+                    output+='<div class="col-sm">';
+                    output+='<div class="card ';
+                    if(details['earliest_clockin']=='23:59:59'){
+                        //do nothing, no one has clocked in yet
+                        output+='text-white bg-danger';
+                    }else if(earliest<=opentime){
+                        output+='text-white bg-success';
+                    }else if((earliest>opentime)&&(earliest<warningtime)){
+                        output+='text-white bg-warning';
+                    }else{
+                        output+='text-white bg-danger';
+                    }
+                    output+='">';
+                    output+='<div class="card-header"><strong>'+details['location']+'</strong></div>';
+                    output+='<div class="card-body">';
+                    output+='<p class="card-text">Open Time: '+details['open_time']+'</p>';
+                    output+='<p class="card-text">No clock in recorded</p>';
+                    output+='</div>';
+                    output+='</div>';
+                    output+='</div>';
+
+                    if(i==3){
+                        output+='</div>';
+                        i=1;
+                    }else{
+                        i++;
+                    }
+                }
+                
+            });
+            if(i<3){
+                output+='</div>';
+            }
+            jQuery('#tfgg_scp_emp_dash_store_clock_in_store_card').append(output);
+        }else{
+                       
+        }
+        jQuery('#tfgg_scp_emp_dash_busy').hide();
+        jQuery('#tfgg_scp_emp_dash_store_clock_in_state').show();
+    });
 }

@@ -1172,3 +1172,22 @@ tr.account_overview_row > td {
 .tfgg-card-log-results:hover{
     text-decoration:underline;
 }
+
+.emp-dash-store-selected{
+    background-color: #FCAF41;
+}
+
+.emp-dash-clock-in-late{
+    background-color: firebrick;
+    color: white;
+}
+
+.emp-dash-clock-in-warning{
+    background-color: goldenrod;
+    color: white;
+}
+
+.emp-dash-clock-in{
+    background-color: #407830;
+    color: white;
+}
