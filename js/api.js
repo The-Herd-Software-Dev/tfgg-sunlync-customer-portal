@@ -1237,6 +1237,54 @@ function portalLogin(formID){
     }
 }
 
+function portalEmployeeLogin(){
+    ResetRegValidation();//we can use this as we are using the same class
+    event.preventDefault();
+
+    jQuery('#tfgg_cp_emp_login_errors').empty();
+
+    if(!ValidateLoginData()){
+        return false;
+    }
+
+    jQuery('#tfgg_scp_emp_login_busy').css('display','');
+    jQuery('#tfgg_cp_api_employee_login').css('display','none');
+
+    //submit the form
+    jQuery.post(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_cp_api_employee_login',
+        'data'      : {user: jQuery('#tfgg_cp_user_login').val(), 
+            pass: jQuery('#tfgg_cp_user_pass').val()},
+		'dataType'  : 'json',
+		'pathname'  : window.location.pathname
+    },function(data){
+        var obj = jQuery.parseJSON(data);
+
+        if(obj["results"].toUpperCase()=='SUCCESS'){
+            var loginAlert='<div class="alert alert-success alert-dismissible fade show">';
+            loginAlert+='<span class="success">'; 
+            
+            setTimeout(function() {
+                location.reload();
+            }, 1500);//reload after 1.5 seconds, will pickup on the session variable and "log" user in
+            
+        }else{
+            var loginAlert='<div class="alert  alert-dismissible fade show alert-danger">';
+            loginAlert+='<span class="error">';
+        }
+        loginAlert+=obj["response"];
+        loginAlert+='</span>'
+        +'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+            +'<span aria-hidden="true">&times;</span>'
+        +'</button>'
+        +'</div>';
+
+        jQuery('#tfgg_scp_emp_login_busy').css('display','none');
+        jQuery('#tfgg_cp_api_employee_login').css('display','');
+        jQuery('#tfgg_cp_emp_login_errors').html(loginAlert);
+    });     
+}
+
 function portalLoginReset(){
     ResetRegValidation();//we can use this as we are using the same class
     event.preventDefault();

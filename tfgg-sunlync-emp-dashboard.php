@@ -14,11 +14,14 @@ function tfgg_scp_display_emp_dashboard(){
 function tfgg_scp_display_emp_dashboard_login(){
     ?>
     <hr /><br />
-    <?php
-        tfgg_sunlync_cp_show_error_messages();
-    ?>
+    <div class="tfgg_cp_errors" id="tfgg_cp_emp_login_errors">
+
+    </div>
     <h3 class="header"><?php _e('Employee Dashboard Login');?></h3>
-    <form method="POST" id="tfgg_cp_api_employee_login" action="">
+    <div id="tfgg_scp_emp_login_busy" style="display:none">
+        <img src="<?php echo plugin_dir_url( __FILE__ ); ?>/images/loading.gif" class="loading-image"/>
+    </div>
+    <div id="tfgg_cp_api_employee_login">
         <div class="login-container">
             <div class="account-overview-input-single">
                 <label for="tfgg_cp_user_login"  class="account-overview-label"><?php _e('SunLync Username'); ?></label>
@@ -39,23 +42,20 @@ function tfgg_scp_display_emp_dashboard_login(){
             <div class="login-container">
                 <div class="account-overview-input-double">
                     <input type="hidden" name="tfgg_cp_employee_login_nonce" id="tfgg_cp_employee_login_nonce" value="<?php echo wp_create_nonce('tfgg-cp-employee-login-nonce'); ?>"/>
-                    <button id="tfgg_cp_login_submit" type="submit" class="account-overview-button account-overview-standard-button" onclick="portalLogin('tfgg_cp_api_employee_login');"><?php _e('LOGIN'); ?></button>
+                    <button id="tfgg_cp_login_submit" type="button" class="account-overview-button account-overview-standard-button" onclick="portalEmployeeLogin();"><?php _e('LOGIN'); ?></button>
                 </div>
             </div>
             
             <br />
         
         </div> 
-    </form> 
+    </div> 
     <?php
 }
 
 function tfgg_scp_display_emp_dashboard_panels(){
     ?>
     <hr /><br />
-    <?php
-        tfgg_sunlync_cp_show_error_messages();
-    ?>
     <h3 class="header"><?php _e('Employee Dashboard');?></h3>
     <div class="container-fluid">
 
@@ -98,7 +98,7 @@ function tfgg_scp_display_emp_dashboard_panels(){
 }
 
 
-function tfgg_scp_employee_login(){
+/*function tfgg_scp_employee_login(){
     if(isset($_POST['tfgg_cp_employee_login_nonce']) && 
         wp_verify_nonce($_POST['tfgg_cp_employee_login_nonce'],'tfgg-cp-employee-login-nonce')){
 
@@ -125,5 +125,5 @@ function tfgg_scp_employee_login(){
         
     }
 }
-add_action('init','tfgg_scp_employee_login');
+add_action('init','tfgg_scp_employee_login');*/
 ?>

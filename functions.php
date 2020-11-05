@@ -3307,19 +3307,19 @@
         }
     }
     
-    function tfgg_cp_api_employee_login($login, $pass){
+    function tfgg_cp_api_employee_login(){
         $url = tfgg_get_api_url();
         $url.='TSunLyncAPI/CIPValidateSecurity//sLoginID/sLoginPass//';
 
-        $url=str_replace('sLoginID',tfgg_cp_hash_password($login),$url);
-        $url=str_replace('sLoginPass',tfgg_cp_hash_password($pass),$url);       
+        $url=str_replace('sLoginID',tfgg_cp_hash_password($_POST['data']['user']),$url);
+        $url=str_replace('sLoginPass',tfgg_cp_hash_password($_POST['data']['pass']),$url);       
 
         try{
             $data = tfgg_sunlync_execute_url($url);
         }catch(Exception $e){
             $result["results"]="error";
             $result["error_message"]=$e->getMessage(); 
-            return json_encode($result);
+            exit(json_encode($result));
         }
 
         if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
@@ -3331,10 +3331,11 @@
                     "response"=>$data[0]->WARNING);
             }
             
-            return json_encode($result);
+            exit(json_encode($result));
         }else{
                 
             $result["results"]="success";
+            $result["response"]="Login successful!";
             $result["data"]=array_slice($data,1,-1);
 
             $_SESSION['sunlync_employee']['employee_number'] = $data[0]->emp_no;
@@ -3343,9 +3344,11 @@
 
             tfgg_scp_get_emp_stores($_SESSION['sunlync_employee']['employee_number']);
 
-            return json_encode($result);
+            exit(json_encode($result));
         }
     }
+    add_action('wp_ajax_tfgg_cp_api_employee_login','tfgg_cp_api_employee_login');
+    add_action('wp_ajax_nopriv_tfgg_cp_api_employee_login','tfgg_cp_api_employee_login');
 
     function tfgg_scp_api_store_clock_ins($date){
         $url = tfgg_get_api_url();
@@ -3393,7 +3396,7 @@
     function tfgg_scp_get_emp_stores($employeenumber){
         //AWEBEmpStores
         $url = tfgg_get_api_url();
-        $url.='TSunLyncAPI/AWEBEmpStores/sEmpNo';
+        $url.='TSunLyncAPI/CIPAdminEmployeeStores/sEmpNo';
 
         $url=str_replace('sEmpNo',$employeenumber,$url);
 
