@@ -1243,7 +1243,7 @@
         $url=str_replace('sGender','',$url);
         $url=str_replace('sSkinType','',$url);
         $url=str_replace('sUserDefined1','',$url);
-        $url=str_replace('sUserDefined2','',$url);
+        $url=str_replace('sUserDefined2','',$url);//set the GA tag here!!!
         $url=str_replace('sDoNotSolicit','0',$url);//defaulting to allow, but not specifying any
         
         try{

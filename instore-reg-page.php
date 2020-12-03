@@ -456,10 +456,16 @@
 			<div class="login-container">
 				<div class="account-overview-input-double">
 				<input type="hidden" name="tfgg_cp_instore_set_store" id="tfgg_cp_instore_set_store" value="<?php echo wp_create_nonce('tfgg-cp-instore-set-store'); ?>"/>
+				<input type="hidden" name="tfgg_cp_user_defined_2" id="tfgg_cp_user_defined_2" value=""/>	
 					<button id="tfgg_cp_instore_reg_store_submit" type="submit" class="account-overview-button account-overview-standard-button">SET STORE</button>
 				</div>
 			</div>
 		</form>
+		<script>
+			ga(function(tracker){
+				jQuery('#tfgg_cp_user_defined_2').val(tracker.get('dimension1'));	
+			});	
+		</script>
 		<?php
 		
 		return ob_get_clean();
@@ -517,7 +523,7 @@
 			'gender'	=> $_POST['tfgg_cp_user_gender'],
 			'skintype'	=> $_POST['tfgg_cp_skin_type'],
 			'userdefined1' => get_option('tfgg_scp_registration_source_label_instore'),
-			'userdefined2' => ''
+			'userdefined2' => $_POST['tfgg_cp_user_defined_2']
 			);
 
 			if((array_key_exists('tfgg_cp_marketing',$_POST))&&($_POST['tfgg_cp_marketing']=='1')){

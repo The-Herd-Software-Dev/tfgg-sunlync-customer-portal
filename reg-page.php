@@ -313,6 +313,7 @@
 				?>
 		
 				<input type="hidden" name="tfgg_cp_register_nonce" id="tfgg_cp_register_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-nonce'); ?>"/>
+				<input type="hidden" name="tfgg_cp_user_defined_2" id="tfgg_cp_user_defined_2" value=""/>
 				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)" 
 				<?php if($whitelisted_captcha == false){echo 'disabled';}?>>  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
@@ -383,7 +384,13 @@
 				
     			jQuery('.js-example-basic-single').select2();
 
-				  		
+				/*jQuery(function(){
+					var tag = ga('cd1');
+					jQuery('#tfgg_cp_user_defined_2').val(tag);
+				});	*/
+				ga(function(tracker){
+					jQuery('#tfgg_cp_user_defined_2').val(tracker.get('dimension1'));	
+				});	
 			</script>
 
         <?php
@@ -557,7 +564,7 @@
 			'gender'	=> $_POST['tfgg_cp_user_gender'],
 			'skintype'	=> $_POST['tfgg_cp_skin_type'],
 			'userdefined1' => get_option('tfgg_scp_registration_source_label'),
-			'userdefined2' => ''
+			'userdefined2' => $_POST['tfgg_cp_user_defined_2']
 			);
 
 			if((array_key_exists('tfgg_cp_marketing',$_POST))&&($_POST['tfgg_cp_marketing']=='1')){
