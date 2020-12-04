@@ -302,7 +302,8 @@
 				<?php
 					//check to see if reCaptcha is active and if so, display it
 					//1.2.4.11 - change code to check for whitelisting
-					if(get_option('tfgg_scp_online_reg_recaptcha_req','1')=='1'){
+					//1.2.7.5 - fixed flag reference
+					if(get_option('tfgg_scp_instore_reg_recaptcha_req','1')=='1'){
 						$whitelisted_captcha = false;
 						include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 						if(is_plugin_active('google-captcha/google-captcha.php')){
@@ -331,6 +332,7 @@
 				?>
 		
 				<input type="hidden" name="tfgg_cp_register_instore_nonce" id="tfgg_cp_register_instore_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-instore-nonce'); ?>"/>
+				<input type="hidden" name="tfgg_cp_user_defined_2" id="tfgg_cp_user_defined_2" value=""/>	
 				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(false)" 
 				<?php if($whitelisted_captcha == false){echo 'disabled';}?>>  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
@@ -456,16 +458,10 @@
 			<div class="login-container">
 				<div class="account-overview-input-double">
 				<input type="hidden" name="tfgg_cp_instore_set_store" id="tfgg_cp_instore_set_store" value="<?php echo wp_create_nonce('tfgg-cp-instore-set-store'); ?>"/>
-				<input type="hidden" name="tfgg_cp_user_defined_2" id="tfgg_cp_user_defined_2" value=""/>	
 					<button id="tfgg_cp_instore_reg_store_submit" type="submit" class="account-overview-button account-overview-standard-button">SET STORE</button>
 				</div>
 			</div>
 		</form>
-		<script>
-			ga(function(tracker){
-				jQuery('#tfgg_cp_user_defined_2').val(tracker.get('dimension1'));	
-			});	
-		</script>
 		<?php
 		
 		return ob_get_clean();
