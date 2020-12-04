@@ -1652,6 +1652,8 @@ function EmpDash_StoreClockIn(){
             var output=''
             jQuery.each(returnData["data"], function(key,details){
                 //we are going to put 3 elements per row
+                //do not show stores that are not open today
+                //do not show stores that have a clock-in record
                 if((details['earliest_clockin']=='23:59:59')&&
                 (details['open']==1)){
                     //var opentime = new Date("1/1/2020 "+details['open_time']);
