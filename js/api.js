@@ -1647,51 +1647,74 @@ function EmpDash_StoreClockIn(){
         if(returnData["results"].toUpperCase()=='SUCCESS'){
             //var parent = jQuery('#tfgg_scp_emp_dash_store_clock_in_store_card');
             var i=1;
+            var storecount=0;
+            var stores_notopen=0;
             var output=''
             jQuery.each(returnData["data"], function(key,details){
                 //we are going to put 3 elements per row
                 if((details['earliest_clockin']=='23:59:59')&&
                 (details['open']==1)){
-                    var opentime = new Date("1/1/1900 "+details['open_time']);
+                    //var opentime = new Date("1/1/2020 "+details['open_time']);
+                    var currenttime = new Date();
+                    var opentime = new Date(currenttime.getFullYear()+'-'+(currenttime.getMonth()+1)+'-'+currenttime.getDate()+' '+details['open_time']);
                     /*var warningtime = new Date(opentime);
                     warningtime.setMinutes(warningtime.getMinutes()+10);*/
-                    var earliest = new Date("1/1/1900 "+details['earliest_clockin']);
+                    if(opentime.getTime()<=currenttime.getTime()){
+                        storecount++;
+                        var earliest = new Date("1/1/1900 "+details['earliest_clockin']);
 
-                    if(i==1){
-                        output+='<div class="row" style="margin-bottom:1em">';
-                    }
+                        if(i==1){
+                            output+='<div class="row" style="margin-bottom:1em">';
+                        }
 
-                    output+='<div class="col-sm">';
-                    output+='<div class="card ';
-                    if(details['earliest_clockin']=='23:59:59'){
-                        //do nothing, no one has clocked in yet
-                        output+='text-white bg-danger';
-                    }else if(earliest<=opentime){
-                        output+='text-white bg-success';
-                    }else if((earliest>opentime)&&(earliest<warningtime)){
-                        output+='text-white bg-warning';
-                    }else{
-                        output+='text-white bg-danger';
-                    }
-                    output+='">';
-                    output+='<div class="card-header"><strong>'+details['location']+'</strong></div>';
-                    output+='<div class="card-body">';
-                    output+='<p class="card-text">Open Time: '+details['open_time']+'</p>';
-                    output+='<p class="card-text">No clock in recorded</p>';
-                    output+='</div>';
-                    output+='</div>';
-                    output+='</div>';
-
-                    if(i==3){
+                        output+='<div class="col-sm">';
+                        output+='<div class="card ';
+                        if(details['earliest_clockin']=='23:59:59'){
+                            //do nothing, no one has clocked in yet
+                            output+='text-white bg-danger';
+                        }else if(earliest<=opentime){
+                            output+='text-white bg-success';
+                        }else if((earliest>opentime)&&(earliest<warningtime)){
+                            output+='text-white bg-warning';
+                        }else{
+                            output+='text-white bg-danger';
+                        }
+                        output+='">';
+                        output+='<div class="card-header"><strong>'+details['location']+'</strong></div>';
+                        output+='<div class="card-body">';
+                        output+='<p class="card-text">Open Time: '+details['open_time']+'</p>';
+                        output+='<p class="card-text">No clock in recorded</p>';
                         output+='</div>';
-                        i=1;
+                        output+='</div>';
+                        output+='</div>';
+
+                        if(i==3){
+                            output+='</div>';
+                            i=1;
+                        }else{
+                            i++;
+                        }
                     }else{
-                        i++;
+                        stores_notopen++;
                     }
+                    
                 }
                 
-            });
+            }); 
             if(i<3){
+                output+='</div>';
+            }
+            //2020-12-04 CB V1.2.7.6 - new store count to show all stores clocked in
+            if(storecount==0){
+                output='<div class="row" style="margin-bottom:1em">';
+                output+='<div class="col-sm">';
+                output+='<div class="card text-white bg-success">';
+                output+='<div class="card-body">';
+                output+='<p class="card-text">All stores currently clocked in</p>';
+                //output+='<p class="card-text">'+stores_notopen+' stores not open</p>';
+                output+='</div>';
+                output+='</div>';
+                output+='</div>';
                 output+='</div>';
             }
             jQuery('#tfgg_scp_emp_dash_store_clock_in_store_card').append(output);
