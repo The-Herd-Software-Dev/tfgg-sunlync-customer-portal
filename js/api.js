@@ -1713,7 +1713,9 @@ function EmpDash_StoreClockIn(){
                 output+='<div class="card text-white bg-success">';
                 output+='<div class="card-body">';
                 output+='<p class="card-text">All stores currently clocked in</p>';
-                //output+='<p class="card-text">'+stores_notopen+' stores not open</p>';
+                if(stores_notopen>0){
+                    output+='<p class="card-text">'+stores_notopen+' store(s) not currently open</p>';
+                }
                 output+='</div>';
                 output+='</div>';
                 output+='</div>';

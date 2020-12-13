@@ -311,14 +311,10 @@
 							<div id="tfgg_scp_reg_recaptcha">
 						<?php
 							$captcha = do_shortcode('[bws_google_captcha]');
-							//var_dump($captcha);
 							if($captcha){
-								if(strpos($captcha,'gglcptch_whitelist_message')>0){
-									$whitelisted_captcha = true;
-								}else{
-									echo $captcha;
-									$whitelisted_captcha = false;
-								}
+								//2020-12-12 CB V1.2.7.7 - changed whitelisting check
+								$whitelisted_captcha = (strpos($captcha,'gglcptch_whitelist_message')>0);
+								echo $captcha;
 							}else{
 								$whitelisted_captcha = true;
 							}
