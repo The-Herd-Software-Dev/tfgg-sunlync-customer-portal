@@ -577,7 +577,7 @@
 					'sms'			=> '0',
 				);	
 			}
-
+			echo ('<script>'.$gtag.'</script>');
 			//check to determine if the user exists in sunlync, if not, register them
 			$alreadyRegistered=json_decode(tfgg_api_check_user_exists($demographics['firstname'],
 			$demographics['lastname'],$demographics['dob'],$demographics['email']));

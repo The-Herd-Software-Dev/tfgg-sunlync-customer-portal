@@ -177,6 +177,7 @@
     }
 
     function tfgg_cp_redirect_after_registration(){
+        $_SESSION['tfgg_scp_send_ga_client_number']=TRUE;
         if(get_option('tfgg_scp_cpnewuser_success_page')==''){
             wp_redirect(get_option('tfgg_scp_cplogin_page_success'));exit;
         }else{
@@ -2943,6 +2944,23 @@
         }
     }
     add_action('wp_head','tfgg_scp_set_meta_equiv');
+
+    //2020-12-20 CB V1.2.7.8
+    add_action('wp_footer','tfgg_scp_send_ga_client');
+    function tfgg_scp_send_ga_client(){
+        if((array_key_exists('tfgg_scp_send_ga_client_number',$_SESSION))&&
+        ($_SESSION['tfgg_scp_send_ga_client_number']===TRUE)){
+            $client = tfgg_cp_get_sunlync_client();
+            if($client!=FALSE){
+                unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
+                $script = '<script type="text/javascript"> '.
+                'var ga = typeof ga === "undefined" && typeof __gaTracker !== "undefined" ? __gaTracker : ga; '.
+                'ga("set","dimension2","'.$client.'"); '.
+                '</script>';
+                echo($script);
+            }
+        }
+    }
     
     /*2019-10-12 CB V1.1.1.1 - deprecated
     add_action('wp_logout','tfgg_auto_redirect_after_logout');

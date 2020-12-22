@@ -1646,10 +1646,16 @@ function EmpDash_StoreClockIn(){
         var returnData = jQuery.parseJSON(data);
         if(returnData["results"].toUpperCase()=='SUCCESS'){
             //var parent = jQuery('#tfgg_scp_emp_dash_store_clock_in_store_card');
+            //console.log(returnData);
             var i=1;
             var storecount=0;
             var stores_notopen=0;
             var output=''
+            var currenttime = new Date();
+
+            //2020-12-29 CB V1.2.7.8 0 new comparison date
+            var compareDate = new Date(currenttime.getFullYear()+'-'+(currenttime.getMonth()+1)+'-'+currenttime.getDate());
+            compareDate.setDate(compareDate.getDate()-7);
             jQuery.each(returnData["data"], function(key,details){
                 //we are going to put 3 elements per row
                 //do not show stores that are not open today
@@ -1657,35 +1663,58 @@ function EmpDash_StoreClockIn(){
                 if((details['earliest_clockin']=='23:59:59')&&
                 (details['open']==1)){
                     //var opentime = new Date("1/1/2020 "+details['open_time']);
-                    var currenttime = new Date();
                     var opentime = new Date(currenttime.getFullYear()+'-'+(currenttime.getMonth()+1)+'-'+currenttime.getDate()+' '+details['open_time']);
                     /*var warningtime = new Date(opentime);
                     warningtime.setMinutes(warningtime.getMinutes()+10);*/
                     if(opentime.getTime()<=currenttime.getTime()){
                         storecount++;
+                        warningText = 'No clock in recorded'
                         var earliest = new Date("1/1/1900 "+details['earliest_clockin']);
 
                         if(i==1){
                             output+='<div class="row" style="margin-bottom:1em">';
                         }
 
+                        textColor = ' text-white';
+                        $bgColor = '';
+
                         output+='<div class="col-sm">';
                         output+='<div class="card ';
                         if(details['earliest_clockin']=='23:59:59'){
                             //do nothing, no one has clocked in yet
-                            output+='text-white bg-danger';
+                            bgColor = ' bg-danger';
                         }else if(earliest<=opentime){
-                            output+='text-white bg-success';
+                            bgColor = ' bg-success';
                         }else if((earliest>opentime)&&(earliest<warningtime)){
-                            output+='text-white bg-warning';
+                            bgColor = ' bg-warning';
                         }else{
-                            output+='text-white bg-danger';
+                            bgColor = ' bg-danger';
                         }
+                        
+                        //2020-12-29 CB V1.2.7.8 0 new code to compare if a clock-in is still there from 7 days ago
+                        if(details['prev_clock_in_list'].length>0){
+                            for(let clockins of details['prev_clock_in_list']){
+                                var prevClockIn = new Date(clockins["clock_in_date"]);
+                                if(prevClockIn < compareDate){
+                                    break;
+                                    //the date is too far in the past for us to do anything with
+                                    //no need to check the rest of the array since it is ordered
+                                    //by date desc
+                                }else{
+                                    textColor = 'text-secondary';
+                                    bgColor = ' bg-warning';
+                                    warningText = 'Clock in exists from '+prevClockIn.getDate()+'/'+(prevClockIn.getMonth()+1)+'/'+prevClockIn.getFullYear();
+                                }
+                            }//for of      
+                        }
+
+                        output+=textColor+bgColor;
+
                         output+='">';
                         output+='<div class="card-header"><strong>'+details['location']+'</strong></div>';
                         output+='<div class="card-body">';
                         output+='<p class="card-text">Open Time: '+details['open_time']+'</p>';
-                        output+='<p class="card-text">No clock in recorded</p>';
+                        output+='<p class="card-text">'+warningText+'</p>';
                         output+='</div>';
                         output+='</div>';
                         output+='</div>';

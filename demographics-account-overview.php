@@ -5,7 +5,8 @@
 		$client=tfgg_cp_get_sunlync_client();
 		
         if ($client!=FALSE){
-            //$client="0000000002";
+			//$client="0000000002";
+
             $demographics = json_decode(tfgg_api_get_client_demographics($client)); 
             //var_dump($demographics);
             if(isset($_SESSION['tfgg_scp_cart_qty'])){
