@@ -360,7 +360,7 @@
 							jQuery('#new_reg_dob').html('');
 							dateselected = jQuery("#tfgg_cp_user_dob_value").datepicker('getDate');	
 							if(dateselected!=null){
-								console.log('here');
+								//console.log('here');
 								if(dateselected.getFullYear()!=yearText){
 									dateselected.setFullYear(yearText)
 									jQuery("#tfgg_cp_user_dob_value").datepicker("setDate",dateselected);
@@ -380,14 +380,6 @@
 
 				
     			jQuery('.js-example-basic-single').select2();
-
-				/*jQuery(function(){
-					var tag = ga('cd1');
-					jQuery('#tfgg_cp_user_defined_2').val(tag);
-				});	*/
-				ga(function(tracker){
-					jQuery('#tfgg_cp_user_defined_2').val(tracker.get('dimension1'));	
-				});	
 			</script>
 
         <?php
@@ -577,7 +569,7 @@
 					'sms'			=> '0',
 				);	
 			}
-			echo ('<script>'.$gtag.'</script>');
+			
 			//check to determine if the user exists in sunlync, if not, register them
 			$alreadyRegistered=json_decode(tfgg_api_check_user_exists($demographics['firstname'],
 			$demographics['lastname'],$demographics['dob'],$demographics['email']));

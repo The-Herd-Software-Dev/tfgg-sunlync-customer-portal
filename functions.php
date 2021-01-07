@@ -2954,7 +2954,7 @@
             if($client!=FALSE){
                 unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
                 $script = '<script type="text/javascript"> '.
-                'var ga = typeof ga === "undefined" && typeof __gaTracker !== "undefined" ? __gaTracker : ga; '.
+                //'var ga = typeof ga === "undefined" && typeof __gaTracker !== "undefined" ? __gaTracker : ga; '.
                 'ga("set","dimension2","'.$client.'"); '.
                 '</script>';
                 echo($script);
