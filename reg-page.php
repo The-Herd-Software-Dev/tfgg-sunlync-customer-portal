@@ -311,6 +311,7 @@
 		
 				<input type="hidden" name="tfgg_cp_register_nonce" id="tfgg_cp_register_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-nonce'); ?>"/>
 				<input type="hidden" name="tfgg_cp_user_defined_2" id="tfgg_cp_user_defined_2" value=""/>
+				<input type="text" name="tfgg_cp_user_password_reenter" id="tfgg_cp_user_password_reenter" style="display:none !important" tabindex="-1" autocomplete="off"/>
 				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)" 
 				<?php if($whitelisted_captcha == false){echo 'disabled';}?>>  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
@@ -522,7 +523,8 @@
 	
 	function tfgg_sunlync_client_api_registration(){
 		if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_nonce',$_POST))&&
-        (wp_verify_nonce($_POST['tfgg_cp_register_nonce'],'tfgg-cp-register-nonce')))){
+		(wp_verify_nonce($_POST['tfgg_cp_register_nonce'],'tfgg-cp-register-nonce')))&&
+		(empty($_POST['tfgg_cp_user_password_reenter']))){
 			//organize the data
 			$address = array(
 			'street'	=> $_POST['tfgg_cp_street_address'],
