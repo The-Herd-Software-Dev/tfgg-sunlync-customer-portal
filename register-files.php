@@ -52,8 +52,9 @@
 
         wp_register_style( 'jquery-style', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css', true);
         wp_enqueue_style( 'jquery-style' );
-        wp_register_script( 'google-jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js', array( 'jquery' ) );
-        wp_enqueue_script( 'google-jquery-ui' );
+        //2021-01-14 CB V1.2.7.12 - changed to use the api script handle to prevent double load
+        wp_register_script( 'jquery-ui-datepicker', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js', array( 'jquery' ) );
+        wp_enqueue_script( 'jquery-ui-datepicker' );
 
 
         wp_register_style( 'select2-style', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.7/css/select2.min.css', true);
