@@ -2946,17 +2946,30 @@
     add_action('wp_head','tfgg_scp_set_meta_equiv');
 
     //2020-12-20 CB V1.2.7.8
+    //2021-01-20 CB V1.2.7.13 - changed to onreadystatechange call
     add_action('wp_footer','tfgg_scp_send_ga_client');
     function tfgg_scp_send_ga_client(){
         if((array_key_exists('tfgg_scp_send_ga_client_number',$_SESSION))&&
         ($_SESSION['tfgg_scp_send_ga_client_number']===TRUE)){
             $client = tfgg_cp_get_sunlync_client();
             if($client!=FALSE){
-                unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
-                $script = '<script type="text/javascript"> '.
-                //'var ga = typeof ga === "undefined" && typeof __gaTracker !== "undefined" ? __gaTracker : ga; '.
-                'ga("set","dimension1","'.$client.'"); '.
-                '</script>';
+                //unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
+                /*$script = "<script type=\"text/javascript\"> \r\n".
+                    "document.addEventListener(\"readystatechange\", event => { \r\n".
+                        "if (event.target.readyState === \"complete\") {\r\n".
+                        //"var ga = typeof ga === \"undefined\" && typeof __gaTracker !== \"undefined\" ? __gaTracker : ga;  \r\n".
+                        "console.log(\"here we go!\");\r\n".
+                        "ga(\"set\",\"clientId\",\"".$client."\"); \r\n".
+                        "}\r\n".
+                    "}); \r\n".
+                    "</script>";*/
+                $script = "<script type=\"text/javascript\">\r\n".
+                    "document.addEventListener(\"readystatechange\", event => { \r\n".
+                        "if (event.target.readyState === \"complete\") {\r\n".
+                            "gtag('event', 'registration', {'dimension1': '".$client."'});\r\n".
+                        "}".
+                    "});".
+                    "</script>";
                 echo($script);
             }
         }
