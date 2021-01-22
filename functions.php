@@ -2967,6 +2967,7 @@
                     "document.addEventListener(\"readystatechange\", event => { \r\n".
                         "if (event.target.readyState === \"complete\") {\r\n".
                             "gtag('event', 'registration', {'dimension1': '".$client."'});\r\n".
+                            "ga('set', 'dimension1', '".$client."');\r\n".
                         "}".
                     "});".
                     "</script>";
