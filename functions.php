@@ -2947,13 +2947,14 @@
 
     //2020-12-20 CB V1.2.7.8
     //2021-01-20 CB V1.2.7.13 - changed to onreadystatechange call
-    add_action('wp_footer','tfgg_scp_send_ga_client');
+    //2021-01-24 CB V1.2.7.15 - added try except for both gtag and ga
+    add_action('wp_footer','tfgg_scp_send_ga_client',100);
     function tfgg_scp_send_ga_client(){
         if((array_key_exists('tfgg_scp_send_ga_client_number',$_SESSION))&&
         ($_SESSION['tfgg_scp_send_ga_client_number']===TRUE)){
             $client = tfgg_cp_get_sunlync_client();
             if($client!=FALSE){
-                //unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
+                unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
                 /*$script = "<script type=\"text/javascript\"> \r\n".
                     "document.addEventListener(\"readystatechange\", event => { \r\n".
                         "if (event.target.readyState === \"complete\") {\r\n".
@@ -2963,14 +2964,21 @@
                         "}\r\n".
                     "}); \r\n".
                     "</script>";*/
-                $script = "<script type=\"text/javascript\">\r\n".
-                    "document.addEventListener(\"readystatechange\", event => { \r\n".
-                        "if (event.target.readyState === \"complete\") {\r\n".
-                            "gtag('event', 'registration', {'dimension1': '".$client."'});\r\n".
-                            "ga('set', 'dimension1', '".$client."');\r\n".
-                        "}".
-                    "});".
-                    "</script>";
+                    $script = "<script type=\"text/javascript\" id=\"tfgg-scp-google-dimension\">
+                    document.addEventListener(\"readystatechange\", event => {              
+                        if (event.target.readyState === \"complete\") {
+                            try{
+                                gtag('event', 'registration', {'dimension1': '".$client."'});
+                            }catch(e){
+                                try{
+                                    ga('set', 'dimension1', '".$client."');
+                                }catch(e){
+                                    console.log('GA and GTAG not defined');
+                                }
+                            }
+                        }
+                    });
+                    </script>";
                 echo($script);
             }
         }
