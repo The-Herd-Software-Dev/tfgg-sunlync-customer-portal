@@ -112,6 +112,15 @@
         //2020-07-15 CB V1.2.6.5 - new field
         register_setting("tfgg_store_selection_section","tfgg_scp_store_registration_selection");
 
+        //2021-02-14 CB V1.3.0.1 - new field
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_slugs");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_promos");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_pkgs");
+
+        register_setting("tfgg_store_selection_section","tfgg_scp_online_registration_selection");
+        register_setting("tfgg_store_selection_section","tfgg_scp_online_reg_promos");
+        register_setting("tfgg_store_selection_section","tfgg_scp_online_reg_pkgs");
+
         //misc section
         add_settings_field("tfgg_scp_customer_service_email", "Customer Service E-Mail:", "display_customer_service_email", "tfgg-misc-options", "tfgg_misc_options_section");
         register_setting("tfgg_misc_options_section", "tfgg_scp_customer_service_email");
@@ -140,10 +149,10 @@
         add_settings_field("tfgg_scp_registration_source_label", "Registration Source:", "display_registration_source_label_online","tfgg-registration-options","tfgg_registration_options_section");
         register_setting("tfgg_registration_options_section","tfgg_scp_registration_source_label");
 
-        add_settings_field("tfgg_scp_reg_promo", "Promo For Registration:", "display_reg_promo_online", "tfgg-registration-options", "tfgg_registration_options_section");
+        add_settings_field("tfgg_scp_reg_promo", "Default Registration Promo:", "display_reg_promo_online", "tfgg-registration-options", "tfgg_registration_options_section");
         register_setting("tfgg_registration_options_section", "tfgg_scp_reg_promo");
 
-        add_settings_field("tfgg_scp_reg_package", "Package For Registration:", "display_reg_package_online", "tfgg-registration-options", "tfgg_registration_options_section");
+        add_settings_field("tfgg_scp_reg_package", "Default Registration Package:", "display_reg_package_online", "tfgg-registration-options", "tfgg_registration_options_section");
         register_setting("tfgg_registration_options_section", "tfgg_scp_reg_package");
 
         add_settings_field("tfgg_scp_online_reg_recaptcha_req", "Google Recaptcha Required:", "display_reg_online_recaptcha_req", "tfgg-registration-options", "tfgg_registration_options_section");

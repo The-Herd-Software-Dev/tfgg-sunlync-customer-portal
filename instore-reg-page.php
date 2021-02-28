@@ -2,9 +2,9 @@
     function reg_form_display_instore(){
         ob_start(); 
         
-        $storeList = json_decode(tfgg_api_get_stores());
+        $storeList = json_decode(tfgg_api_get_reg_stores(false));
         if(StrToUpper($storeList->results)==='SUCCESS'){
-        	$storeList = $storeList->stores;	
+			$storeList = $storeList->stores;
 		}
 		
 		$skintypes = json_decode(tfgg_api_get_skintypes());
@@ -313,7 +313,8 @@
 							$captcha = do_shortcode('[bws_google_captcha]');
 							if($captcha){
 								//2020-12-12 CB V1.2.7.7 - changed whitelisting check
-								$whitelisted_captcha = (strpos($captcha,'gglcptch_whitelist_message')>0);
+								$whitelisted_captcha = ((strpos($captcha,'gglcptch_whitelist_message')>0)||
+								((strpos($captcha,'gglcptch_allowlist_message')>0)));
 								echo $captcha;
 							}else{
 								$whitelisted_captcha = true;
@@ -419,7 +420,7 @@
 	function set_storecode_display(){
 		ob_start(); 
         
-        $storeList = json_decode(tfgg_api_get_reg_stores());
+        $storeList = json_decode(tfgg_api_get_reg_stores(false));
         if(StrToUpper($storeList->results)==='SUCCESS'){
         	$storeList = $storeList->stores;	
 		}
@@ -545,9 +546,15 @@
 				//no user in SunLync, insert as a new user
 
 				//2020-02-25 CB V1.2.4.21 - updated to include reg promo and pkg
-				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
+				/*$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
 				get_option('tfgg_scp_reg_promo_instore','0000000000'),
-				get_option('tfgg_scp_reg_package_instore','0000000000')));
+				get_option('tfgg_scp_reg_package_instore','0000000000')));*/
+
+				//2021-02-15 CB V1.3.0.1 - new code
+				$storePkg = tfgg_cp_reg_pkg($storecode,false);
+				$storePromo = tfgg_cp_reg_promo($storecode,false);
+				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
+				$storePromo, $storePkg));
 				
 				if(strtoupper($reg_result->results)=='SUCCESS'){
 					//now set the password

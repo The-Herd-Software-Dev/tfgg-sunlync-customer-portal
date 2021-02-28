@@ -157,8 +157,41 @@
         
         return $user->user_login;
     }
-    
     add_action('init','tfgg_cp_get_sunlync_client');
+
+    function tfgg_cp_reg_pkg($store, $isOnline){
+        //check if there is a store specific registration package
+        if($isOnline){
+            $regStorePkgs = (array)get_option('tfgg_scp_store_reg_pkgs');
+        }else{
+            $regStorePkgs = (array)get_option('tfgg_scp_online_reg_pkgs');
+        }
+        if((array_key_exists($store, $regStorePkgs))&&
+            ($regStorePkgs[$store]<>'')){ 
+                $result = $regStorePkgs[$store]; 
+        }else{
+            $result=get_option('tfgg_scp_reg_package','0000000000');//default 
+        }
+
+        return $result;
+    }
+
+    function tfgg_cp_reg_promo($store, $isOnline){
+        //check if there is a store specific registration package
+        if($isOnline){
+            $regStorePromo = (array)get_option('tfgg_scp_store_reg_promos');
+        }else{
+            $regStorePromo = (array)get_option('tfgg_scp_online_reg_promos');
+        }
+        if((array_key_exists($store, $regStorePromo))&&
+            ($regStorePromo[$store]<>'')){ 
+                $result = $regStorePromo[$store]; 
+        }else{
+            $result=get_option('tfgg_scp_reg_promo','0000000000');//default 
+        }
+
+        return $result;  
+    }
 
     function tfgg_cp_redirect_after_login($existingUser=false, $redirectToCart=false){
         if(get_option('tfgg_scp_cplogin_page_success')==''){
@@ -805,12 +838,12 @@
     add_action( 'wp_ajax_tfgg_api_get_stores', 'tfgg_api_get_stores' );
     add_action( 'wp_ajax_nopriv_tfgg_api_get_stores', 'tfgg_api_get_stores' );
 
-    function tfgg_api_get_reg_stores(){
+    function tfgg_api_get_reg_stores($online){
         //2020-07-15 CB V1.2.6.5 - new
         $url= tfgg_get_api_url().'TSunLyncAPI/CIPGetStoreDemoApptInfo/sStoreCode/nInAppts';
         
         //$url=str_replace('sStoreCode',tfgg_scp_get_stores_selected_for_api(),$url);
-        $url=str_replace('sStoreCode',tfgg_scp_get_stores_selected_for_reg(),$url);
+        $url=str_replace('sStoreCode',tfgg_scp_get_stores_selected_for_reg($online),$url);
         $url=str_replace('nInAppts','',$url);
         
         try{
@@ -1722,8 +1755,12 @@
     }
 
     //2019-10-23 CB V1.2.6.5 - new function to return the stores selected for registration pages as a 'useable' string for the API
-    function tfgg_scp_get_stores_selected_for_reg(){
-        $stores = get_option('tfgg_scp_store_registration_selection');
+    function tfgg_scp_get_stores_selected_for_reg($online){
+        if($online){
+            $stores = get_option('tfgg_scp_store_registration_selection');
+        }else{
+            $stores = get_option('tfgg_scp_online_registration_selection');
+        }
         if($stores<>''){
             $storesSelected = join('","',$stores);   
             return '"'.$storesSelected.'"';    
@@ -2938,8 +2975,10 @@
     function tfgg_scp_set_meta_equiv(){
         global $post;
         $post_slug = $post->post_name;
-        if(($post_slug==get_option('tfgg_scp_cpnewuser_page_instore'))||
-        (strpos(get_option('tfgg_scp_cpnewuser_page_instore'),$post_slug)>0)){
+        
+        //2020-02-11 CB - added check for blank post slug
+        if(($post_slug!='')&&(($post_slug==get_option('tfgg_scp_cpnewuser_page_instore'))||
+        (strpos(get_option('tfgg_scp_cpnewuser_page_instore'),$post_slug)>0))){
             echo '<meta http-equiv="refresh" content="36000"/>';
         }
     }
@@ -2947,38 +2986,36 @@
 
     //2020-12-20 CB V1.2.7.8
     //2021-01-20 CB V1.2.7.13 - changed to onreadystatechange call
-    //2021-01-24 CB V1.2.7.15 - added try except for both gtag and ga
-    add_action('wp_footer','tfgg_scp_send_ga_client',100);
+    //2021-01-24 CB V1.2.7.16 - added try except for both gtag and ga
+    add_action('wp_footer','tfgg_scp_send_ga_client');
     function tfgg_scp_send_ga_client(){
+        
         if((array_key_exists('tfgg_scp_send_ga_client_number',$_SESSION))&&
         ($_SESSION['tfgg_scp_send_ga_client_number']===TRUE)){
             $client = tfgg_cp_get_sunlync_client();
             if($client!=FALSE){
                 unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
-                /*$script = "<script type=\"text/javascript\"> \r\n".
-                    "document.addEventListener(\"readystatechange\", event => { \r\n".
-                        "if (event.target.readyState === \"complete\") {\r\n".
-                        //"var ga = typeof ga === \"undefined\" && typeof __gaTracker !== \"undefined\" ? __gaTracker : ga;  \r\n".
-                        "console.log(\"here we go!\");\r\n".
-                        "ga(\"set\",\"clientId\",\"".$client."\"); \r\n".
-                        "}\r\n".
-                    "}); \r\n".
-                    "</script>";*/
-                    $script = "<script type=\"text/javascript\" id=\"tfgg-scp-google-dimension\">
+                $script = "<script type=\"text/javascript\" id=\"tfgg-scp-google-dimension\">
                     document.addEventListener(\"readystatechange\", event => {              
                         if (event.target.readyState === \"complete\") {
                             try{
                                 gtag('event', 'registration', {'dimension1': '".$client."'});
                             }catch(e){
                                 try{
-                                    ga('set', 'dimension1', '".$client."');
+                                    ga(function() {
+                                        // Logs an array of all tracker objects
+                                        var trackers = ga.getAll();
+                                        var firstTracker = trackers[0];
+                                        console.log('tracker: '+firstTracker.get('name'));
+                                        ga(firstTracker.get('name')+\".send\",\"pageview\" {\"dimension1\":\"".$client."\"});
+                                    });
                                 }catch(e){
                                     console.log('GA and GTAG not defined');
                                 }
                             }
                         }
                     });
-                    </script>";
+                </script>";   
                 echo($script);
             }
         }

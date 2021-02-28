@@ -3,9 +3,30 @@
     function reg_form_display_new(){
         ob_start(); 
         
-        $storeList = json_decode(tfgg_api_get_reg_stores());
+        $storeList = json_decode(tfgg_api_get_reg_stores(true));
         if(StrToUpper($storeList->results)==='SUCCESS'){
-        	$storeList = $storeList->stores;	
+			$storeList = $storeList->stores;
+			$selectedStore='';
+			global $post;
+			$post_slug = $post->post_name;
+			//check to see if we need to validate a store specific 
+			if($post_slug<>get_option('tfgg_scp_cpnewuser_page')){
+				//we are on a store specific page, maybe
+
+				$regStoreSlugs = (array)get_option('tfgg_scp_store_reg_slugs');
+				$storeSlugKey = array_search($post_slug,$regStoreSlugs);
+
+				if(($storeSlugKey!='')&&($storeSlugKey!=FALSE)){
+					foreach($storeList as &$details){
+						if((!strpos(StrToUpper($details->store_loc),'CLOSED'))&&
+						(!strpos(StrToUpper($details->store_loc),'DELETED'))){
+							if($storeSlugKey==$details->store_id){
+								$selectedStore=$details->store_loc;
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		$skintypes = json_decode(tfgg_api_get_skintypes());
@@ -100,7 +121,9 @@
 							<!--<input data-alertpnl="new_reg_post_code" name="tfgg_cp_store" id="tfgg_cp_store" class="required account-overview-input" type="text"/>-->
 							
 							<div class="select-container">
-							
+							<?php
+							if((isset($selectedStore))&&($selectedStore=='')){
+							?>
 							<select data-alertpnl="new_reg_store_alertpnl" name="tfgg_cp_store" id="tfgg_cp_store" class="js-example-basic-single required account-overview-input">
 								<option value="please select">Please Select...</option>
 								<?php
@@ -124,7 +147,15 @@
 									}
 								?>
 							</select>
- 
+							<?php
+	}else{
+?>
+							<input data-alertpnl="v" id="tfgg_cp_store_show" name="tfgg_cp_store_show" class="account-overview-input" type="text"
+							value="<?php echo ($selectedStore); ?>" readonly/>
+							<input type="hidden" name="tfgg_cp_store" value="<?php echo $storeSlugKey;?>"/>
+<?php
+	}
+							?>
 							</div>
 					
 							<div style="display:none" id="new_reg_store_alertpnl" class="reg_alert"></div>
@@ -585,9 +616,16 @@
 				//no user in SunLync, insert as a new user
 
 				//2020-02-25 CB V1.2.4.21 - updated to include reg promo and pkg
-				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
+				//2021-02-14 CB V1.3.0.1 - changed for new set up properties
+				/*$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
 				get_option('tfgg_scp_reg_promo','0000000000'),
-				get_option('tfgg_scp_reg_package','0000000000')));
+				get_option('tfgg_scp_reg_package','0000000000')));*/
+
+				//2021-02-14 CB V1.3.0.1 - new code
+				$storePkg = tfgg_cp_reg_pkg($_POST['tfgg_cp_store'],true);
+				$storePromo = tfgg_cp_reg_promo($_POST['tfgg_cp_store'],true);
+				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
+				$storePromo, $storePkg));
 				
 				if(strtoupper($reg_result->results)=='SUCCESS'){
 					//now set the password
