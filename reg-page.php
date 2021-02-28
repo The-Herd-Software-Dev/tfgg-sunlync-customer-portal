@@ -329,6 +329,7 @@
 								//2021-01-22 CB V1.2.7.14 - additional whitelist check for new message
 								$whitelisted_captcha = ((strpos($captcha,'gglcptch_whitelist_message')>0)||
 								((strpos($captcha,'gglcptch_allowlist_message')>0)));
+								$v3Captcha = (strpos($captcha,'gglcptch_v3')>0);
 								echo $captcha;
 							}else{
 								$whitelisted_captcha = true;
@@ -346,7 +347,7 @@
 				<input type="hidden" name="tfgg_cp_user_defined_2" id="tfgg_cp_user_defined_2" value=""/>
 				<input type="text" name="tfgg_cp_user_password_reenter" id="tfgg_cp_user_password_reenter" style="display:none !important" tabindex="-1" autocomplete="off"/>
 				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)" 
-				<?php if($whitelisted_captcha == false){echo 'disabled';}?>>  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
+				<?php if(($whitelisted_captcha == false)||($v3Captcha == false)){echo 'disabled';}?>>  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
 					<div id="new_reg_overall_alertpnl" style="display:none;" class="reg_alert"></div>
 				</div>
