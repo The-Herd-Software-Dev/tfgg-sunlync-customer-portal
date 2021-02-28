@@ -2999,19 +2999,18 @@
                     document.addEventListener(\"readystatechange\", event => {              
                         if (event.target.readyState === \"complete\") {
                             try{
-                                gtag('event', 'registration', {'dimension1': '".$client."'});
+                                ga(function() {
+                                    // Logs an array of all tracker objects
+                                    var trackers = ga.getAll();
+                                    var firstTracker = trackers[0];
+                                    console.log('tracker: '+firstTracker.get('name'));
+                                    ga(firstTracker.get('name')+\".set\",\"dimension1\",\"".$client."\");
+                                    ga(firstTracker.get('name')+\".send\", \"event\", \"registration\", \"complete\", \"Customer Reg\", {
+                                        nonInteraction: true
+                                      });
+                                });
                             }catch(e){
-                                try{
-                                    ga(function() {
-                                        // Logs an array of all tracker objects
-                                        var trackers = ga.getAll();
-                                        var firstTracker = trackers[0];
-                                        console.log('tracker: '+firstTracker.get('name'));
-                                        ga(firstTracker.get('name')+\".send\",\"pageview\" {\"dimension1\":\"".$client."\"});
-                                    });
-                                }catch(e){
-                                    console.log('GA and GTAG not defined');
-                                }
+                                console.log('GA not defined');
                             }
                         }
                     });
