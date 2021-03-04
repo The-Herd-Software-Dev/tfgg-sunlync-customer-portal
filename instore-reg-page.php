@@ -484,6 +484,7 @@
 		(wp_verify_nonce($_POST['tfgg_cp_register_instore_nonce'],'tfgg-cp-register-instore-nonce')))){*/
 		if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_instore_nonce',$_POST)))&&
 		(empty($_POST['tfgg_cp_user_password_reenter']))){
+			
 			$check_captcha = apply_filters( 'gglcptch_verify_recaptcha', true, 'string', $_POST['tfgg_cp_online_reg_source_slug'] );
 			
 			if(true === $check_captcha){

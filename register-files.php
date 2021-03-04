@@ -27,7 +27,7 @@
         $includeJsV = date("ymd-Gis", filemtime( plugin_dir_path( __FILE__ ) . 'js/include.js' ));
         $wpStuleV = date("ymd-Gis", filemtime( plugin_dir_path( __FILE__ ) . 'css/wp_style.css' ));
 
-        wp_enqueue_script( 'tfgg-api-scripts', plugin_dir_url(__FILE__).'js/api.js', array( 'jquery' ), $apiJsV );
+        wp_enqueue_script( 'tfgg-api-scripts', plugin_dir_url(__FILE__).'js/api.js', array( 'jquery','jquery-ui-dialog'), $apiJsV,true );
         wp_localize_script('tfgg-api-scripts', 'localAccess', array('pluginsUrl' => plugin_dir_url(__FILE__),
         'adminAjaxURL' => admin_url( 'admin-ajax.php' ),
         'acctOverview' => get_option('tfgg_scp_acct_overview'),

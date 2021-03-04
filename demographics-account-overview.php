@@ -48,7 +48,12 @@
        
        <hr />
    
-       
+       <?php
+	   	//20201-03-04  - we need to output a dialog box on screen instead of creating on the fly
+	   ?>
+	   <div style="padding: 10px; max-width: 500px; word-wrap: break-word; display:none;" id="tfgg-scp-confirmDialog">
+
+	   </div>
         <form id="tfgg_sunlync_cp_demo" method="POST" action="">
     	
 

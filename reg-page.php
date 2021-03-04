@@ -315,7 +315,8 @@
 				<?php
 					//check to see if reCaptcha is active and if so, display it
 					//1.2.4.11 - change code to check for whitelisting
-					if(get_option('tfgg_scp_online_reg_recaptcha_req','1')=='1'){
+					//2021-02-28 CB - deprecated for v3
+					/*if(get_option('tfgg_scp_online_reg_recaptcha_req','1')=='1'){
 						$whitelisted_captcha = false;
 						include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 						if(is_plugin_active('google-captcha/google-captcha.php')){
@@ -330,7 +331,7 @@
 								$whitelisted_captcha = ((strpos($captcha,'gglcptch_whitelist_message')>0)||
 								((strpos($captcha,'gglcptch_allowlist_message')>0)));
 								$v3Captcha = (strpos($captcha,'gglcptch_v3')>0);
-								echo $captcha;
+								echo $captcha; 
 							}else{
 								$whitelisted_captcha = true;
 							}
@@ -340,14 +341,15 @@
 						}
 					}else{
 						$whitelisted_captcha = true;
-					}
+					}*/
+					echo apply_filters( 'gglcptch_display_recaptcha', '', $post_slug );
 				?>
 		
 				<input type="hidden" name="tfgg_cp_register_nonce" id="tfgg_cp_register_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-nonce'); ?>"/>
 				<input type="hidden" name="tfgg_cp_user_defined_2" id="tfgg_cp_user_defined_2" value=""/>
+				<input type="hidden" name="tfgg_cp_online_reg_source_slug" id="tfgg_cp_online_reg_source_slug" value="<?php echo $post_slug;?>"/>
 				<input type="text" name="tfgg_cp_user_password_reenter" id="tfgg_cp_user_password_reenter" style="display:none !important" tabindex="-1" autocomplete="off"/>
-				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)" 
-				<?php if(($whitelisted_captcha == false)||($v3Captcha == false)){echo 'disabled';}?>>  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
+				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)">  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
 				<div class="account-overview-input-single">
 					<div id="new_reg_overall_alertpnl" style="display:none;" class="reg_alert"></div>
 				</div>
@@ -559,6 +561,16 @@
 		if((isset($_POST['tfgg_cp_user_email'])) && ((array_key_exists('tfgg_cp_register_nonce',$_POST))&&
 		(wp_verify_nonce($_POST['tfgg_cp_register_nonce'],'tfgg-cp-register-nonce')))&&
 		(empty($_POST['tfgg_cp_user_password_reenter']))){
+
+			$check_captcha = apply_filters( 'gglcptch_verify_recaptcha', true, 'string', $_POST['tfgg_cp_online_reg_source_slug'] );
+			
+			if(true === $check_captcha){
+				//do nothing, the captcha was a success
+			}else{
+				tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$check_captcha.
+					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?		subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));	
+				return false;
+			}
 			//organize the data
 			$address = array(
 			'street'	=> $_POST['tfgg_cp_street_address'],

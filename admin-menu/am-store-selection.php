@@ -30,21 +30,24 @@ function display_tfgg_store_selection(){
         if((StrToupper($promoList->results)==='SUCCESS')&&
         (array_key_exists('promotions',$promoList))&&(count($promoList->promotions)>0)){
             $promoList = $promoList->promotions;
+            
         }else{
             $promoList='';
+            
         }
         
         $packageList = json_decode(tfgg_scp_get_packages_from_api(''));
         if(StrToUpper($packageList->results)==='SUCCESS'){
             $packageList = $packageList->packages;
+            
         }else{
             $packageList='';
+            
         }
         $selectedStores = (array)get_option('tfgg_scp_store_selection');
 
         //2020-07-15 CB V1.2.6.5 - new array
         $regStores = (array)get_option('tfgg_scp_store_registration_selection');
-
         $apptStores = (array)get_option('tfgg_scp_store_appts_selection');
         $storeCartDetailsID = (array)get_option('tfgg_scp_store_cart_details_id');
 
@@ -59,10 +62,12 @@ function display_tfgg_store_selection(){
 
         
         $rowCounter=1;
-
+        
         echo '<div class="container border rounded" style="padding: 10px; margin-left:unset">';
         foreach($storeList as &$storeDetails){
-            if($storeDetails->store_id!='0000000000'){
+            if(($storeDetails->store_id!='0000000000')&&
+            (strpos(strtolower($storeDetails->store_loc),'closed')===false)&&
+            (strpos(strtolower($storeDetails->store_loc),'deleted')===false)){
                 if($rowCounter==1){
                     //reset the row container
                     echo '<div class="row">';
@@ -83,8 +88,7 @@ function display_tfgg_store_selection(){
                                 $storeContainer.=' </div>';
                             $storeContainer.= '</div>';
 
-                            if((array_key_exists($storeDetails->store_id, $regStoreSlugs))&&
-                            ($regStoreSlugs[$storeDetails->store_id]<>'')){ $storeSlug = $regStoreSlugs[$storeDetails->store_id]; }else{ $storeSlug = ''; } 
+                            if(array_key_exists($storeDetails->store_id, $regStoreSlugs)){ $storeSlug = $regStoreSlugs[$storeDetails->store_id]; }else{ $storeSlug = ''; } 
                             $storeContainer.= '<div class="row">';
                                 $storeContainer.= '<div class="col-1">&nbsp;</div>';
                                 $storeContainer.= '<div class="col-3"><label>Slug</lable></div>';
@@ -93,8 +97,7 @@ function display_tfgg_store_selection(){
                                 $storeContainer.=' </div>';
                             $storeContainer.= '</div>';
 
-                            if((array_key_exists($storeDetails->store_id, $regStorePromos))&&
-                            ($regStorePromos[$storeDetails->store_id]<>'')){ $storePromo = $regStorePromos[$storeDetails->store_id]; }else{ $storePromo = ''; } 
+                            if(array_key_exists($storeDetails->store_id, $regStorePromos)){ $storePromo = $regStorePromos[$storeDetails->store_id]; }else{ $storePromo = ''; } 
                             $storeContainer.= '<div class="row">';
                                 $storeContainer.= '<div class="col-1">&nbsp;</div>';
                                 $storeContainer.= '<div class="col-3"><label>Promo</lable></div>';
@@ -106,16 +109,17 @@ function display_tfgg_store_selection(){
                                 $storeContainer.='</select></div>';
                             $storeContainer.= '</div>';
 
-                            if((array_key_exists($storeDetails->store_id, $regStorePkgs))&&
-                            ($regStorePkgs[$storeDetails->store_id]<>'')){ $storePkg = $regStorePkgs[$storeDetails->store_id]; }else{ $storePkg = ''; } 
+                            if(array_key_exists($storeDetails->store_id, $regStorePkgs)){ $storePkg = $regStorePkgs[$storeDetails->store_id]; }else{ $storePkg = ''; } 
                             $storeContainer.= '<div class="row">';
                                 $storeContainer.= '<div class="col-1">&nbsp;</div>';
                                 $storeContainer.= '<div class="col-3"><label>Package</lable></div>';
                                 $storeContainer.= '<div class="col"><select name="tfgg_scp_store_reg_pkgs['.$storeDetails->store_id.']" style="width:100%">';
                                 $storeContainer.= '<option value="">Please Select...</option>';
                                 foreach($packageList as &$details){
-                                    $storeContainer.='<option value="'.$details->package_id.'" '.($details->package_id === $storePkg ? "selected" : "").'>'.$details->description.'</option>';
-                                }
+                                    if($details->category_number=='0000000087'){//2021-03-04 CB V1.3.0.2 - category number checl
+                                        $storeContainer.='<option value="'.$details->package_id.'" '.($details->package_id === $storePkg ? "selected" : "").'>'.$details->description.'</option>';
+                                    }//if
+                                }//foreach
                                 $storeContainer.='</select></div>';
                             $storeContainer.= '</div>';
 
@@ -140,8 +144,7 @@ function display_tfgg_store_selection(){
                                 $storeContainer.=' </div>';
                             $storeContainer.= '</div>';*/
 
-                            if((array_key_exists($storeDetails->store_id, $regOnlinePromos))&&
-                            ($regOnlinePromos[$storeDetails->store_id]<>'')){ $storePromo = $regOnlinePromos[$storeDetails->store_id]; }else{ $storePromo = ''; } 
+                            if(array_key_exists($storeDetails->store_id, $regOnlinePromos)){ $storePromo = $regOnlinePromos[$storeDetails->store_id]; }else{ $storePromo = ''; } 
                             $storeContainer.= '<div class="row">';
                                 $storeContainer.= '<div class="col-1">&nbsp;</div>';
                                 $storeContainer.= '<div class="col-3"><label>Promo</lable></div>';
@@ -153,16 +156,17 @@ function display_tfgg_store_selection(){
                                 $storeContainer.='</select></div>';
                             $storeContainer.= '</div>';
 
-                            if((array_key_exists($storeDetails->store_id, $regOnlinePkgs))&&
-                            ($regOnlinePkgs[$storeDetails->store_id]<>'')){ $storePkg = $regOnlinePkgs[$storeDetails->store_id]; }else{ $storePkg = ''; } 
+                            if(array_key_exists($storeDetails->store_id, $regOnlinePkgs)){ $storePkg = $regOnlinePkgs[$storeDetails->store_id]; }else{ $storePkg = ''; } 
                             $storeContainer.= '<div class="row">';
                                 $storeContainer.= '<div class="col-1">&nbsp;</div>';
                                 $storeContainer.= '<div class="col-3"><label>Package</lable></div>';
                                 $storeContainer.= '<div class="col"><select name="tfgg_scp_online_reg_pkgs['.$storeDetails->store_id.']" style="width:100%">';
                                 $storeContainer.= '<option value="">Please Select...</option>';
                                 foreach($packageList as &$details){
-                                    $storeContainer.='<option value="'.$details->package_id.'" '.($details->package_id === $storePkg ? "selected" : "").'>'.$details->description.'</option>';
-                                }
+                                    if($details->category_number=='0000000087'){//2021-03-04 CB V1.3.0.2 - category number checl
+                                        $storeContainer.='<option value="'.$details->package_id.'" '.($details->package_id === $storePkg ? "selected" : "").'>'.$details->description.'</option>';
+                                    }//if
+                                }//foreach
                                 $storeContainer.='</select></div>';
                             $storeContainer.= '</div>';
 
@@ -188,8 +192,7 @@ function display_tfgg_store_selection(){
                                 $storeContainer.=' </div>';
                             $storeContainer.= '</div>';
 
-                            if((array_key_exists($storeDetails->store_id, $storeCartDetailsID))&&
-                            ($storeCartDetailsID[$storeDetails->store_id]<>'')){ $cartDetailsID = $storeCartDetailsID[$storeDetails->store_id]; }else{ $cartDetailsID = ''; } 
+                            if(array_key_exists($storeDetails->store_id, $storeCartDetailsID)){ $cartDetailsID = $storeCartDetailsID[$storeDetails->store_id]; }else{ $cartDetailsID = ''; } 
                             $storeContainer.= '<div class="row">';
                                 $storeContainer.= '<div class="col-1">&nbsp;</div>';
                                 $storeContainer.= '<div class="col-3"><label>Details ID</lable></div>';

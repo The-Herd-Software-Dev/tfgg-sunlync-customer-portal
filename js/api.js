@@ -1057,7 +1057,8 @@ function closeRegTAndC(){
 }
 
 function myConfirm(dialogText, okFunc, cancelFunc, dialogTitle) {
-    jQuery('<div style="padding: 10px; max-width: 500px; word-wrap: break-word;">' + dialogText + '</div>').dialog({
+    var dialog = jQuery('<div style="padding: 10px; max-width: 500px; word-wrap: break-word;">' + dialogText + '</div>').dialog({
+      autoOpen: false,
       draggable: false,
       modal: true,
       resizable: false,
@@ -1083,6 +1084,8 @@ function myConfirm(dialogText, okFunc, cancelFunc, dialogTitle) {
         }
       }
     });
+
+    dialog.dialog('open');
   }
 
 function recaptchaCallback(){
