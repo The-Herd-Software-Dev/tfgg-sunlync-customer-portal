@@ -116,9 +116,13 @@ function display_tfgg_store_selection(){
                                 $storeContainer.= '<div class="col"><select name="tfgg_scp_store_reg_pkgs['.$storeDetails->store_id.']" style="width:100%">';
                                 $storeContainer.= '<option value="">Please Select...</option>';
                                 foreach($packageList as &$details){
-                                    if($details->category_number=='0000000087'){//2021-03-04 CB V1.3.0.2 - category number checl
+                                    if($_SERVER['HTTP_HOST']=='thetanningshop.co.uk'){//2021-03-04 CB V1.3.0.2 - category number check
+                                        if($details->category_number=='0000000087'){
+                                            $storeContainer.='<option value="'.$details->package_id.'" '.($details->package_id === $storePkg ? "selected" : "").'>'.$details->description.'</option>';
+                                        }
+                                    }else{
                                         $storeContainer.='<option value="'.$details->package_id.'" '.($details->package_id === $storePkg ? "selected" : "").'>'.$details->description.'</option>';
-                                    }//if
+                                    }
                                 }//foreach
                                 $storeContainer.='</select></div>';
                             $storeContainer.= '</div>';
@@ -163,9 +167,13 @@ function display_tfgg_store_selection(){
                                 $storeContainer.= '<div class="col"><select name="tfgg_scp_online_reg_pkgs['.$storeDetails->store_id.']" style="width:100%">';
                                 $storeContainer.= '<option value="">Please Select...</option>';
                                 foreach($packageList as &$details){
-                                    if($details->category_number=='0000000087'){//2021-03-04 CB V1.3.0.2 - category number checl
+                                    if($_SERVER['HTTP_HOST']=='thetanningshop.co.uk'){//2021-03-04 CB V1.3.0.2 - category number check
+                                        if($details->category_number=='0000000087'){
+                                            $storeContainer.='<option value="'.$details->package_id.'" '.($details->package_id === $storePkg ? "selected" : "").'>'.$details->description.'</option>';
+                                        }
+                                    }else{
                                         $storeContainer.='<option value="'.$details->package_id.'" '.($details->package_id === $storePkg ? "selected" : "").'>'.$details->description.'</option>';
-                                    }//if
+                                    }
                                 }//foreach
                                 $storeContainer.='</select></div>';
                             $storeContainer.= '</div>';
