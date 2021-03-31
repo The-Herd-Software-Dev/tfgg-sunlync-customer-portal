@@ -1190,6 +1190,197 @@
             return json_encode($result);
 		}    
     }
+
+    function tfgg_api_multi_step_existing_user_check($fname, $lname, $dob, $email){
+        //2021-03-25 - added to take a multi step approach to verifying if a user presently exists or not
+        
+        //first just check if the email exists
+        $result_array = Array();
+        if(!tfgg_api_multi_step_existing_user_email_check($fname, $lname, $dob, $email, $result_array)){
+            //email exists on >=1 account, failed unique validation
+            //exit here so we don't attempt to locate based on demographics
+            return json_encode($result_array);
+        }
+        
+        //email doesn't exist, so check on demographics
+        $result_array=Array();
+        tfgg_api_multi_step_existing_user_demo_check($fname, $lname, $dob, $email, $result_array);
+        return json_encode($result_array);
+    }
+
+    function tfgg_api_multi_step_existing_user_email_check($fname, $lname, $dob, $email, &$result_array){
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPClientSearch/sFirstName/';
+        $url.='sLastName/sClientNumber/sAddress/sDOB/sPhone/';
+        $url.='sEmail/sRange';
+        
+        $url=str_replace('sFirstName','',$url);
+        $url=str_replace('sLastName','',$url);
+        $url=str_replace('sClientNumber','',$url);
+        $url=str_replace('sAddress','',$url);
+        $url=str_replace('sDOB','',$url);
+        $url=str_replace('sPhone','',$url);
+        $url=str_replace('sEmail',$email,$url);
+        $url=str_replace('sRange','',$url);
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result_array["results"]="error";
+            $result_array["error_message"]=$e->getMessage(); 
+            return false;
+        }
+        
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result_array=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+                //the warning returns 'no customer records found'
+                //there is no record_count 0
+				$result_array["results"]="SUCCESS";
+                $result_array["message"]="email unique";
+                $reg = array('fail_code' => '',
+                        'attempted_email'=>$email,
+                        'attempted_first'=>$fname,
+                        'attempted_last'=>$lname,
+                        'attempted_dob'=>$dob);
+                $_SESSION['tfgg_reg_resp']=$reg;
+                return true;
+			}
+			
+			return false;
+		}else{
+		    
+            if($data[0]->record_count > 1){
+                $result_array["results"]="FAIL";
+                $result_array["message"]="email on multiple accounts";
+                $reg = array('fail_code' => 'me',
+                        'attempted_email'=>$email,
+                        'attempted_first'=>$fname,
+                        'attempted_last'=>$lname,
+                        'attempted_dob'=>$dob);
+                $_SESSION['tfgg_reg_resp']=$reg;
+                return false;
+            }elseif($data[0]->record_count == 0){
+                //email does not exist, check demographics
+                $result_array["results"]="SUCCESS";
+                $result_array["message"]="email unique";
+                $reg = array('fail_code' => '',
+                        'attempted_email'=>$email,
+                        'attempted_first'=>$fname,
+                        'attempted_last'=>$lname,
+                        'attempted_dob'=>$dob);
+                $_SESSION['tfgg_reg_resp']=$reg;
+                return true;
+            }else{
+                //exists on one accunt, check demogrphics
+                $result_array["results"]="FAIL";
+                $result_array["message"]="email already in use";
+                $reg = array('fail_code' => 'ee',
+                            'attempted_email'=>$email,
+                            'attempted_first'=>$fname,
+                            'attempted_last'=>$lname,
+                            'attempted_dob'=>$dob);
+                    $_SESSION['tfgg_reg_resp']=$reg;
+                return false;
+            }
+		}
+    }
+
+    function tfgg_api_multi_step_existing_user_demo_check($fname, $lname, $dob, $email, &$result_array){
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPClientSearch/sFirstName/';
+        $url.='sLastName/sClientNumber/sAddress/sDOB/sPhone/';
+        $url.='sEmail/sRange';
+        
+        $url=str_replace('sFirstName',$fname,$url);
+        $url=str_replace('sLastName',$lname,$url);
+        $url=str_replace('sClientNumber','',$url);
+        $url=str_replace('sAddress','',$url);
+        $url=str_replace('sDOB',$dob,$url);
+        $url=str_replace('sPhone','',$url);
+        $url=str_replace('sEmail','',$url);
+        $url=str_replace('sRange','',$url);
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result_array["results"]="error";
+            $result_array["error_message"]=$e->getMessage(); 
+            return false;
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result_array=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result_array["results"]="SUCCESS";
+                $result_array["process"]="insert";
+                $result_array["message"]="Allow standard registration";
+                $reg = array('fail_code' => 'insert',
+                        'attempted_email'=>$email,
+                        'attempted_first'=>$fname,
+                        'attempted_last'=>$lname,
+                        'attempted_dob'=>$dob);
+                $_SESSION['tfgg_reg_resp']=$reg;
+                return true;
+			}
+		}else{
+		    
+            if($data[0]->record_count > 1){
+                $result_array["results"]="FAIL";
+                $result_array["message"]="Demographics match multiple accounts";
+                $reg = array('fail_code' => 'md',
+                        'attempted_email'=>$email,
+                        'attempted_first'=>$fname,
+                        'attempted_last'=>$lname,
+                        'attempted_dob'=>$dob);
+                $_SESSION['tfgg_reg_resp']=$reg;
+                return false;
+            }elseif($data[0]->record_count == 0){
+                //demographics do not exist
+                $result_array["results"]="SUCCESS";
+                $result_array["process"]="insert";
+                $result_array["message"]="Allow standard registration";
+                $reg = array('fail_code' => '',
+                        'attempted_email'=>$email,
+                        'attempted_first'=>$fname,
+                        'attempted_last'=>$lname,
+                        'attempted_dob'=>$dob);
+                $_SESSION['tfgg_reg_resp']=$reg;
+                return true;
+            }else{
+                //exists on one accunt
+                $client = $data[1];
+                
+                if($client->email == ''){
+                    //signal the password to be set
+                    $result_array["results"]="SUCCESS";
+                    $result_array["process"]="set";
+                    $result_array["client"]=$client;
+                    $result_array["message"]="Client exists";
+                    $reg = array('fail_code' => '',
+                        'attempted_email'=>$email,
+                        'attempted_first'=>$fname,
+                        'attempted_last'=>$lname,
+                        'attempted_dob'=>$dob);
+                    $_SESSION['tfgg_reg_resp']=$reg;
+                    return true;
+                }else{
+                    $result_array["results"]="FAIL";
+                    $result_array["message"]="Demographics match single account different email";
+                    $reg = array('fail_code' => 'ed',
+                        'attempted_email'=>$email,
+                        'attempted_first'=>$fname,
+                        'attempted_last'=>$lname,
+                        'attempted_dob'=>$dob,
+                        'rtnd_demo'=>$client);
+                    $_SESSION['tfgg_reg_resp']=$reg;
+                        return false;
+                }
+            }
+		}
+    }
     
     function tfgg_api_check_user_exists($fname, $lname, $dob, $email){
         /*CIPClientSearch(sFirstName, sLastName, sClientNumber, sAddress, sDOB, sPhone,
@@ -1451,6 +1642,42 @@
 		} 
 
     } 
+
+    function tfgg_api_update_single_demo($client, $field, $newValue){
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPUpdateDemographics/sclientNumber/sfield/snewvalue/sEmpNo';
+        $emp = get_option('tfgg_scp_update_employee');
+
+        $url=str_replace('sclientNumber',$client,$url);
+        $url=str_replace('sEmpNo',$emp,$url);
+        $url=str_replace('sfield',$field,$url);
+        $url=str_replace('snewvalue',$newValue,$url);
+
+        try{
+            $data = tfgg_sunlync_execute_url($url);
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+            }
+            
+            $result['url']=$url;
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            return json_encode($result);
+		} 
+    }
     
     function tfgg_api_schedule_appt(){
         /*
@@ -2995,26 +3222,22 @@
             $client = tfgg_cp_get_sunlync_client();
             if($client!=FALSE){
                 unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
-                $script = "<script type=\"text/javascript\" id=\"tfgg-scp-google-dimension\">
-                    document.addEventListener(\"readystatechange\", event => {              
-                        if (event.target.readyState === \"complete\") {
-                            try{
-                                ga(function() {
-                                    // Logs an array of all tracker objects
-                                    var trackers = ga.getAll();
-                                    var firstTracker = trackers[0];
-                                    console.log('tracker: '+firstTracker.get('name'));
-                                    ga(firstTracker.get('name')+\".set\",\"dimension1\",\"".$client."\");
-                                    ga(firstTracker.get('name')+\".send\", \"event\", \"registration\", \"complete\", \"Customer Reg\", {
-                                        nonInteraction: true
-                                      });
+                $script="<script type=\"text/javascript\" id=\"tfgg-scp-google-dimension\">
+                    window.onload = function(){
+                        try{
+                            ga(function() {
+                                // Logs an array of all tracker objects
+                                var trackers = ga.getAll();
+                                trackers.forEach(function(thisTracker){
+                                    console.log('tracker: '+thisTracker);
+                                    ga(thisTracker.get('name')+\".set\",\"dimension1\",\"".$client."\");
                                 });
-                            }catch(e){
-                                console.log('GA not defined');
-                            }
+                            });
+                        }catch(e){
+                            console.log('GA not defined');
                         }
-                    });
-                </script>";   
+                    };
+                </script>";  
                 echo($script);
             }
         }

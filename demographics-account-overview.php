@@ -44,8 +44,18 @@
 			//$wp_login = tfgg_cp_get_user_loginid();
 			//echo $wp_login;
                 
-        ?>
-       
+		if((array_key_exists('linked_reg',$_SESSION))&&($_SESSION['linked_reg']==$client)){
+			unset($_SESSION['linked_reg']);//we only want to see this once
+		?>
+			<div class="card alert-success">
+				<div class="card-body">
+					<p class="card-text">Hey! It looks like you already had an account, so we linked your email to it.</p>
+					<p class="card-text">Please take a moment to correct your address and mobile number</p>
+				</div>
+			</div>
+		<?php
+		}
+		?>
        <hr />
    
        <?php
@@ -56,7 +66,7 @@
 	   </div>
         <form id="tfgg_sunlync_cp_demo" method="POST" action="">
     	
-
+		
 		<div class="account-overview-generic-container">
 		        
 		        <div class="account_overview-section account-overview-comm-prefs">

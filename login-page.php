@@ -90,7 +90,7 @@
 					if(get_option('tfgg_scp_cpnewuser_page')!=''){
 				?>
 					<div class="account-overview-input-single">
-						<a class="registration-link"  href="<?php echo(get_option('tfgg_scp_cpnewuser_page')); ?>" >Never used the site before? Register Now!</a>
+						<a class="registration-link"  href="<?php echo(get_option('tfgg_scp_cpnewuser_page')); ?>" >Never used The Tanning Shop before? Register Now!</a>
 					</div>
 
 				<?php } ?>

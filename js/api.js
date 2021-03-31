@@ -286,8 +286,22 @@ function ValidateNewReg(isOnline){
     var bResult = true;
     
     if(!isEmail(jQuery('#tfgg_cp_user_email').val())){
-        jQuery('#new_reg_email').html('<p>'+jQuery('label[for="tfgg_cp_user_email"]').text()+' is required</p>');
+        jQuery('#new_reg_email').html('<p>'+jQuery('label[for="tfgg_cp_user_email"]').text()+' is not a well formed email</p>');
         jQuery('#new_reg_email').css('display','block');
+        bResult = false;
+    }
+
+    if(!isEmail(jQuery('#tfgg_cp_user_email_confirm').val())){
+        jQuery('#new_reg_email_confirm').html('<p>'+jQuery('label[for="tfgg_cp_user_email_confirm"]').text()+' is not a well formed email</p>');
+        jQuery('#new_reg_email_confirm').css('display','block');
+        bResult = false;
+    }
+
+    var email = jQuery('#tfgg_cp_user_email').val().trim();
+    var confirm = jQuery('#tfgg_cp_user_email_confirm').val().trim();
+    if(!(email.toUpperCase() === confirm.toUpperCase())){
+        jQuery('#new_reg_email_confirm').html('<p>'+jQuery('label[for="tfgg_cp_user_email_confirm"]').text()+' does not match</p>');
+        jQuery('#new_reg_email_confirm').css('display','block');
         bResult = false;
     }
 
@@ -394,24 +408,22 @@ function ValidateNewReg(isOnline){
 	    bResult = false;    
     }
 
-    if(isOnline){//2019-11-18 CB V1.2.3.6 - password requirements only required online
-        if(!isValidPass(jQuery('#tfgg_cp_user_pass').val())){
-            jQuery('#new_reg_pass').css('display','block');
-            jQuery('#new_reg_pass').html('Password does not meet requirements');
-            bResult = false;    
-        }
+    if(!isValidPass(jQuery('#tfgg_cp_user_pass').val())){
+        jQuery('#new_reg_pass').css('display','block');
+        jQuery('#new_reg_pass').html('Password does not meet requirements');
+        bResult = false;    
+    }
 
-        if(jQuery('#tfgg_cp_user_pass_confirm').val()===""){
-            jQuery('#new_reg_pass_confirm').css('display','block');
-            jQuery('#new_reg_pass_confirm').html('A confirmation of your password must be set');
-            bResult = false;    
-        }
-    
-        if(jQuery('#tfgg_cp_user_pass').val()!=jQuery('#tfgg_cp_user_pass_confirm').val()){
-            jQuery('#new_reg_pass_confirm').css('display','block');
-            jQuery('#new_reg_pass_confirm').html('Confirmation password does not match');
-            bResult = false;    
-        }
+    if(jQuery('#tfgg_cp_user_pass_confirm').val()===""){
+        jQuery('#new_reg_pass_confirm').css('display','block');
+        jQuery('#new_reg_pass_confirm').html('A confirmation of your password must be set');
+        bResult = false;    
+    }
+
+    if(jQuery('#tfgg_cp_user_pass').val()!=jQuery('#tfgg_cp_user_pass_confirm').val()){
+        jQuery('#new_reg_pass_confirm').css('display','block');
+        jQuery('#new_reg_pass_confirm').html('Confirmation password does not match');
+        bResult = false;    
     }
 
     if(!bResult){
@@ -1295,6 +1307,51 @@ function portalLoginReset(){
     if(ValidateLoginResetData()){
         jQuery('#tfgg_cp_api_login_reset').submit();
     }    
+}
+
+function ValidateLoginAcctCheckData(){
+    var bResult=true;
+    
+    if(jQuery('#tfgg_scp_acct_check_email').val()===''){
+        jQuery('#tfgg_scp_acct_check_email_alert').css('display','block');
+	    jQuery('#tfgg_scp_acct_check_email_alert').html('Please enter your email');
+	    bResult = false;
+    }
+
+    if(!isEmail(jQuery('#tfgg_scp_acct_check_email').val())){
+        jQuery('#tfgg_scp_acct_check_email_alert').html('Not a valid email');
+        jQuery('#tfgg_scp_acct_check_email_alert').css('display','block');
+        bResult = false;
+    }
+
+    if(jQuery('#tfgg_scp_acct_check_firstname').val()===''){
+        jQuery('#tfgg_scp_acct_check_firstname_alert').css('display','block');
+	    jQuery('#tfgg_scp_acct_check_firstname_alert').html('Please enter your first name');
+	    bResult = false;   
+    }
+
+    if(jQuery('#tfgg_scp_acct_check_lastname').val()===''){
+        jQuery('#tfgg_scp_acct_check_lastname_alert').css('display','block');
+	    jQuery('#tfgg_scp_acct_check_lastname_alert').html('Please enter your last name');
+	    bResult = false;   
+    }
+
+    if(jQuery('#tfgg_scp_acct_check_dob_value').val()===''){
+        jQuery('#tfgg_scp_acct_check_dob_alert').css('display','block');
+	    jQuery('#tfgg_scp_acct_check_dob_alert').html('Please enter your date of birth');
+	    bResult = false;   
+    }
+    
+    return bResult;
+}
+
+function portalLoginAcctCheck(){
+    ResetRegValidation();//we can use this as we are using the same class  
+    event.preventDefault();  
+
+    if(ValidateLoginAcctCheckData()){
+        jQuery('#tfgg_scp_login_account_check').submit();
+    }
 }
 
 function endPortalSession(){

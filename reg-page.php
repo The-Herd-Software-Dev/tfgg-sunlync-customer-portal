@@ -1,7 +1,40 @@
 <?php
 
     function reg_form_display_new(){
-        ob_start(); 
+
+		if((array_key_exists('tfgg_reg_resp',$_SESSION))&&(isset($_SESSION['tfgg_reg_resp']))){
+			switch($_SESSION['tfgg_reg_resp']['fail_code']){
+				case 'me':
+					//multi-email
+					$reg_email = $_SESSION['tfgg_reg_resp']['attempted_email'];
+					unset($_SESSION['tfgg_reg_resp']);
+					return reg_form_multi_email_display($reg_email);
+				break;
+				case 'ee':
+					//existing email
+					$reg_email = $_SESSION['tfgg_reg_resp']['attempted_email'];
+					unset($_SESSION['tfgg_reg_resp']);
+					return reg_form_existing_email_display($reg_email);
+				break;
+				case 'md':
+					//multiple demographics
+					unset($_SESSION['tfgg_reg_resp']);
+					return reg_form_multi_demo_display();
+				break;
+				case 'ed':
+					$reg_email = $_SESSION['tfgg_reg_resp']['rtnd_demo']->email;
+					unset($_SESSION['tfgg_reg_resp']);
+					return reg_form_single_demo_diff_email_display($reg_email);
+					break;
+			}
+		}else{
+			return display_tfgg_scp_registration_form();	
+		}
+		
+    }
+
+	function display_tfgg_scp_registration_form(){
+		ob_start(); 
         
         $storeList = json_decode(tfgg_api_get_reg_stores(true));
         if(StrToUpper($storeList->results)==='SUCCESS'){
@@ -50,6 +83,7 @@
 	        <?php
 	            tfgg_sunlync_cp_show_error_messages(); 
 	        ?>
+			
 			<form id="sunlync_cp_registration_form" action="" method="POST" autocomplete="OFF">
 				
 			<div class="registration-container-main">
@@ -65,6 +99,14 @@
 							value="<?php if(($repopulate)&&(array_key_exists('tfgg_cp_user_email',$_POST))){echo $_POST['tfgg_cp_user_email'];} ?>"
 							/>
 							<div style="display:none" id="new_reg_email" class="reg_alert"></div> 
+						</div>
+					</div>
+
+					<div class="registration-container">
+						<div class="account-overview-input-single">
+							<label for="tfgg_cp_user_email_confirm" class="account-overview-label"><?php _e('Confirm Email'); ?></label>
+							<input data-alertpnl="new_reg_email_confirm" name="tfgg_cp_user_email_confirm" id="tfgg_cp_user_email_confirm" class="required account-overview-input" type="email"/>
+							<div style="display:none" id="new_reg_email_confirm" class="reg_alert"></div> 
 						</div>
 					</div>
 						
@@ -422,7 +464,119 @@
         <?php
 		return ob_get_clean();
         //return ob_get_contents();
-    }
+	}
+
+	function reg_form_multi_email_display($reg_email){
+		ob_start(); 
+
+		$cs_email = get_option('tfgg_scp_customer_service_email');
+	?>
+		<div class="card alert-warning">
+			<div class="card-header">
+				Multiple Accounts Found
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">There appres to be an issue with your registration</h5>
+				<p class="card-text">The email address you are attempting to use, <?php echo $reg_email; ?>, is associated with multiple accounts</p>
+				<p class="card-text">Please contact our customer service representatives at <a href="mailto:<?php echo $cs_email; ?>?subject=Registration Issues (Non-Unique EMail)"><?php echo $cs_email; ?></a> for assistance with identifying your account</p>
+				<p class="card-text">Please include the following information to assist with locating the correct account: <br/>
+				<ul>
+					<li>Full first name</li>
+					<li>Full last name</li>
+					<li>Your date of birth</li>
+					<li>Your registration email</li>
+				</ul>
+				</p>
+			</div>
+		</div>
+		<br/>
+	<?php
+		return ob_get_clean();
+	}
+
+	function reg_form_existing_email_display($reg_email){
+		ob_start(); 
+
+		$forgot = get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page'))."?login=reset";
+	?>
+		<div class="card">
+			<div class="card-header alert-info">
+				Registration E-Mail Exists
+			</div>
+			<div class="card-body">
+				<p class="card-text">The email address you are attempting to register with, <?php echo $reg_email; ?>, is already associated with an account</p>
+				<p class="card-text">Please use the <a href="<?php echo $forgot;?>">Forgot Password Form</a> to request a new password for that account</p>
+			</div>
+		</div>
+		<br/>
+	<?php
+		return ob_get_clean();
+	}
+
+	function reg_form_multi_demo_display(){
+		ob_start(); 
+		$cs_email = get_option('tfgg_scp_customer_service_email');
+	?>
+		<div class="card alert-warning">
+			<div class="card-header">
+				Multiple Accounts Found
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">There appears to be an issue with your registration</h5>
+				<p class="card-text">The information you are attempting to register with is associated with multiple accounts</p>
+				<p class="card-text">Please contact our customer service representatives at <a href="mailto:<?php echo $cs_email; ?>?subject=Registration Issues (Multiple Accounts)"><?php echo $cs_email; ?></a> for assistance with your registration</p>
+				<p class="card-text">Please include the following information to assist with locating the correct account: <br/>
+				<ul>
+					<li>Full first name</li>
+					<li>Full last name</li>
+					<li>Your date of birth</li>
+					<li>Your registration email</li>
+				</ul>
+				</p>
+			</div>
+		</div>
+		<br/>
+	<?php
+		return ob_get_clean();
+	}
+
+	function obfuscate_email($email){
+		$em = explode("@",$email);
+		$len = strlen($em[0]);
+		$name = substr($em[0],0,1).str_repeat('*',$len)."@".$em[1];
+		return $name;
+	}
+
+	function reg_form_single_demo_diff_email_display($reg_email){
+		ob_start(); 
+		$cs_email = get_option('tfgg_scp_customer_service_email');
+		$forgot = get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page'))."?login=reset";
+
+
+	?>
+		<div class="card alert-warning">
+			<div class="card-header">
+				EMail Conflict
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">There appears to be an issue with your registration</h5>
+				<p class="card-text">The information you are attempting to register with is associated with an account that has a different email: <?php echo obfuscate_email($reg_email);?></p>
+				<p class="card-text">If this email looks familiar, please use the <a href="<?php echo $forgot;?>">Forgot Password Form</a> to request a new password for that account</p>
+				<p class="card-text">Otherwise, contact our customer service representatives at <a href="mailto:<?php echo $cs_email; ?>?subject=Registration Issues (EMail Conflict)"><?php echo $cs_email; ?></a> for assistance with your registration</p>
+				<p class="card-text">Please include the following information to assist with locating the correct account: <br/>
+				<ul>
+					<li>Full first name</li>
+					<li>Full last name</li>
+					<li>Your date of birth</li>
+					<li>Your registration email</li>
+				</ul>
+				</p>
+			</div>
+		</div>
+		<br/>
+	<?php
+		return ob_get_clean();
+	}
 	
 	
 	//THIS IS DEPRECATED!!!!!
@@ -568,7 +722,7 @@
 				//do nothing, the captcha was a success
 			}else{
 				tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$check_captcha.
-					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?		subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));	
+					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues (reCaptcha)" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));	
 				return false;
 			}
 			//organize the data
@@ -618,43 +772,50 @@
 				);	
 			}
 			
-			//check to determine if the user exists in sunlync, if not, register them
-			$alreadyRegistered=json_decode(tfgg_api_check_user_exists($demographics['firstname'],
+			//2021-03-25 CB - new validation before registration
+			$reg_validation = json_decode(tfgg_api_multi_step_existing_user_check($demographics['firstname'],
 			$demographics['lastname'],$demographics['dob'],$demographics['email']));
-			
-			if(StrToUpper($alreadyRegistered->results)==='SUCCESS'){
-				//user exists in SunLync
-				tfgg_cp_errors()->add('warning_existing_user', __('An account with these details already exists<br/>Try resetting your password from the login page or contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));	
+
+			if(StrToUpper($reg_validation->results)==='FAIL'){
+				//couldn't validate unique account
+				//session values will take care of the display
 			}else{
-				//no user in SunLync, insert as a new user
+				//able to register somehow
+				if(isset($reg_validation->process)){
+					switch($reg_validation->process){
+						case 'insert':
+							//process the insert like normal
+							$storePkg = tfgg_cp_reg_pkg($_POST['tfgg_cp_store'],true);
+							$storePromo = tfgg_cp_reg_promo($_POST['tfgg_cp_store'],true);
+							$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
+							$storePromo, $storePkg));
 
-				//2020-02-25 CB V1.2.4.21 - updated to include reg promo and pkg
-				//2021-02-14 CB V1.3.0.1 - changed for new set up properties
-				/*$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
-				get_option('tfgg_scp_reg_promo','0000000000'),
-				get_option('tfgg_scp_reg_package','0000000000')));*/
+							if(strtoupper($reg_result->results)=='SUCCESS'){
+								//now set the password
+								tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
+								
+								$clientNumber=$reg_result->clientnumber;
+								
+							}else{
+								tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$reg_result->response.
+								'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));
+							}
 
-				//2021-02-14 CB V1.3.0.1 - new code
-				$storePkg = tfgg_cp_reg_pkg($_POST['tfgg_cp_store'],true);
-				$storePromo = tfgg_cp_reg_promo($_POST['tfgg_cp_store'],true);
-				$reg_result=json_decode(tfgg_api_insert_user_proprietary($demographics, $commPref,
-				$storePromo, $storePkg));
-				
-				if(strtoupper($reg_result->results)=='SUCCESS'){
-					//now set the password
-					tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
-					
-					$clientNumber=$reg_result->clientnumber;
+						break;
+						case 'set':
+							//set the password and the email on the account
+							$clientNumber=$reg_validation->client->client_id;
+							tfgg_api_set_password($clientNumber,$_POST['tfgg_cp_user_pass']);
+							tfgg_api_update_single_demo($clientNumber,'email',$demographics['email']);
+							$_SESSION['linked_reg']=$clientNumber;
+						break;
+					}
 					tfgg_cp_set_sunlync_client($clientNumber);
 					//2020-01-12 CB V1.2.4.13 - tfgg_cp_redirect_after_login();
 					tfgg_cp_redirect_after_registration();
-					
-				}else{
-					tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$reg_result->response.
-					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));
 				}
+				
 			}
-
 
 		}
 	}
