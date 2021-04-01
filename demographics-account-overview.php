@@ -51,6 +51,14 @@
 				<div class="card-body">
 					<p class="card-text">Hey! It looks like you already had an account, so we linked your email to it.</p>
 					<p class="card-text">Please take a moment to correct your address and mobile number</p>
+					<?php
+						if((array_key_exists('linked_from_login',$_SESSION))&&($_SESSION['linked_from_login']==true)){
+							unset($_SESSION['linked_from_login']);//we only want to see this once
+					?>
+					<p class="card-text">Please take a minute to set your password also</p>
+					<?php
+						}
+					?>
 				</div>
 			</div>
 		<?php

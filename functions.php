@@ -100,6 +100,9 @@
         if(isset($_SESSION['tfgg_cp_cart_warning'])){
             unset($_SESSION['tfgg_cp_cart_warning']);
         }
+        if(isset($_SESSION['tfgg_reg_resp'])){
+            unset($_SESSION['tfgg_reg_resp']);
+        }
 
         $result["logout"]=site_url();//possible configurable option
         exit(json_encode($result));

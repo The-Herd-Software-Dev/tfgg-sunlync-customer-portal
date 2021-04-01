@@ -308,8 +308,8 @@
 				<br />
 				
 				<div class="login-container">
-					<?php echo tfgg_scp_login_reset_pass_link(); ?>	
-					<?php echo tfgg_scp_login_account_check_link(); ?>					
+					<?php echo tfgg_scp_login_reset_pass_link(); ?>
+					<?php echo tfgg_scp_login_account_check_link(); ?>				
 					<?php echo tfgg_scp_login_register_link(); ?>
 		
 				</div>
@@ -349,8 +349,8 @@
 			<br/>
 			
 			<div class="login-container">
-				<?php echo tfgg_scp_login_link(); ?>	
-				<?php echo tfgg_scp_login_account_check_link(); ?>					
+				<?php echo tfgg_scp_login_link(); ?>
+				<?php echo tfgg_scp_login_account_check_link(); ?>				
 				<?php echo tfgg_scp_login_register_link(); ?>
 			</div>
 		
@@ -361,7 +361,7 @@
 
 	function tfgg_scp_login_link(){
 		?>
-		<div class="account-overview-input-double">
+		<div class="account-overview-input-single">
 		<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')).'/');?>"><?php _e('Retrun to login page'); ?></a>
 		</div>
 		<?php	
@@ -369,7 +369,7 @@
 
 	function tfgg_scp_login_reset_pass_link(){
 		?>
-		<div class="account-overview-input-double">
+		<div class="account-overview-input-single">
 			<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')).'/');?>?login=reset"><?php _e('Forgot Password?'); ?></a>
 		</div>
 		<?php
@@ -377,8 +377,8 @@
 
 	function tfgg_scp_login_account_check_link(){
 		?>
-		<div class="account-overview-input-double">
-			<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')).'/');?>?login=acct_check"><?php _e('Check your account to link your email'); ?></a>
+		<div class="account-overview-input-single">
+			<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')).'/');?>?login=acct_check"><?php _e('Forgot login details?'); ?></a>
 		</div>
 		<?php
 	}
@@ -482,17 +482,17 @@
 					//couldn't validate unique account
 					//session values will take care of the display
 				}else{
-					if(isset($reg_validation->process)){
-						switch($reg_validation->process){
+					if(isset($acct_check->process)){
+						switch($acct_check->process){
 							case 'insert':
 								//alert the user to register as we can't locate their account
 							break;
 							case 'set':
 								//set the password and the email on the account
-								$clientNumber=$reg_validation->client->client_id;
-								tfgg_api_set_password($clientNumber,$_POST['tfgg_cp_user_pass']);
-								tfgg_api_update_single_demo($clientNumber,'email',$demographics['email']);
+								$clientNumber=$acct_check->client->client_id;
+								tfgg_api_update_single_demo($clientNumber,'email',$_POST['tfgg_scp_acct_check_email']);
 								$_SESSION['linked_reg']=$clientNumber;
+								$_SESSION['linked_from_login']=true;
 								tfgg_cp_set_sunlync_client($clientNumber);
 								//2020-01-12 CB V1.2.4.13 - tfgg_cp_redirect_after_login();
 								tfgg_cp_redirect_after_registration();
