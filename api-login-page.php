@@ -35,6 +35,11 @@
 								unset($_SESSION['tfgg_reg_resp']);
 								return tfgg_acct_check_advise_registration();
 								break;
+							case '':
+							default:
+								unset($_SESSION['tfgg_reg_resp']);
+								return tfgg_scp_login_form();
+								break;
 						}
 					}else{
 						return tfgg_scp_login_acct_check();
@@ -45,6 +50,9 @@
 					break;
 			}
         }else{
+			if(array_key_exists('tfgg_reg_resp',$_SESSION)){
+				unset($_SESSION['tfgg_reg_resp']);	
+			}
 			return tfgg_scp_login_form();
 		}
     }
@@ -499,7 +507,7 @@
 								$_SESSION['linked_from_login']=true;
 								tfgg_cp_set_sunlync_client($clientNumber);
 								//2020-01-12 CB V1.2.4.13 - tfgg_cp_redirect_after_login();
-								tfgg_cp_redirect_after_registration();
+								tfgg_cp_redirect_after_login();
 							break;
 						}
 					}

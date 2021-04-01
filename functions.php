@@ -201,12 +201,12 @@
 			wp_redirect(home_url());exit;
 		}else{
 		    if($existingUser){
-		        wp_redirect(get_option('tfgg_scp_cplogin_page_success').'?existingUser='.$existingUser);exit;    
+		        wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success').'/?existingUser='.$existingUser));exit;    
 		    }else{
                 if($redirectToCart){
-                    wp_redirect(get_option('tfgg_scp_cart_slug'));exit;
+                    wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_slug').'/'));exit;
                 }else{
-                    wp_redirect(get_option('tfgg_scp_cplogin_page_success'));exit;
+                    wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success').'/'));exit;
                 }
 		    }
 		}
@@ -215,9 +215,9 @@
     function tfgg_cp_redirect_after_registration(){
         $_SESSION['tfgg_scp_send_ga_client_number']=TRUE;
         if(get_option('tfgg_scp_cpnewuser_success_page')==''){
-            wp_redirect(get_option('tfgg_scp_cplogin_page_success'));exit;
+            wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success').'/'));exit;
         }else{
-            wp_redirect(get_option('tfgg_scp_cpnewuser_success_page'));exit;
+            wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_success_page').'/'));exit;
         }
     }
 
