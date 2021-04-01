@@ -1,6 +1,6 @@
 <?php
     function login_form_display(){
-		
+
         if(isset($_GET['login'])){
 			switch($_GET['login']){
 				case 'reset':
@@ -225,7 +225,11 @@
 				<input type="hidden" name="tfgg_sunlync_cp_acct_check_nonce" id="tfgg_sunlync_cp_acct_check_nonce" value="<?php echo wp_create_nonce('tfgg-sunlync-cp-acct-check-nonce'); ?>"/>
 				<button id="tfgg_login_acct_check_submit" type="submit" class="account-overview-button account-overview-standard-button" onclick="portalLoginAcctCheck()"><?php _e('Check Account'); ?></button>
 			</form>
-			<br/><br/>
+			<br/>
+			<div class="login-container" style="display:inline-block;">
+				<?php echo tfgg_scp_login_link(); ?>			
+				<?php echo tfgg_scp_login_register_link(); ?>
+			</div>
 			<script>
 				jQuery( function() {
 					var now = new Date();					
@@ -307,7 +311,7 @@
 				
 				<br />
 				
-				<div class="login-container">
+				<div class="login-container" style="display:inline-block">
 					<?php echo tfgg_scp_login_reset_pass_link(); ?>
 					<?php echo tfgg_scp_login_account_check_link(); ?>				
 					<?php echo tfgg_scp_login_register_link(); ?>
@@ -348,7 +352,7 @@
 			</p>
 			<br/>
 			
-			<div class="login-container">
+			<div class="login-container" style="display:inline-block;">
 				<?php echo tfgg_scp_login_link(); ?>
 				<?php echo tfgg_scp_login_account_check_link(); ?>				
 				<?php echo tfgg_scp_login_register_link(); ?>
@@ -361,7 +365,7 @@
 
 	function tfgg_scp_login_link(){
 		?>
-		<div class="account-overview-input-single">
+		<div class="account-overview-input-double">
 		<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')).'/');?>"><?php _e('Retrun to login page'); ?></a>
 		</div>
 		<?php	
@@ -369,7 +373,7 @@
 
 	function tfgg_scp_login_reset_pass_link(){
 		?>
-		<div class="account-overview-input-single">
+		<div class="account-overview-input-double">
 			<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')).'/');?>?login=reset"><?php _e('Forgot Password?'); ?></a>
 		</div>
 		<?php
@@ -377,7 +381,7 @@
 
 	function tfgg_scp_login_account_check_link(){
 		?>
-		<div class="account-overview-input-single">
+		<div class="account-overview-input-double">
 			<a class="registration-link" href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page')).'/');?>?login=acct_check"><?php _e('Forgot login details?'); ?></a>
 		</div>
 		<?php
@@ -387,7 +391,7 @@
 	
 		if(get_option('tfgg_scp_cpnewuser_page')!=''){
 			?>
-			<div class="account-overview-input-single">
+			<div class="account-overview-input-double">
 				<a class="registration-link"  href="<?php echo(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_page')).'/'); ?>" ><?php _e('Never used The Tanning Shop before? Register Now!'); ?></a>
 			</div>
 		<?php 
