@@ -3224,6 +3224,7 @@
         ($_SESSION['tfgg_scp_send_ga_client_number']===TRUE)){
             $client = tfgg_cp_get_sunlync_client();
             if($client!=FALSE){
+                $page = get_option('tfgg_scp_cpnewuser_success_page');
                 unset($_SESSION['tfgg_scp_send_ga_client_number']);//first, clear this so we don't execute multiple times
                 $script="<script type=\"text/javascript\" id=\"tfgg-scp-google-dimension\">
                     window.onload = function(){
@@ -3234,6 +3235,7 @@
                                 trackers.forEach(function(thisTracker){
                                     console.log('tracker: '+thisTracker);
                                     ga(thisTracker.get('name')+\".set\",\"dimension1\",\"".$client."\");
+                                    ga(thisTracker.get('name')+\".send\",\"pageview\",\"".$page."\");
                                 });
                             });
                         }catch(e){
