@@ -36,6 +36,10 @@
                     <th scope="row">Shopping Cart: </th>
                     <td>[cp_sunlync_cart]</td>
                 </tr>
+                <tr>
+                    <th scope="row">Processed Shopping Cart: </th>
+                    <td>[cp_sunlync_success_cart]</td>
+                </tr>
             </tbody>
         </table>
         <?php

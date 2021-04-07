@@ -125,4 +125,11 @@ function tfgg_cp_sunlync_emp_dashboard(){
     return tfgg_scp_display_emp_dashboard();
 }
 add_shortcode('cp_sunlync_emp_dashboard','tfgg_cp_sunlync_emp_dashboard');
+
+function tfgg_cp_sunlync_cart_success(){
+    if(get_option('tfgg_scp_enable_cart',0)==0){return false;}
+
+    return tfgg_scp_cart_success_display();
+}
+add_shortcode('cp_sunlync_success_cart','tfgg_cp_sunlync_cart_success');
 ?>

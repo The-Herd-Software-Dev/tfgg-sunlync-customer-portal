@@ -3028,6 +3028,12 @@
                     }
                 }
 
+                //2021-04-07 CB V1.3.3.1 - new code to redirect user to a separate cart success page
+                if((array_key_exists('processedCartReceipt',$_SESSION))&&
+                (get_option('tfgg_scp_cart_success_slug')!='')){
+                    wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_success_slug').'/'));exit;
+                }
+
             }else{
                 //handle errors
                 tfgg_cp_errors()->add('error_processing_card', __('There was an error processing your card<br/><br/>'.$response->statusDetail));
@@ -3219,7 +3225,7 @@
     //2021-01-24 CB V1.2.7.16 - added try except for both gtag and ga
     add_action('wp_footer','tfgg_scp_send_ga_client');
     function tfgg_scp_send_ga_client(){
-        
+        /*ga(thisTracker.get('name')+\".send\",\"pageview\",\"".$page."\");*/
         if((array_key_exists('tfgg_scp_send_ga_client_number',$_SESSION))&&
         ($_SESSION['tfgg_scp_send_ga_client_number']===TRUE)){
             $client = tfgg_cp_get_sunlync_client();
@@ -3235,7 +3241,7 @@
                                 trackers.forEach(function(thisTracker){
                                     console.log('tracker: '+thisTracker);
                                     ga(thisTracker.get('name')+\".set\",\"dimension1\",\"".$client."\");
-                                    ga(thisTracker.get('name')+\".send\",\"pageview\",\"".$page."\");
+                                    
                                 });
                             });
                         }catch(e){

@@ -191,6 +191,117 @@
         <?php
     }
 
+    function tfgg_scp_cart_success_display(){
+        //2021-04-07 CB V1.3.3.1 - all new code for displaying output
+        ob_start();
+        ?>
+        <br/><br/>
+        <?php
+        if(array_key_exists('processedCartReceipt',$_SESSION)){
+            $msg = get_option('tfgg_scp_cart_success_message');
+            $msg = str_replace('!@#receiptnumber#@!',$_SESSION['processedCartReceipt'], $msg);
+
+            tfgg_cp_errors()->add('success', __($msg));
+            tfgg_sunlync_cp_show_error_messages();
+
+            $cartContents = json_decode(tfgg_scp_get_processed_cart_contents($_SESSION['processedCartReceipt']));
+        ?>
+        <div class="d-flex flex-column">
+            <div class="p-2"><?php tfgg_scp_cart_success_header($cartContents->header, $cartContents->paymentItems); ?></div>
+            <div class="p-2"><?php tfgg_scp_cart_success_items($cartContents->lineItems);?></div>
+        </div>
+        <?php
+            unset($_SESSION['processedCartReceipt']);
+            unset($_SESSION['tfgg_scp_cartid']); 
+        }else{
+            tfgg_cp_errors()->add('warning_existing_user','You have not completed the purchase of your services');
+            tfgg_sunlync_cp_show_error_messages();
+        ?>
+            <div class="d-flex flex-row">
+                <div class="p-2"><?php tfgg_scp_cart_continue_shopping();?></div>
+                <div class="p-2"><?php tfgg_scp_go_to_cart();?></div>
+            </div>
+        <?php
+        }
+        ?>
+        <br/><br/>
+        <?php
+        return ob_get_clean();
+    }
+
+    function tfgg_scp_cart_success_header($cartHeader, $cartPayments){
+    ?>
+    <div class="cart-items-header"><h4>PURCHASE SUMMARY</h4></div>
+    <div class="d-flex justify-content-center">
+        <div class="p-2" id="cart-totals-content-labels-container" >
+            <h5>Receipt Summary</h5>
+            <span class="cart-totals-content-label">Receipt Number</span>
+            <span class="cart-totals-content-value"><?php echo $cartHeader->receipt; ?></span> 
+            <br/>
+            <span class="cart-totals-content-label">Store</span>
+            <span class="cart-totals-content-value"><?php echo $cartHeader->processingStoreName; ?></span> 
+            <br/>
+            <span class="cart-totals-content-label">Total Items</span>
+            <span class="cart-totals-content-value"><?php echo $cartHeader->qty; ?></span> 
+            <br/>
+            <span class="cart-totals-content-label overlay-totals-content-total-line">Total Paid</span>
+            <span class="cart-totals-content-value overlay-totals-content-total-line"><?php echo tfgg_display_currency_symbol();?><?php echo number_format(($cartHeader->totalPayments),2,'.',','); ?></span>
+            <br/><br/>
+        </div>
+        <div class="p-2" id="cart-totals-content-labels-container">
+            <h5>Payment Summary</h5>
+        <?php
+            foreach($cartPayments as $payment){
+        ?>
+            <span class="cart-totals-content-label">Type</span>
+            <span class="cart-totals-content-value"><?php echo $payment->Description; ?></span> 
+            <br/>
+            <span class="cart-totals-content-label">Amount</span>
+            <span class="cart-totals-content-value"><?php echo tfgg_display_currency_symbol();?><?php echo number_format(($payment->Amt),2,'.',','); ?></span> 
+            <br/>
+        <?php
+            }//cartPayments as payment
+        ?>
+            <span class="cart-totals-content-label overlay-totals-content-total-line">Total</span>
+            <span class="cart-totals-content-value overlay-totals-content-total-line"><?php echo tfgg_display_currency_symbol();?><?php echo number_format(($cartHeader->totalPayments),2,'.',','); ?></span>
+            <br/><br/>
+        </div>
+    </div>
+    <br/><hr/>
+    <?php
+            
+    }
+
+    function tfgg_scp_cart_success_items($cartItems){
+    ?>
+        <h5>Receipt Items</h5>
+        <div class="d-flex flex-column">
+    <?php
+        foreach($cartItems as $details){
+            ?>
+            <div class="p-2">
+                <div class="d-flex flex-row justify-content-between my-flex-container">
+                    <div class="p-2 my-flex-item"><?php echo $details->alias;?></div>
+                    <div class="p-2 my-flex-item"><?php echo $details->Qty;?> @ <?php echo tfgg_display_currency_symbol();?><?php echo number_format(($details->PPU),2,'.',','); ?></div>
+                    <div class="p-2 my-flex-item" style="text-align:right"><?php echo tfgg_display_currency_symbol();?><?php echo number_format(($details->Total),2,'.',','); ?>
+                    <?php if($details->PromoValue>0.00){
+                        ?>
+                        <br/>
+                        <span class="overlay-items-item-description small">Promotion: <?php echo $details->PromoDesc;?></span>
+                        <span class="overlay-items-item-price small"> (-<?php echo tfgg_display_currency_symbol();?><?php echo number_format(($details->PromoValue),2,'.',',');?>)</span>
+                        <?php
+                    }?>
+                    </div>
+                </div>
+            <hr>
+            </div>
+            <?php
+        }  
+    ?>
+        </div>
+    <?php  
+    }
+
     function tfgg_scp_successful_cart_finalize(){
         //tfgg_scp_display_cart_banner();
         ?>
@@ -371,6 +482,13 @@
     ?>      
         <form action="<?php echo site_url(get_option('tfgg_scp_services_sale_slug'));?>">
             <button type="submit" class="account-overview-button account-overview-standard-button">CONTINUE SHOPPING</button>
+        </form>     
+    <?php
+    }
+    function tfgg_scp_go_to_cart(){
+    ?>      
+        <form action="<?php echo site_url(get_option('tfgg_scp_cart_slug'));?>">
+            <button type="submit" class="account-overview-button account-overview-standard-button">GO TO CART</button>
         </form>     
     <?php
     }

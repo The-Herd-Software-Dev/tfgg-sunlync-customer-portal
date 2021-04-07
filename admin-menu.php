@@ -240,6 +240,10 @@
         add_settings_field("tfgg_scp_cart_slug","Cart Slug:","display_tfgg_cart_slug", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_slug");
 
+        //2021-04-07 CB V1.3.3.1 - new field
+        add_settings_field("tfgg_scp_cart_success_slug","Cart Success Slug:","display_tfgg_cart_success_slug", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_success_slug");
+
         add_settings_field("tfgg_scp_cart_menu_link_text","Cart Menu Link Label:","display_tfgg_menu_link_label", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_menu_link_text");
 

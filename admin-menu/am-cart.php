@@ -16,6 +16,12 @@ function display_tfgg_cart_slug(){
     <?php
 }
 
+function display_tfgg_cart_success_slug(){
+    ?>
+    <input type="text" name="tfgg_scp_cart_success_slug" value="<?php echo get_option('tfgg_scp_cart_success_slug'); ?>" style="width: 60%" />
+    <?php
+}
+
 function display_tfgg_cart_currency_symbol(){
     $selected = get_option('tfgg_scp_cart_currency_symbol','1');
     ?>
