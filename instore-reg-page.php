@@ -25,6 +25,10 @@
 					unset($_SESSION['tfgg_reg_resp']);
 					return reg_form_single_demo_diff_email_display($reg_email);
 					break;
+				default:
+					unset($_SESSION['tfgg_reg_resp']);
+					return tfgg_display_instore_reg_form();	
+					break;
 			}
 		}else{
 			return tfgg_display_instore_reg_form();	

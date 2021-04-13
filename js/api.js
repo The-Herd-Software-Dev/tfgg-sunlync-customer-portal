@@ -425,7 +425,7 @@ function ValidateNewReg(isOnline){
         jQuery('#new_reg_pass_confirm').html('Confirmation password does not match');
         bResult = false;    
     }
-
+    
     if(!bResult){
         event.preventDefault();
         /*if(jQuery('#tfgg_scp_reg_recaptcha').length){
@@ -434,7 +434,6 @@ function ValidateNewReg(isOnline){
         } */
         if(jQuery('#tfgg_scp_reg_recaptcha').children().length!=0){
             //console.log('still not empty');
-            grecaptcha.reset();//reset the reCaptcha 
             jQuery('#registrationSubmitButton').attr('disabled','true');   
         }       
         jQuery('#new_reg_overall_alertpnl').css('display','block');
