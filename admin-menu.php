@@ -10,6 +10,7 @@
         add_settings_section("tfgg_misc_options_section", '', null, "tfgg-misc-options");
         add_settings_section("tfgg_registration_options_section", '', null, "tfgg-registration-options");
         add_settings_section("tfgg_registration_options_section_instore", '', null, "tfgg-registration-options-instore");
+        add_settings_section("tfgg_scp_recaptcha_options", '', null, "tfgg-scp-recaptcha-options");
         add_settings_section("tfgg_customer_acct_section", '', null, "tfgg-customer-acct-options");
         add_settings_section("tfgg_appointments_section", '', null, "tfgg-appointments-options");
         add_settings_section("tfgg_messages_section", '', null, "tfgg-messages-options");
@@ -305,6 +306,16 @@
 
         add_settings_field("tfgg_scp_cart_success_message","Successful Cart Message:","display_tfgg_successful_cart_message", "tfgg-cart-options", "tfgg_cart_section");
         register_setting("tfgg_cart_section","tfgg_scp_cart_success_message");
+
+        //2021-04-13 CB V1.4.1.1 - new reCaptcha options
+        add_settings_field("tfgg_scp_recaptcha_site_key","reCaptcah Site Key:","display_tfgg_recaptcha_site_key", "tfgg-scp-recaptcha-options", "tfgg_scp_recaptcha_options");
+        register_setting("tfgg_scp_recaptcha_options","tfgg_scp_recaptcha_site_key");
+        
+        add_settings_field("tfgg_scp_recaptcha_secret_key","reCaptcah Secret Key:","display_tfgg_recaptcha_secret_key", "tfgg-scp-recaptcha-options", "tfgg_scp_recaptcha_options");
+        register_setting("tfgg_scp_recaptcha_options","tfgg_scp_recaptcha_secret_key");
+
+        add_settings_field("tfgg_scp_recaptcha_score","reCaptcah Score:","display_tfgg_recaptcha_score", "tfgg-scp-recaptcha-options", "tfgg_scp_recaptcha_options");
+        register_setting("tfgg_scp_recaptcha_options","tfgg_scp_recaptcha_score");
         
     }
     
@@ -321,11 +332,11 @@
     include('admin-menu/am-services.php');
     include('admin-menu/am-cart.php');
     include('admin-menu/am-card-tran-log.php');//2020-03-22 CB V1.2.6.3 - added
+    include('admin-menu/am-recaptcha.php');//2021-04-13 CB V1.4.1.1 - added
 
     function tfgg_sunlync_cp_admin_menu_option(){
         add_menu_page('Sunlync Customer Portal','Sunlync CP','manage_options','tfgg-sunlync-cp-admin-menu','tfgg_sunlync_cp_page','',5);
     }
-    
     add_action('admin_menu','tfgg_sunlync_cp_admin_menu_option');
     
     /*function tfgg_sunlync_cp_demo_menu_option(){
@@ -378,6 +389,7 @@
             <div class="nav-tab-wrapper">
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-shortcodes" class="nav-tab <?php echo $active_tab == 'tfgg-shortcodes' ? 'nav-tab-active' : ''; ?>">Shortcodes & Redirect</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-api-options" class="nav-tab <?php echo $active_tab == 'tfgg-api-options' ? 'nav-tab-active' : ''; ?>">API Connection</a>
+                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-recaptcha" class="nav-tab <?php echo $active_tab == 'tfgg-recaptcha' ? 'nav-tab-active' : ''; ?>">reCaptcha</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-store-selection" class="nav-tab <?php echo $active_tab == 'tfgg-store-selection' ? 'nav-tab-active' : ''; ?>">Stores To Use</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-online-registration" class="nav-tab <?php echo $active_tab == 'tfgg-online-registration' ? 'nav-tab-active' : ''; ?>">Online Registration</a>
                 <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-instore-registration" class="nav-tab <?php echo $active_tab == 'tfgg-instore-registration' ? 'nav-tab-active' : ''; ?>">Instore Registration</a>
@@ -459,6 +471,10 @@
                         display_tfgg_card_data_log();
                         $hideSubmitButton = 'style="display:none"';
                         break;
+                    case 'tfgg-recaptcha':
+                        settings_fields('tfgg_scp_recaptcha_options');
+                        do_settings_sections('tfgg-scp-recaptcha-options');
+                        break;
                 }//switch
             ?>
             <input type="submit" class="button button-primary" <?php echo $hideSubmitButton; ?> value="Save Changes"/>
@@ -473,6 +489,12 @@
                 <br/><br/>
                 <button class="button button-primary" onclick="TestAPICredentials()" value="Test Credentials" />Test Credentials</button>
                 <?php
+            }
+            if(($active_tab=='tfgg-recaptcha')&&
+            (get_option('tfgg_scp_recaptcha_site_key')!='')&&
+            (get_option('tfgg_scp_recaptcha_secret_key')!='')&&
+            (current_user_can('administrator'))){
+            display_tfgg_recaptcha_test();
             }
             
     }

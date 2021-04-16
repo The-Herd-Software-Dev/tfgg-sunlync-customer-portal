@@ -26,6 +26,10 @@
 					unset($_SESSION['tfgg_reg_resp']);
 					return reg_form_single_demo_diff_email_display($reg_email);
 					break;
+				default:
+					unset($_SESSION['tfgg_reg_resp']);
+					return display_tfgg_scp_registration_form();
+					break;
 			}
 		}else{
 			return display_tfgg_scp_registration_form();	
@@ -252,10 +256,7 @@
 							<div style="display:none" id="new_reg_skin_type_alertpnl" class="reg_alert"></div>
 						</div>
 					</div>
-
-
-
-
+					<input type="text" name="tfgg_scp_recaptcha_site_key" value="<?php echo get_option('tfgg_scp_recaptcha_site_key'); ?>" style="display:none" />
 				</div>
 	
 				</div>
@@ -354,44 +355,15 @@
 				<p>You are in your first trimester of pregnancy. If you are pregnant and not in your first trimester please take care when using our booths as the floor may be slippery.</p>
 				<br/>
 				</div>
-				<?php
-					//check to see if reCaptcha is active and if so, display it
-					//1.2.4.11 - change code to check for whitelisting
-					//2021-02-28 CB - deprecated for v3
-					/*if(get_option('tfgg_scp_online_reg_recaptcha_req','1')=='1'){
-						$whitelisted_captcha = false;
-						include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-						if(is_plugin_active('google-captcha/google-captcha.php')){
-						?>
-							<div id="tfgg_scp_reg_recaptcha">
-						<?php
-							$captcha = do_shortcode('[bws_google_captcha]');
-							//var_dump($captcha);
-							if($captcha){
-								//2020-12-12 CB V1.2.7.7 - changed whitelisting check
-								//2021-01-22 CB V1.2.7.14 - additional whitelist check for new message
-								$whitelisted_captcha = ((strpos($captcha,'gglcptch_whitelist_message')>0)||
-								((strpos($captcha,'gglcptch_allowlist_message')>0)));
-								$v3Captcha = (strpos($captcha,'gglcptch_v3')>0);
-								echo $captcha; 
-							}else{
-								$whitelisted_captcha = true;
-							}
-						?>
-							</div>
-						<?php
-						}
-					}else{
-						$whitelisted_captcha = true;
-					}*/
-					echo apply_filters( 'gglcptch_display_recaptcha', '', $post_slug );
-				?>
 		
 				<input type="hidden" name="tfgg_cp_register_nonce" id="tfgg_cp_register_nonce" value="<?php echo wp_create_nonce('tfgg-cp-register-nonce'); ?>"/>
 				<input type="hidden" name="tfgg_cp_user_defined_2" id="tfgg_cp_user_defined_2" value=""/>
 				<input type="hidden" name="tfgg_cp_online_reg_source_slug" id="tfgg_cp_online_reg_source_slug" value="<?php echo $post_slug;?>"/>
 				<input type="text" name="tfgg_cp_user_password_reenter" id="tfgg_cp_user_password_reenter" style="display:none !important" tabindex="-1" autocomplete="off"/>
+				<input type="hidden" name="recaptcha_response" id="recaptchaResponse" autocomplete="off"/>
 				<button type="submit" id="registrationSubmitButton" class="account-overview-button account-overview-standard-button" onclick="ValidateNewReg(true)">  <?php _e('REGISTER YOUR ACCOUNT'); ?></button>
+				<img src="<?php echo plugin_dir_url( __FILE__ ); ?>/images/loading.gif" class="loading-image" style="width: 40px; display:none"
+            	id="tfgg_scp_recaptcha_busy"/>
 				<div class="account-overview-input-single">
 					<div id="new_reg_overall_alertpnl" style="display:none;" class="reg_alert"></div>
 				</div>
@@ -716,12 +688,12 @@
 		(wp_verify_nonce($_POST['tfgg_cp_register_nonce'],'tfgg-cp-register-nonce')))&&
 		(empty($_POST['tfgg_cp_user_password_reenter']))){
 
-			$check_captcha = apply_filters( 'gglcptch_verify_recaptcha', true, 'string', $_POST['tfgg_cp_online_reg_source_slug'] );
+			$check_captcha = tfgg_scp_get_registration_recaptcha_response($_POST['recaptcha_response']);
 			
 			if(true === $check_captcha){
 				//do nothing, the captcha was a success
 			}else{
-				tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: '.$check_captcha.
+				tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: Failed reCaptcha'.
 					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues (reCaptcha)" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));	
 				return false;
 			}

@@ -170,6 +170,84 @@ jQuery(function(){
 
 var selectedStorePanel = "";
 
+function GetReCaptchaTestToken(){
+    var bCont = true;
+    document.getElementById('tfgg_scp_recaptcha_site_key_error').innerHTML="";
+    document.getElementById('tfgg_scp_recaptcha_secret_key_error').innerHTML="";
+    
+    if(document.getElementsByName('tfgg_scp_recaptcha_site_key')[0].value==''){
+        document.getElementById('tfgg_scp_recaptcha_site_key_error').innerHTML="Please enter your site key";
+        bCont = false;
+    }  
+
+    if(document.getElementsByName('tfgg_scp_recaptcha_secret_key')[0].value==''){
+        document.getElementById('tfgg_scp_recaptcha_secret_key_error').innerHTML="Please enter your secret key";
+        bCont = false;
+    }  
+
+    if(!bCont){
+        return;
+    }
+
+    document.getElementById('tfgg_scp_recaptcha_get_token_button').setAttribute('disabled','true');
+    document.getElementById('tfgg_scp_recaptcha_busy').style.display='';
+
+    document.getElementById('tfgg_scp_recaptcha_test_results').style.display='';
+    document.getElementById('tfgg_scp_recaptcha_test_results').classList.add('alert-info');
+    document.getElementById('tfgg_scp_recaptcha_test_results').innerHTML="Loading Token";
+
+    grecaptcha.ready(function () {
+        grecaptcha.execute(document.getElementsByName('tfgg_scp_recaptcha_site_key')[0].value, 
+        { action: 'key_test' }).then(function (token) {
+           var recaptchaResponse = document.getElementById('recaptchaResponse');
+           recaptchaResponse.value = token;
+           setTimeout( function(){
+            if( document.getElementById('recaptchaResponse').value.length > 0 ) {
+                document.getElementById('tfgg_scp_recaptcha_test_results').style.display='none';
+                document.getElementById('tfgg_scp_recaptcha_test_results').innerHTML="";
+                document.getElementById('tfgg_scp_recaptcha_test_results').classList.remove('alert-info');
+
+                document.getElementById('tfgg_scp_recaptcha_get_token_button' ).style.display='none';
+                document.getElementById('tfgg_scp_recaptcha_busy').style.display='none';
+
+                document.getElementById('tfgg_scp_recaptcha_test_token_button').style.display='';
+            }
+            }, 2000 );
+        });
+     });
+    
+}
+
+function VerifyTestToken(){
+    document.getElementById('tfgg_scp_recaptcha_test_token_button').setAttribute('disabled','true');
+    document.getElementById('tfgg_scp_recaptcha_busy').style.display='';
+
+    var token = document.getElementById('recaptchaResponse').value;
+
+    jQuery.post(localAccess.adminAjaxURL,{
+        'action'    : 'tfgg_scp_get_recaptcha_response',
+        'data'      : {recaptcha_response: token},
+		'dataType'  : 'json',
+		'pathname'  : window.location.pathname
+    },function(data){
+        console.log(data);
+        document.getElementById('tfgg_scp_recaptcha_test_token_button').removeAttribute('disabled');
+        document.getElementById('tfgg_scp_recaptcha_test_token_button').style.display = 'none';
+        document.getElementById('tfgg_scp_recaptcha_busy').style.display='none';
+        
+        var obj = jQuery.parseJSON(data);
+
+        if(obj['result']){
+            document.getElementById('tfgg_scp_recaptcha_test_results').innerHTML="Token Verified!";  
+            document.getElementById('tfgg_scp_recaptcha_test_results').classList.add('alert-success'); 
+        }else{
+            document.getElementById('tfgg_scp_recaptcha_test_results').innerHTML="Verification failed";  
+            document.getElementById('tfgg_scp_recaptcha_test_results').classList.add('alert-danger');      
+        }
+        document.getElementById('tfgg_scp_recaptcha_test_results').style.display='';
+    });
+}
+
 function FormatTimeToUK(time){
     time = time.split(':');
     var formattedTime = new Date('2000','01','01', time[0], time[1], time[2]);    
@@ -272,7 +350,7 @@ function processApptCancelation(apptID){
 }
 
 function ResetRegValidation(){
-
+    
     jQuery('.reg_alert').each(function(){
         jQuery(this).css('display','none');
         jQuery(this).html('');
@@ -284,7 +362,8 @@ function ValidateNewReg(isOnline){
     ResetRegValidation();
     event.preventDefault();
     var bResult = true;
-    
+    document.getElementById('tfgg_scp_recaptcha_busy').style.display='';
+
     if(!isEmail(jQuery('#tfgg_cp_user_email').val())){
         jQuery('#new_reg_email').html('<p>'+jQuery('label[for="tfgg_cp_user_email"]').text()+' is not a well formed email</p>');
         jQuery('#new_reg_email').css('display','block');
@@ -424,28 +503,40 @@ function ValidateNewReg(isOnline){
         jQuery('#new_reg_pass_confirm').css('display','block');
         jQuery('#new_reg_pass_confirm').html('Confirmation password does not match');
         bResult = false;    
-    }
+    }   
+    
     
     if(!bResult){
         event.preventDefault();
-        /*if(jQuery('#tfgg_scp_reg_recaptcha').length){
-            console.log('not empty');
-            grecaptcha.reset();//reset the reCaptcha
-        } */
-        if(jQuery('#tfgg_scp_reg_recaptcha').children().length!=0){
-            //console.log('still not empty');
-            jQuery('#registrationSubmitButton').attr('disabled','true');   
-        }       
+        
+        document.getElementById('tfgg_scp_recaptcha_busy').style.display='none';
+
         jQuery('#new_reg_overall_alertpnl').css('display','block');
         jQuery('#new_reg_overall_alertpnl').html('We encountered an error with your registration, please fix the highlighted fields');
         genModalDialog('instore_reg_validation_fail_warning');
         return false;
     }else{
+        var actionTag='instore_registration';
         if(isOnline){
-            jQuery('#sunlync_cp_registration_form').submit();
-        }else{
-            jQuery('#sunlync_cp_instore_registration_form').submit();
+            actionTag='online_registration';
         }
+        grecaptcha.ready(function () {
+            grecaptcha.execute(document.getElementsByName('tfgg_scp_recaptcha_site_key')[0].value, 
+            { action: actionTag }).then(function (token) {
+                var recaptchaResponse = document.getElementById('recaptchaResponse');
+                recaptchaResponse.value = token;
+                setTimeout( function(){
+                    document.getElementById('tfgg_scp_recaptcha_busy').style.display='none';
+                    if( document.getElementById('recaptchaResponse').value.length > 0 ) {
+                        if(isOnline){
+                            jQuery('#sunlync_cp_registration_form').submit();
+                        }else{
+                            jQuery('#sunlync_cp_instore_registration_form').submit();
+                        }
+                    }
+                }, 2000 );
+            });
+        });
     }
 }
 

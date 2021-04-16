@@ -204,9 +204,9 @@
 		        wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success').'/?existingUser='.$existingUser));exit;    
 		    }else{
                 if($redirectToCart){
-                    wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_slug').'/'));exit;
+                    wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_slug')).'/');exit;
                 }else{
-                    wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success').'/'));exit;
+                    wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success')).'/');exit;
                 }
 		    }
 		}
@@ -215,9 +215,9 @@
     function tfgg_cp_redirect_after_registration(){
         $_SESSION['tfgg_scp_send_ga_client_number']=TRUE;
         if(get_option('tfgg_scp_cpnewuser_success_page')==''){
-            wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success').'/'));exit;
+            wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success')).'/');exit;
         }else{
-            wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_success_page').'/'));exit;
+            wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cpnewuser_success_page')).'/');exit;
         }
     }
 
@@ -3151,7 +3151,8 @@
         //if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='secondary-menu'){
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
         //2019-10-09 CB V1.0.1.3 - added full site URL
-          $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_acct_overview') .'/">Account Overview</a></li>';  
+          $items .='<li><a href="'. get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_acct_overview').'/').'/">Account Overview</a></li>';  
+          
         }
         return $items;
     }
@@ -3178,11 +3179,11 @@
 
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
             //$items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
-            $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))).'/" id="tfgg_scp_cart_link">'.$link.'</a></li>';
+            $items.='<li><a href="'. get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_slug').'/').'/" id="tfgg_scp_cart_link">'.$link.'</a></li>';
         }
         if($sunlyncuser && $args->theme_location=='primary-menu'){
             //$items .='<li><a href="'. esc_url(add_query_arg('viewcart','cart',site_url(get_option('tfgg_scp_cart_slug')))) .'" id="tfgg_scp_cart_link">'.$link.'</a></li>'; 
-            $items.='<li><a href="'. esc_url(site_url(get_option('tfgg_scp_cart_slug'))) .'/" id="tfgg_scp_cart_link_primary">'.$link2.'</a></li>';
+            $items.='<li><a href="'. get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_slug').'/').'/" id="tfgg_scp_cart_link_primary">'.$link2.'</a></li>';
         }
         return $items;
     }
@@ -3195,7 +3196,7 @@
             $sunlyncuser = tfgg_cp_get_sunlync_client();
             if(is_user_logged_in() && $sunlyncuser && $args->theme_location=='primary-menu'){
                 //2019-10-09 CB V1.0.1.3 - added full site URL
-                $items .='<li><a href="'. get_site_url().'/'.get_option('tfgg_scp_cpappt_page') .'/">Book Appointment</a></li>';  
+                $items .='<li><a href="'. get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cpappt_page').'/').'/">Book Appointment</a></li>';  
             }            
         }
         return $items;
@@ -3794,4 +3795,88 @@
         }    
     }
 
+    function tfgg_scp_get_recaptcha_response(){
+        /*$recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+        $recaptcha_secret = get_option('tfgg_scp_recaptcha_secret_key'); // Insert your secret key here
+        $recaptcha_response = $_POST['data']['recaptcha_response'];
+
+        $recaptcha = json_decode(file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response));
+        */
+
+        $captcha = $_POST['data']['recaptcha_response'];
+        $privatekey = get_option('tfgg_scp_recaptcha_secret_key');;
+        $url = 'https://www.google.com/recaptcha/api/siteverify';
+        $data = array(
+            'secret' => $privatekey,
+            'response' => $captcha,
+            'remoteip' => $_SERVER['REMOTE_ADDR']
+        );
+
+        $curlConfig = array(
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_POSTFIELDS => $data
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $curlConfig);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $recaptcha=json_decode($response);
+
+        if($recaptcha->success == true && $recaptcha->score>=get_option('tfgg_scp_recaptcha_score','0.1')){
+            $result = array('result'=>true,
+            'response'=>$recaptcha);
+        }else{
+            $result = array('result'=>false,
+            'response'=>$recaptcha);
+        }
+
+        exit(json_encode($result));
+    }
+    add_action( 'wp_ajax_tfgg_scp_get_recaptcha_response', 'tfgg_scp_get_recaptcha_response' );
+    add_action( 'wp_ajax_nopriv_tfgg_scp_get_recaptcha_response', 'tfgg_scp_get_recaptcha_response' );
+
+    function tfgg_scp_get_registration_recaptcha_response($recaptcha_response){
+        /*$recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+        $recaptcha_secret = get_option('tfgg_scp_recaptcha_secret_key'); // Insert your secret key here
+        //$recaptcha_response = $_POST['data']['recaptcha_response'];
+
+        $recaptcha = json_decode(file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response));*/
+
+        $captcha = $recaptcha_response;
+        $privatekey = get_option('tfgg_scp_recaptcha_secret_key');;
+        $url = 'https://www.google.com/recaptcha/api/siteverify';
+        $data = array(
+            'secret' => $privatekey,
+            'response' => $captcha,
+            'remoteip' => $_SERVER['REMOTE_ADDR']
+        );
+
+        $curlConfig = array(
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_POSTFIELDS => $data
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, $curlConfig);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $recaptcha=json_decode($response);
+
+        if($recaptcha->success == true && $recaptcha->score>=get_option('tfgg_scp_recaptcha_score','0.1')){
+            return true;
+        }else{
+            return false;
+        }
+
+        exit(json_encode($result));
+    }
 ?>
