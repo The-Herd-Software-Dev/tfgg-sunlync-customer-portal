@@ -5,10 +5,11 @@
 * dont forget to add any publicly facing shortcodes to admin-menu/am-shortcodes.php
 */
 
-require_once('reg-page.php');
-require_once('instore-reg-page.php');
+//require_once('reg-page.php');
+//require_once('instore-reg-page.php');
 //require_once('login-page.php');
 require_once('api-login-page.php');
+require_once('registration.php');
 
 /*function tfgg_cp_sunlync_clientnumber(){
     return 'sunlync client number';
@@ -48,14 +49,15 @@ function tfgg_cp_sunlync_register_new(){
             echo '<script>document.location.href = "'.get_option('tfgg_scp_cplogin_page_success').'";</script>';
         }
     }*/
-    return reg_form_display_new(); 
+    //return reg_form_display_new(); 
+    return tfgg_scp_registration(false);
 }
 add_shortcode('cp_sunlync_registrationform_new','tfgg_cp_sunlync_register_new');
 
-function tfgg_cp_sunlync_register_existing(){
+/*function tfgg_cp_sunlync_register_existing(){
     //return reg_form_display();
 }
-add_shortcode('cp_sunlync_registrationform_existing','tfgg_cp_sunlync_register_existing');
+add_shortcode('cp_sunlync_registrationform_existing','tfgg_cp_sunlync_register_existing');*/
 
 function tfgg_cp_sunlync_appointments(){
     return appt_booking();
@@ -82,9 +84,9 @@ add_shortcode('cp_sunlync_demographics','tfgg_cp_sunlync_account');
 function tfgg_cp_sunlync_register_instore(){
 
     if(!isset($_COOKIE['instore_reg_store'])){
-        return set_storecode_display();
+        return tfgg_scp_registration_instore_set_cookie_display();
     }else{
-        return reg_form_display_instore(); 
+        return tfgg_scp_registration(true);
     }
 
 }
@@ -132,4 +134,14 @@ function tfgg_cp_sunlync_cart_success(){
     return tfgg_scp_cart_success_display();
 }
 add_shortcode('cp_sunlync_success_cart','tfgg_cp_sunlync_cart_success');
+
+/*function cp_registration_instore(){
+    return tfgg_scp_registration(true);
+}
+add_shortcode('tfgg_scp_registration_instore','cp_registration_instore');
+
+function cp_registration_online(){
+    return tfgg_scp_registration(false);
+}
+add_shortcode('tfgg_scp_registration_online','cp_registration_online');*/
 ?>

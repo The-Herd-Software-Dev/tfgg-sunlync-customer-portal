@@ -330,11 +330,11 @@ tr.account_overview_row > td {
     max-width:280px;
 }
 
-.reg_alert {
+/*.reg_alert {
     font-size:0.8em;
     color:red;
     padding-left:2px;
-}
+}*/
 
 .registration-link {
     color:#F16631;
@@ -417,9 +417,9 @@ tr.account_overview_row > td {
         font-size:0.9em;
     }
     
-    .reg_alert {
+    /*.reg_alert {
         font-size:0.9em;
-    }
+    }*/
     
     .registration-link {
         font-size:0.8em;

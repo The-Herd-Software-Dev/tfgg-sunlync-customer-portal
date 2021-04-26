@@ -1,6 +1,6 @@
 <?php
 
-    function tfgg_cp_register_css() {
+    /*function tfgg_cp_register_css() {
     	wp_register_style('tfgg-cp-form-css', plugin_dir_url( __FILE__ ) . '/css/forms.css');
     }
     add_action('init', 'tfgg_cp_register_css');
@@ -15,10 +15,9 @@
      
     	wp_print_styles('tfgg-cp-form-css');
     }
-    add_action('wp_footer', 'tfgg_cp_print_css');
+    add_action('wp_footer', 'tfgg_cp_print_css');*/
     
     add_action( 'wp_enqueue_scripts', 'load_api_scripts' );
-    
     add_action( 'admin_enqueue_scripts', 'load_api_scripts' );
     function load_api_scripts(){   
         

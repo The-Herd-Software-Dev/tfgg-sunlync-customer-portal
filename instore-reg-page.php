@@ -626,6 +626,6 @@
 		}
 	}
 
-	add_action('init','tfgg_sunlync_client_instore_api_registration');
+	//add_action('init','tfgg_sunlync_client_instore_api_registration');
 	
 ?>

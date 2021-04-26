@@ -38,29 +38,6 @@ jQuery(function(){
         resizeable: false
     });*/
 
-    jQuery('#tfgg_cp_skin_type').change(function(){
-        jQuery('#new_reg_skin_type_alertpnl').css('display','none');
-        jQuery('#new_reg_skin_type_alertpnl').html('');
-        jQuery('#tfgg_cp_skin_type_confirm').prop("checked",false);
-
-        //2019-09-26 CB V1.0.0.4 - updated to reflect tanning warning message
-        //2019-09-30 CB V1.0.0.6 - changed to only show for 'SENSITIVE'
-        var selected = jQuery(this).children('option:selected').text();
-        if(selected.toUpperCase()=='SENSITIVE'){
-            jQuery('#new_reg_skin_type_alertpnl').html('Skin Type: No Tanning - You are unsuitable for UV tanning but you can still use spray tanning services');
-            jQuery('#new_reg_skin_type_alertpnl').css('display','block');
-        }
-    });
-
-    jQuery('#tfgg_cp_store').change(function(){
-        //2019-09-30 CB V1.0.0.6 - added
-        jQuery('#chiswick_display_warning').css('display','none');
-        var selected = jQuery(this).children('option:selected').text();
-        if(selected.toUpperCase()=='CHISWICK'){
-            jQuery('#chiswick_display_warning').css('display','block');    
-        }
-    });
-
     jQuery('#tfgg_store_filter').on('input',function(){
         jQuery('#tfgg_storeselect_warning').hide();
         var filter =  jQuery('#tfgg_store_filter').val().toLowerCase();//2019-06-11 - added toLowercase to remove case sensitivity
