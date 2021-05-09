@@ -335,7 +335,13 @@
     include('admin-menu/am-recaptcha.php');//2021-04-13 CB V1.4.1.1 - added
 
     function tfgg_sunlync_cp_admin_menu_option(){
-        add_menu_page('Sunlync Customer Portal','Sunlync CP','manage_options','tfgg-sunlync-cp-admin-menu','tfgg_sunlync_cp_page','',5);
+        add_menu_page('Sunlync Customer Portal',
+        'Sunlync CP',
+        'manage_options',
+        'tfgg-sunlync-cp-admin-menu',
+        'tfgg_sunlync_cp_page',
+        '',
+        5);
     }
     add_action('admin_menu','tfgg_sunlync_cp_admin_menu_option');
     

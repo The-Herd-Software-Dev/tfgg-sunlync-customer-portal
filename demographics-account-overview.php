@@ -38,11 +38,6 @@
 				$commPref = $commPref->commPref[0];
 			}
 			
-			//var_dump($commPref);
-			
-			//2019-10-12 CB V1.1.1.1 - deprecated
-			//$wp_login = tfgg_cp_get_user_loginid();
-			//echo $wp_login;
                 
 		if((array_key_exists('linked_reg',$_SESSION))&&($_SESSION['linked_reg']==$client)){
 			unset($_SESSION['linked_reg']);//we only want to see this once
@@ -73,7 +68,6 @@
 
 	   </div>
         <form id="tfgg_sunlync_cp_demo" method="POST" action="">
-    	
 		
 		<div class="account-overview-generic-container">
 		        

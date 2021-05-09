@@ -19,6 +19,19 @@
     
     add_action( 'wp_enqueue_scripts', 'load_api_scripts' );
     add_action( 'admin_enqueue_scripts', 'load_api_scripts' );
+
+    function tfgg_scp_load_admin_recaptcha($hook_suffix){
+        if($hook_suffix==='toplevel_page_tfgg-sunlync-cp-admin-menu'){
+            if((get_option('tfgg_scp_recaptcha_site_key','')!=='')&&
+            (get_option('tfgg_scp_recaptcha_secret_key','')!=='')){
+                if(is_admin() && current_user_can('administrator')){
+                    wp_enqueue_script('tfgg-recaptcha','https://www.google.com/recaptcha/api.js?render='.get_option('tfgg_scp_recaptcha_site_key'),'','');
+                }
+            }
+        }
+    }
+    add_action('admin_enqueue_scripts','tfgg_scp_load_admin_recaptcha');
+
     function load_api_scripts(){   
         
         //2019-10-11 CB V1.0.1.4 - versioning added to css and js
@@ -32,20 +45,6 @@
         'acctOverview' => get_option('tfgg_scp_acct_overview'),
         'apptRedirect' => get_option('tfgg_scp_cpappt_success',get_option('tfgg_scp_acct_overview'))));
 
-        if((get_option('tfgg_scp_recaptcha_site_key','')!=='')&&
-        (get_option('tfgg_scp_recaptcha_secret_key','')!=='')){
-
-            if(is_admin() && current_user_can('administrator')){
-                wp_enqueue_script('tfgg-recaptcha','https://www.google.com/recaptcha/api.js?render='.get_option('tfgg_scp_recaptcha_site_key'),'','');
-            }else{
-                global $post;
-		        $post_slug = $post->post_name;
-                if((str_replace('/','',get_option('tfgg_scp_cpnewuser_page'))==$post_slug)||
-                (str_replace('/','',get_option('tfgg_scp_cpnewuser_page_instore'))==$post_slug)){
-                    wp_enqueue_script('tfgg-recaptcha','https://www.google.com/recaptcha/api.js?render='.get_option('tfgg_scp_recaptcha_site_key'),'','');
-                }
-            }
-        }
         
         wp_enqueue_script( 'tfgg-wp-scripts', plugin_dir_url(__FILE__).'js/include.js', array( 'jquery' ), $includeJsV );
         wp_localize_script('tfgg-wp-scripts', 'localAccess', array('pluginsUrl' => plugin_dir_url(__FILE__),

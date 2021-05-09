@@ -1,11 +1,7 @@
 <?php
 
     function tfgg_scp_add_registration_dialogs_to_footer(){
-        global $post;
-        $post_slug = $post->post_name;
-        if((str_replace('/','',get_option('tfgg_scp_cpnewuser_page'))==$post_slug)||
-            (str_replace('/','',get_option('tfgg_scp_cpnewuser_page_instore'))==$post_slug)){
-                echo'<div class="modal fade bd-modal-lg" id="modal-tfgg-scp-validation-results" tabindex="-1" role="dialog" 
+        echo'<div class="modal fade bd-modal-lg" id="modal-tfgg-scp-validation-results" tabindex="-1" role="dialog" 
                     aria-labelledby="model-tfgg-scp-results-center-title" aria-hidden="true" data-backdrop="false" 
                     style="background-color: rgba(0, 0, 0, 0.5);">
                     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -92,9 +88,9 @@
             </div>
             <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
             <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>';
-            }
+        
     }
-    add_action('wp_footer','tfgg_scp_add_registration_dialogs_to_footer');
+    
 
     function tfgg_scp_registration_instore_set_cookie_display(){
         ob_start();
@@ -1088,7 +1084,7 @@
             }
 
             function evaluateSkinTypeWarning(el){
-                console.log(el.options[el.selectedIndex].text.toUpperCase());
+                //console.log(el.options[el.selectedIndex].text.toUpperCase());
                 var regAlert = document.getElementById('reg_alert_for_'+el.id);
                 regAlert.innerHTML='';
                 regAlert.style.display='none';
@@ -1099,7 +1095,9 @@
                 }
             }
 
-            
+            if ( window.history.replaceState ) {
+                window.history.replaceState( null, null, window.location.href );
+            }
         </script>
     <?php
         return ob_get_clean();
@@ -1111,21 +1109,28 @@
 
         if((array_key_exists('tfgg_scp_registration_nonce',$_POST))&&
         (wp_verify_nonce($_POST['tfgg_scp_registration_nonce'],'tfgg-scp-registration-nonce'))&&
-        (empty($_POST['tfgg_scp_registration_user_password_reenter']))
+        (empty($_POST['tfgg_scp_registration_user_password_reenter']))&&
+        (array_key_exists('recaptcha_response',$_POST))
         ){
 
-            //at this point, we know a 'good' registration has been submitted, process the data
-            $check_captcha = tfgg_scp_get_registration_recaptcha_response($_POST['recaptcha_response']);
-			
-			if(true === $check_captcha){
-				//do nothing, the captcha was a success
-			}else{
-				tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: Failed reCaptcha'.
-					'<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues (reCaptcha)" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));	
-				return false;
-			}
+            unset($_POST['tfgg_scp_registration_nonce']);
 
             $instoreRegistration = ($_POST['tfgg_scp_registration_instore']==1);
+
+            //at this point, we know a 'good' registration has been submitted, process the data
+            
+            $check_captcha = tfgg_scp_get_registration_recaptcha_response($_POST['recaptcha_response']);
+            unset($_POST['recaptcha_response']);
+            
+            if(!$instoreRegistration){
+                if(true === $check_captcha){
+                    //do nothing, the captcha was a success
+                }else{
+                    tfgg_cp_errors()->add('error_cannot_reg', __('There was an error registering your account: Failed reCaptcha'.
+                        '<br/>Please contact the support department for assistance: <a href="mailto:'.get_option('tfgg_scp_customer_service_email').'?subject=Registration Issues (reCaptcha)" target="_blank">'.get_option('tfgg_scp_customer_service_email').'</a>'));	
+                    return false;
+                }
+            }
 
             //organize the data
 			$address = array(
@@ -1209,7 +1214,7 @@
 
                             if(strtoupper($reg_result->results)=='SUCCESS'){
 								//now set the password
-								tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_cp_user_pass']);
+								tfgg_api_set_password($reg_result->clientnumber,$_POST['tfgg_scp_registration_password']);
 								
                                 if($instoreRegistration){
                                     //2019-11-14 CB V1.2.3.1 - added palceholders to replace data
@@ -1231,7 +1236,7 @@
                         case 'set':
                             //set the password and the email on the account
 							$clientNumber=$reg_validation->client->client_id;
-							tfgg_api_set_password($clientNumber,$_POST['tfgg_cp_user_pass']);
+							tfgg_api_set_password($clientNumber,$_POST['tfgg_scp_registration_password']);
 							tfgg_api_update_single_demo($clientNumber,'email',$demographics['email']);
                             
                             if($instoreRegistration){

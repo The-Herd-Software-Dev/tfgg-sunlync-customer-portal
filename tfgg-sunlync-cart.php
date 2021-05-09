@@ -4,7 +4,7 @@
         ob_start();
         
         $cartContents = json_decode(tfgg_scp_get_cart_contents());
-        //var_dump($cartContents);
+        
         if(StrToUpper($cartContents->results) === 'SUCCESS'){
            // tfgg_scp_display_cart_banner();
            // echo '<br/><br/><br/><br/>';
@@ -333,7 +333,7 @@
                         "quantity": 2,
                         "price": '2.0'
                     },
-                    */
+                    
                     $gtag = 'gtag(\'event\', \'purchase\', {
                         "transaction_id": "'.$cartContents->header->receipt.'",
                         "affiliation": "The Tanning Shop",
@@ -356,7 +356,7 @@
                     $gtag=rtrim($gtag,",");
                     $gtag.=']});';
 
-                    echo ('<script>'.$gtag.'</script>');
+                    echo ('<script>'.$gtag.'</script>');*/
                     unset($_SESSION['processedCartReceipt']);
                     unset($_SESSION['tfgg_scp_cartid']); 
                 }
@@ -850,7 +850,11 @@
             return false;
         }
 
-        if(isset($_SESSION['tfgg_scp_cart_store'])){$browsingStore = $_SESSION['tfgg_scp_cart_store'];}else{$browsingStore=$_SESSION['clientHomeStore'];}        
+        if(isset($_SESSION['tfgg_scp_cart_store'])){
+            $browsingStore = $_SESSION['tfgg_scp_cart_store'];
+        }else{
+            $browsingStore=$_SESSION['clientHomeStore'];
+        }        
         
         if($packagesForSale<>''){
             $packageList = json_decode(tfgg_scp_get_packages_from_api($packagesForSale, $browsingStore, false));
@@ -1175,7 +1179,9 @@
 
     function display_store_cart_details($store){
         //get_post('post_content',url_to_postid(site_url(get_option('tfgg_scp_tandc_slug_instore'))))
-        echo get_post_field('post_content',url_to_postid(site_url(get_option('tfgg_scp_store_cart_details_page'))),'display');
+        if(get_option('tfgg_scp_store_cart_details_page','')!=''){
+            echo get_post_field('post_content',url_to_postid(site_url(get_option('tfgg_scp_store_cart_details_page'))),'display');
+        }
         
         if($store!='xxxxxxxxxx'){
             $storeCartDetailsID = (array)get_option('tfgg_scp_store_cart_details_id');

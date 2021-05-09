@@ -67,18 +67,23 @@
     }
 
     function tfgg_cp_set_sunlync_client($clientnumber){
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         $_SESSION['sunlync_client'] = $clientnumber;
+        session_write_close();
     }
 
     function tfgg_cp_unset_sunlync_client(){
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         unset($_SESSION['sunlync_client']);
         unset($_SESSION['sunlync_firstname']);
         unset($_SESSION['sunlync_lastname']);
+        session_write_close();
     }
 
     function tfgg_cp_portal_logout(){
         tfgg_cp_unset_sunlync_client();
-
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
+        
         if(isset($_SESSION['tfgg_scp_cartid'])){
             unset($_SESSION['tfgg_scp_cartid']);
         }
@@ -104,6 +109,7 @@
             unset($_SESSION['tfgg_reg_resp']);
         }
 
+        session_write_close();
         $result["logout"]=site_url();//possible configurable option
         exit(json_encode($result));
     }
@@ -128,7 +134,6 @@
         }else{
             return false;
         }
-
     }
 
     function tfgg_is_sunlync_user_logged_in(){
@@ -213,7 +218,11 @@
     }
 
     function tfgg_cp_redirect_after_registration(){
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         $_SESSION['tfgg_scp_send_ga_client_number']=TRUE;
+        $_SESSION['awin_registration_info']=array('clientnumber'=>$_SESSION['sunlync_client']);
+        session_write_close();
+
         if(get_option('tfgg_scp_cpnewuser_success_page')==''){
             wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cplogin_page_success')).'/');exit;
         }else{
@@ -262,6 +271,7 @@
         //2020-03-05 CB V1.2.5.7 - appended full site url
 
         //I am purposely leaving this broken out to make management easier
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         if($sunlyncUser){
             log_me('is a sunlync user');
             if(is_page(array($login, $registration))){
@@ -270,6 +280,7 @@
                 //2020-03-02 CB V1.2.5.4 - redirect back to cart if customer came from cart to login page
                 if((array_key_exists('sendBackToCart',$_SESSION))&&($_SESSION['sendBackToCart']===true)){
                     unset($_SESSION['sendBackToCart']);
+                    session_write_close();
                     wp_redirect( $siteurl.$servicesSale.'/' ); 
                 }else{
                     wp_redirect( $siteurl.$acctOverview.'/' ); 
@@ -283,9 +294,10 @@
                 unset($_SESSION['sendBackToCart']);//just in case
                 if($wp->request==$servicesSale){
                     $_SESSION['sendBackToCart']=true;
+                    session_write_close();
                 }
-
                 wp_redirect( $siteurl.$login.'/'); 
+                
                 exit;
             }    
         }
@@ -439,9 +451,11 @@
             $demo = $result['demographics'][0];
             //var_dump($demo);
             //default purchasing store if the cart is empty
+            //if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
             $_SESSION['clientHomeStore'] = $demo->homeStore;
             $_SESSION['sunlync_firstname'] = $demo->first_name;
             $_SESSION['sunlync_lastname'] = $demo->last_name;
+            session_write_close();
 
             if(!isset($_SESSION['tfgg_scp_cartid'])){
                 unset($_SESSION['tfgg_scp_cartid']);
@@ -1232,7 +1246,8 @@
             $result_array["error_message"]=$e->getMessage(); 
             return false;
         }
-        
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
+
         if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
 			if(array_key_exists('ERROR',$data[0])){
 				$result_array=array("results"=>"FAIL",
@@ -1248,6 +1263,7 @@
                         'attempted_last'=>$lname,
                         'attempted_dob'=>$dob);
                 $_SESSION['tfgg_reg_resp']=$reg;
+                session_write_close();
                 return true;
 			}
 			
@@ -1263,6 +1279,7 @@
                         'attempted_last'=>$lname,
                         'attempted_dob'=>$dob);
                 $_SESSION['tfgg_reg_resp']=$reg;
+                session_write_close();
                 return false;
             }elseif($data[0]->record_count == 0){
                 //email does not exist, check demographics
@@ -1274,6 +1291,7 @@
                         'attempted_last'=>$lname,
                         'attempted_dob'=>$dob);
                 $_SESSION['tfgg_reg_resp']=$reg;
+                session_write_close();
                 return true;
             }else{
                 //exists on one accunt, check demogrphics
@@ -1285,6 +1303,7 @@
                             'attempted_last'=>$lname,
                             'attempted_dob'=>$dob);
                     $_SESSION['tfgg_reg_resp']=$reg;
+                session_write_close();
                 return false;
             }
 		}
@@ -1312,6 +1331,7 @@
             return false;
         }
 
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
 			if(array_key_exists('ERROR',$data[0])){
 				$result_array=array("results"=>"FAIL",
@@ -1326,6 +1346,7 @@
                         'attempted_last'=>$lname,
                         'attempted_dob'=>$dob);
                 $_SESSION['tfgg_reg_resp']=$reg;
+                session_write_close();
                 return true;
 			}
 		}else{
@@ -1339,6 +1360,7 @@
                         'attempted_last'=>$lname,
                         'attempted_dob'=>$dob);
                 $_SESSION['tfgg_reg_resp']=$reg;
+                session_write_close();
                 return false;
             }elseif($data[0]->record_count == 0){
                 //demographics do not exist
@@ -1351,6 +1373,7 @@
                         'attempted_last'=>$lname,
                         'attempted_dob'=>$dob);
                 $_SESSION['tfgg_reg_resp']=$reg;
+                session_write_close();
                 return true;
             }else{
                 //exists on one accunt
@@ -1368,6 +1391,7 @@
                         'attempted_last'=>$lname,
                         'attempted_dob'=>$dob);
                     $_SESSION['tfgg_reg_resp']=$reg;
+                    session_write_close();
                     return true;
                 }else{
                     $result_array["results"]="FAIL";
@@ -1379,6 +1403,7 @@
                         'attempted_dob'=>$dob,
                         'rtnd_demo'=>$client);
                     $_SESSION['tfgg_reg_resp']=$reg;
+                    session_write_close();
                         return false;
                 }
             }
@@ -2269,8 +2294,10 @@
         $cartHeader = $data->result[0][0][0];
         $cartHeader = $cartHeader->header[0];//there is only ever 1 header record
 
+        
         $_SESSION['tfgg_scp_cart_store'] = $cartHeader->processingStore;
         $_SESSION['tfgg_scp_cart_qty'] = $cartHeader->qty;
+        session_write_close();
 
         $cartItems= $data->result[0][0][1];
         $cartItems = $cartItems->lineitems;//this could be an array of items
@@ -2339,9 +2366,11 @@
 
         $result["paymentItems"]=$paymentItems;
         
+        
         if(!isset($_SESSION['tfgg_scp_cartid'])){
             $_SESSION['tfgg_scp_cartid']=$result["header"]->cartID;
         }
+        session_write_close();
 
         return json_encode($result);
     }
@@ -2444,9 +2473,11 @@
 
         $result["paymentItems"]=$paymentItems;
         
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         if(!isset($_SESSION['tfgg_scp_cartid'])){
             $_SESSION['tfgg_scp_cartid']=$result["header"]->cartID;
         }
+        session_write_close();
 
         return json_encode($result);    
     }
@@ -2468,6 +2499,7 @@
         */
         $url=tfgg_get_api_url().'TAPICart/CartItems';
 
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         if(isset($_SESSION['tfgg_scp_cartid'])){
             $cartid=$_SESSION['tfgg_scp_cartid'];
         }else{
@@ -2475,6 +2507,7 @@
         }
 
         if(isset($_SESSION['tfgg_scp_cart_store'])){$storecode = $_SESSION['tfgg_scp_cart_store'];}else{$storecode=$_SESSION['clientHomeStore'];}
+        session_write_close();
 
         $postBody = array();
         $postBody["clientNumber"] = tfgg_cp_get_sunlync_client();
@@ -2503,7 +2536,7 @@
             exit(json_encode($result));
         }
         $result=$data->result[0][0];
-
+        
         if((array_key_exists('ERROR',$result))||(array_key_exists('WARNING',$result))){
 			if(array_key_exists('ERROR',$result)){
 				$result=array("results"=>"FAIL",
@@ -2514,6 +2547,8 @@
 			}			
 			exit(json_encode($result));
 		}else{
+            if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
+            
             $return["results"]="success";
             $cartID=$data->result[0][1];
             $return["cartID"]=$cartID->cartID;
@@ -2526,6 +2561,7 @@
             }
             
             $return['cartQty']=$_SESSION['tfgg_scp_cart_qty'];
+            session_write_close();
 
             exit(json_encode($return));
 		} 
@@ -2705,6 +2741,7 @@
     }
 
     function tfgg_scp_post_cart_storecode(){
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         $_SESSION['tfgg_cp_cart_warning']='1';
 
         if((!isset($_SESSION['tfgg_scp_cartid']))||
@@ -2714,8 +2751,10 @@
             $_SESSION['tfgg_scp_cart_store']=$_POST['data']['storecode'];
             
             $return["results"]="success";
+            session_write_close();
             exit(json_encode($return));
         }
+        session_write_close();
 
         $url=tfgg_get_api_url().'TAPICart/CartStore/sCartID/sStoreCode';
 
@@ -2755,9 +2794,10 @@
 
 
     function tfgg_api_finalize_cart(){
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         $url=tfgg_get_api_url().'TAPICart/Cart/sCartID';
         $url=str_replace('sCartID',$_SESSION['tfgg_scp_cartid'],$url);
-
+        session_write_close();
         try{
             $data = tfgg_execute_api_request('PUT', $url, '');
         }catch(Exception $e){
@@ -2915,6 +2955,15 @@
 
             $cartContents = json_decode(tfgg_scp_get_cart_contents());
             $cartHeader = $cartContents->header;
+            $cartItems = $cartContents->lineItems;
+
+            $promoCode='';
+            foreach($cartContents->paymentItems as $payments){
+                if($payments->Description=='Promotion'){
+                    $promoCode=$payments->ExternalID;
+                }
+            }
+
             $auth = get_option('tfgg_scp_cart_sage_key').':'.get_option('tfgg_scp_cart_sage_pass');
 
             $tranDate = new DateTime();
@@ -3001,7 +3050,9 @@
                     tfgg_cp_errors()->add('success', __($msg));
                     
                     //2020-03-01 CB V1.2.5.1 - need this to output gsat tags
+                    if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
                     $_SESSION['processedCartReceipt']=$cartFinal->receipt;
+                    session_write_close();
 
                 }else{
                     tfgg_scp_process_sage_pay_refund($vendorCode, (($cartHeader->total)*100), 
@@ -3031,6 +3082,17 @@
                 //2021-04-07 CB V1.3.3.1 - new code to redirect user to a separate cart success page
                 if((array_key_exists('processedCartReceipt',$_SESSION))&&
                 (get_option('tfgg_scp_cart_success_slug')!='')){
+                    if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
+                    $_SESSION['awin_sales_conversion_info']=array(
+                        'receipt_number' =>$cartFinal->receipt,
+                        'total_amt'=>number_format(($cartHeader->total),2,'.',','),
+                        'promo_desc'=>$promoCode
+                    );
+                    $_SESSION['google_sales_conversion_info']=array(
+                        'receipt_number' =>$cartFinal->receipt,
+                        'total_amt'=>number_format(($cartHeader->total),2,'.',',')   
+                    );
+                    session_write_close();
                     wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_success_slug').'/'));exit;
                 }
 
@@ -3174,7 +3236,6 @@
         if((isset($_SESSION['tfgg_scp_cart_qty']))&&($_SESSION['tfgg_scp_cart_qty']>0)){
             $link2.=' ('.$_SESSION['tfgg_scp_cart_qty'].')';
         }
-
         $link2.="</span>";
 
         if($sunlyncuser && $args->theme_location=='secondary-menu'){
@@ -3253,6 +3314,56 @@
                 echo($script);
             }
         }
+    }
+
+    add_action('wp_footer','tfgg_scp_send_awin_client_registration');
+    function tfgg_scp_send_awin_client_registration(){
+        
+        if(isset($_SESSION['awin_registration_info'])){
+
+            tfgg_scp_awin_tracking('registration',1.00,
+            $_SESSION['awin_registration_info']['clientnumber'],'');
+
+            unset($_SESSION['awin_registration_info']);
+        }
+        session_write_close();
+    }
+
+    add_action('wp_footer','tfgg_scp_send_awin_sale_conversion');
+    function tfgg_scp_send_awin_sale_conversion(){
+        
+        if(isset($_SESSION['awin_sales_conversion_info'])){
+
+            tfgg_scp_awin_tracking('sale',
+            $_SESSION['awin_sales_conversion_info']['total_amt'],
+            $_SESSION['awin_sales_conversion_info']['receipt_number'],
+            $_SESSION['awin_sales_conversion_info']['promo_desc']);
+
+            unset($_SESSION['awin_sales_conversion_info']);
+        }
+        
+        session_write_close();
+    }
+
+    add_action('wp_header','tfgg_scp_send_google_sale_conversion');
+    function tfgg_scp_send_google_sale_conversion(){
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
+        if(isset($_SESSION['google_sales_conversion_info'])){
+            
+            tfgg_scp_gtag_sales($_SESSION['google_sales_conversion_info']['total_amt'],
+            $_SESSION['google_sales_conversion_info']['receipt_number']);
+
+            unset($_SESSION['google_sales_conversion_info']);
+        }
+        session_write_close();
+    }
+
+    function tfgg_scp_gtag_sales($amt,$receipt){
+        echo'
+        <!-- Event snippet for Purchase conversion page --> 
+        <script> gtag(\'event\', \'conversion\', { \'send_to\': \'AW-1006266356/OHzUCMyIjAMQ9M_p3wM\', \'value\': \''.$amt.'\', 
+            \'currency\': \'GBP\', \'transaction_id\': \''.$receipt.'\' }); </script>
+        ';
     }
     
     /*2019-10-12 CB V1.1.1.1 - deprecated
@@ -3649,11 +3760,13 @@
             $result["response"]="Login successful!";
             $result["data"]=array_slice($data,1,-1);
 
+            if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
             $_SESSION['sunlync_employee']['employee_number'] = $data[0]->emp_no;
             $_SESSION['sunlync_employee']['first_name'] = $data[0]->firstname;
             $_SESSION['sunlync_employee']['last_name'] = $data[0]->lastname;
+            session_write_close();
 
-            tfgg_scp_get_emp_stores($_SESSION['sunlync_employee']['employee_number']);
+            tfgg_scp_get_emp_stores($data[0]->emp_no);
 
             exit(json_encode($result));
         }
@@ -3731,7 +3844,8 @@
             return json_encode($result);
         }else{
             array_pop($data);//remove the request id
-
+            if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
+            
             $_SESSION['sunlync_employee']['storelist'] = array();//initialize the storelist array
             foreach($data as $store){
     
@@ -3739,19 +3853,25 @@
                 "location"=>$store->storeloc);
                 
                 array_push($_SESSION['sunlync_employee']['storelist'],$storeInfo);
-            }        
+            }  
+
+            session_write_close();     
         }
     }
 
     function tfgg_cp_set_sunlync_employee($employeenumber){
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         $_SESSION['sunlync_employee'] = $employeenumber;
+        session_write_close();
     }
 
     function tfgg_scp_get_formatted_employee_storecodes(){
         $storelist="";
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         foreach($_SESSION['sunlync_employee']['storelist'] as $store){
             $storelist.='"'.$store["storecode"].'",';
         }
+        session_write_close();
         return substr($storelist,0,-1);//remove the last comma
     }
 
@@ -3766,7 +3886,9 @@
     add_action( 'wp_ajax_nopriv_tfgg_cp_employee_dashboard_logout', 'tfgg_cp_employee_dashboard_logout' );
 
     function tfgg_cp_unset_sunlync_employee(){
+        if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         unset($_SESSION['sunlync_employee']);
+        session_write_close();
     }
     add_filter('wp_nav_menu_items', 'tfgg_add_logout_employee_link', 10, 2 );
 
@@ -3878,5 +4000,64 @@
         }
 
         exit(json_encode($result));
+    }
+
+    function tfgg_scp_awin_tracking($trackingType,$totalAmt, 
+    $uniqueId,$voucherCode){
+        //2021-04-26 - V1.5.2.1
+        
+        $testMode = 0;
+        $advertiserID = 22934;//can this be a constant somewhere?
+        $channel = 'aw';
+
+        switch($trackingType){
+            case 'registration':
+                $leadType = 'LEAD';
+                $totalAmt = 1.00;
+                $voucherCode='';//to be safe
+                break;
+            default:
+                $leadType = 'DEFAULT';
+                break;
+        }
+
+        echo '<img border="0" height="0" src="https://www.awin1.com/sread.img?tt=ns&tv=2&merchant='.$advertiserID.'&amount='.$totalAmt.'&ch='.$channel.'&cr=GBP&parts='.$leadType.':'.$totalAmt.'&ref='.$uniqueId.'&testmode='.$testMode.'&vc='.$voucherCode.'" style="display: none;" width="0">
+        <script type="text/javascript">
+        //<![CDATA[
+        /*** Do not change ***/
+        var AWIN = {};
+        AWIN.Tracking = {};
+        AWIN.Tracking.Sale = {};
+        /*** Set your transaction parameters ***/
+        AWIN.Tracking.Sale.amount = "'.$totalAmt.'";
+        AWIN.Tracking.Sale.channel = "'.$channel.'";
+        AWIN.Tracking.Sale.currency = "GBP";
+        AWIN.Tracking.Sale.orderRef = "'.$uniqueId.'";
+        AWIN.Tracking.Sale.parts = "'.$leadType.':'.$totalAmt.'";
+        AWIN.Tracking.Sale.test = "'.$testMode.'";
+        AWIN.Tracking.Sale.voucher = "'.$voucherCode.'";
+        //]]>
+        </script>
+        <script defer="defer" src="https://www.dwin1.com/'.$advertiserID.'.js" type="text/javascript"></script>';
+
+        $url = "https://www.awin1.com/sread.php?tt=ss&tv=2&merchant=".$advertiserID;
+        $url .= "&amount=" . $totalAmt;
+        $url .= "&ch=".$channel;
+        $url .= "&cr=GBP";
+        $url .= "&ref=" . $uniqueId;
+        $url .= "&parts=".$leadType.":" . $totalAmt;
+        $url .= "&testmode=".$testMode;
+        $url .= "&vc=" . $voucherCode;
+        if (isset($_COOKIE['awc'])) {
+            $url .= "&cks=" . $_COOKIE['awc']; // Populate the Awin click checksum if one is associated with the conversion
+        }
+        
+        $c = curl_init();
+        curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($c, CURLOPT_URL, $url);
+        curl_exec($c);
+        curl_close($c);
+        
     }
 ?>

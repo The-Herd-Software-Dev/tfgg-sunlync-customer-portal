@@ -30,7 +30,6 @@ function tfgg_cp_sunlync_login(){
             echo '<script>document.location.href = "'.get_option('tfgg_scp_cplogin_page_success').'";</script>';
         }
     }*/
-
     return login_form_display(); 
     
 }
@@ -50,6 +49,11 @@ function tfgg_cp_sunlync_register_new(){
         }
     }*/
     //return reg_form_display_new(); 
+    if((get_option('tfgg_scp_recaptcha_site_key','')!=='')&&
+    (get_option('tfgg_scp_recaptcha_secret_key','')!=='')){
+        wp_enqueue_script('tfgg-user-recaptcha','https://www.google.com/recaptcha/api.js?render='.get_option('tfgg_scp_recaptcha_site_key'),'','');
+    }
+    add_action('wp_footer','tfgg_scp_add_registration_dialogs_to_footer');
     return tfgg_scp_registration(false);
 }
 add_shortcode('cp_sunlync_registrationform_new','tfgg_cp_sunlync_register_new');
@@ -82,7 +86,11 @@ function tfgg_cp_sunlync_account(){
 add_shortcode('cp_sunlync_demographics','tfgg_cp_sunlync_account');
 
 function tfgg_cp_sunlync_register_instore(){
-
+    if((get_option('tfgg_scp_recaptcha_site_key','')!=='')&&
+    (get_option('tfgg_scp_recaptcha_secret_key','')!=='')){
+        wp_enqueue_script('tfgg-user-recaptcha','https://www.google.com/recaptcha/api.js?render='.get_option('tfgg_scp_recaptcha_site_key'),'','');
+    }
+    add_action('wp_footer','tfgg_scp_add_registration_dialogs_to_footer');
     if(!isset($_COOKIE['instore_reg_store'])){
         return tfgg_scp_registration_instore_set_cookie_display();
     }else{
