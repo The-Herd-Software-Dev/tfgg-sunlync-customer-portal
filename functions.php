@@ -220,7 +220,9 @@
     function tfgg_cp_redirect_after_registration(){
         if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         $_SESSION['tfgg_scp_send_ga_client_number']=TRUE;
-        $_SESSION['awin_registration_info']=array('clientnumber'=>$_SESSION['sunlync_client']);
+        if(get_option('tfgg_scp_enable_awin_mrkting','0')=='1'){
+            $_SESSION['awin_registration_info']=array('clientnumber'=>$_SESSION['sunlync_client']);
+        }
         session_write_close();
 
         if(get_option('tfgg_scp_cpnewuser_success_page')==''){
@@ -3083,15 +3085,19 @@
                 if((array_key_exists('processedCartReceipt',$_SESSION))&&
                 (get_option('tfgg_scp_cart_success_slug')!='')){
                     if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
-                    $_SESSION['awin_sales_conversion_info']=array(
-                        'receipt_number' =>$cartFinal->receipt,
-                        'total_amt'=>number_format(($cartHeader->total),2,'.',','),
-                        'promo_desc'=>$promoCode
-                    );
-                    $_SESSION['google_sales_conversion_info']=array(
-                        'receipt_number' =>$cartFinal->receipt,
-                        'total_amt'=>number_format(($cartHeader->total),2,'.',',')   
-                    );
+                    if(get_option('tfgg_scp_enable_awin_mrkting','0')=='1'){
+                        $_SESSION['awin_sales_conversion_info']=array(
+                            'receipt_number' =>$cartFinal->receipt,
+                            'total_amt'=>number_format(($cartHeader->total),2,'.',','),
+                            'promo_desc'=>$promoCode
+                        );
+                    }
+                    if(get_option('tfgg_scp_enable_google_mrkting','0')==1){
+                        $_SESSION['google_sales_conversion_info']=array(
+                            'receipt_number' =>$cartFinal->receipt,
+                            'total_amt'=>number_format(($cartHeader->total),2,'.',',')   
+                        );
+                    }
                     session_write_close();
                     wp_redirect(get_site_url().'/'.tfgg_scp_remove_slashes(get_option('tfgg_scp_cart_success_slug').'/'));exit;
                 }
@@ -3321,8 +3327,10 @@
         
         if(isset($_SESSION['awin_registration_info'])){
 
-            tfgg_scp_awin_tracking('registration',1.00,
-            $_SESSION['awin_registration_info']['clientnumber'],'');
+            if(get_option('tfgg_scp_enable_awin_mrkting','0')=='1'){
+                tfgg_scp_awin_tracking('registration',get_option('tfgg_scp_awin_reg_amt','1.00'),
+                $_SESSION['awin_registration_info']['clientnumber'],'');
+            }
 
             unset($_SESSION['awin_registration_info']);
         }
@@ -3334,10 +3342,12 @@
         
         if(isset($_SESSION['awin_sales_conversion_info'])){
 
-            tfgg_scp_awin_tracking('sale',
-            $_SESSION['awin_sales_conversion_info']['total_amt'],
-            $_SESSION['awin_sales_conversion_info']['receipt_number'],
-            $_SESSION['awin_sales_conversion_info']['promo_desc']);
+            if(get_option('tfgg_scp_enable_awin_mrkting','0')=='1'){
+                tfgg_scp_awin_tracking('sale',
+                $_SESSION['awin_sales_conversion_info']['total_amt'],
+                $_SESSION['awin_sales_conversion_info']['receipt_number'],
+                $_SESSION['awin_sales_conversion_info']['promo_desc']);
+            }
 
             unset($_SESSION['awin_sales_conversion_info']);
         }
@@ -3350,8 +3360,10 @@
         if(session_status() !== PHP_SESSION_ACTIVE){ session_start();}
         if(isset($_SESSION['google_sales_conversion_info'])){
             
-            tfgg_scp_gtag_sales($_SESSION['google_sales_conversion_info']['total_amt'],
-            $_SESSION['google_sales_conversion_info']['receipt_number']);
+            if(get_option('tfgg_scp_enable_google_mrkting','0')==1){
+                tfgg_scp_gtag_sales($_SESSION['google_sales_conversion_info']['total_amt'],
+                $_SESSION['google_sales_conversion_info']['receipt_number']);
+            }
 
             unset($_SESSION['google_sales_conversion_info']);
         }
@@ -3359,11 +3371,23 @@
     }
 
     function tfgg_scp_gtag_sales($amt,$receipt){
+        if(get_option('tfgg_scp_enable_google_mrkting','0')==0){
+            return;
+        }
+
+        $output = get_option('tfgg_scp_google_mrkting_script','');
+        if($output!=''){
+            $output = str_replace('{{amt}}',$amt,$output);
+            $output = str_replace('{{receipt}}',$receipt,$output);
+            echo $output;
+        }
+        
+        /*
         echo'
         <!-- Event snippet for Purchase conversion page --> 
         <script> gtag(\'event\', \'conversion\', { \'send_to\': \'AW-1006266356/OHzUCMyIjAMQ9M_p3wM\', \'value\': \''.$amt.'\', 
             \'currency\': \'GBP\', \'transaction_id\': \''.$receipt.'\' }); </script>
-        ';
+        ';*/
     }
     
     /*2019-10-12 CB V1.1.1.1 - deprecated
@@ -4005,19 +4029,23 @@
     function tfgg_scp_awin_tracking($trackingType,$totalAmt, 
     $uniqueId,$voucherCode){
         //2021-04-26 - V1.5.2.1
+
+        if(get_option('tfgg_scp_enable_awin_mrkting','0')=='0'){
+            return;
+        }
         
         $testMode = 0;
-        $advertiserID = 22934;//can this be a constant somewhere?
-        $channel = 'aw';
+        $advertiserID = get_option('tfgg_scp_awin_merchant_id','22934');
+        $channel = get_option('tfgg_scp_awin_channel','cw');
 
         switch($trackingType){
             case 'registration':
-                $leadType = 'LEAD';
-                $totalAmt = 1.00;
+                $leadType = get_option('tfgg_scp_awin_reg_lead_desc','LEAD');
+                $totalAmt = get_option('tfgg_scp_awin_reg_amt','1.00');
                 $voucherCode='';//to be safe
                 break;
             default:
-                $leadType = 'DEFAULT';
+                $leadType = get_option('tfgg_scp_awin_trans_lead_desc','DEFAULT');
                 break;
         }
 

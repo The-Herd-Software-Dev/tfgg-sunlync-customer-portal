@@ -1,11 +1,81 @@
 <?php
 
-function tfgg_scp_service_selction_description(){
-    echo '<br/>';
-    echo '<p>Please select the services you wish users to be able to purchase through this portal, if no services are selected, all services returned from the API will be used</p>';
-    echo '<p>Prices displayed to the user will be those pulled from the API</p>';
+function tfgg_scp_admin_services_options(){
+    add_settings_section("tfgg_service_selection_section", '', null, "tfgg-service-selection");
+
+    add_settings_field("tfgg_scp_services_sale_slug","Services Sale Slug:","display_tfgg_services_sale_slug", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_services_sale_slug");
+
+    add_settings_field("tfgg_scp_package_header_label","Package Display Header:","display_tfgg_package_header_label", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_header_label");
+
+    add_settings_field("tfgg_scp_package_allow_search","Allow Package Search:","display_tfgg_package_allow_search", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_allow_search");
+
+    add_settings_field("tfgg_scp_package_unit_minutes","Rename 'Minutes':","display_tfgg_package_units_minutes", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_minutes");
+
+    add_settings_field("tfgg_scp_package_unit_sessions","Rename 'Sessions':","display_tfgg_package_units_sessions", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_sessions");
+
+    add_settings_field("tfgg_scp_package_unit_credits","Rename 'Credits':","display_tfgg_package_units_credits", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_credits");
+
+    add_settings_field("tfgg_scp_package_selection","Packages For Sale:","display_tfgg_package_selection", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_selection");
+
+    //add_settings_field("tfgg_scp_package_alias","Package Alias:","", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_alias");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_img");
+    register_setting("tfgg_service_selection_section","tfgg_scp_package_free_text");
+
+    add_settings_field("tfgg_scp_membership_header_label","Membership Display Header:","display_tfgg_membership_header_label", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_membership_header_label");
+
+    add_settings_field("tfgg_scp_membership_allow_search","Allow Membership Search:","display_tfgg_membership_allow_search", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_membership_allow_search");
+
+    add_settings_field("tfgg_scp_membership_selection","Memberships For Sale:","display_tfgg_membership_selection", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_membership_selection");
+
+    //add_settings_field("tfgg_scp_membership_alias","Membership Alias:","", "tfgg-service-selection", "tfgg_service_selection_section");
+    register_setting("tfgg_service_selection_section","tfgg_scp_membership_alias");
+    register_setting("tfgg_service_selection_section","tfgg_scp_membership_img");
+    register_setting("tfgg_service_selection_section","tfgg_scp_membership_free_text");
 }
 
+function tfgg_scp_admin_cart_services_for_sale(){
+    tfgg_scp_admin_menu_header();
+    ?>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-11">
+                <div class="card">
+                    <h5 class="card-header">Services for Sale</h5>
+                    <div class="card-body">
+                        <p class="card-text">Please select the services you wish users to be able to purchase through this portal, if no services are selected, all services returned from the API will be used</p>
+                        <p class="card-text">Prices displayed to the user will be those pulled from the API</p>
+                        <form method="POST" action="options.php">
+                        <?php
+                        settings_fields('tfgg_service_selection_section');
+                        do_settings_sections('tfgg-service-selection');
+                        ?>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <div class="form-group col-12">
+                                    <button type="submit" class="btn btn-primary"><?php echo __('Save Settings');?></button>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
 function display_tfgg_services_sale_slug(){
     ?>
     <input type="text" name="tfgg_scp_services_sale_slug" value="<?php echo get_option('tfgg_scp_services_sale_slug'); ?>" style="width: 60%" />

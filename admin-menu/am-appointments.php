@@ -1,7 +1,55 @@
 <?php
 
-    function tfgg_scp_appointments_description(){
-        echo '<p>Appointments Settings</p>';
+    function tfgg_scp_admin_appointments_options(){
+        add_settings_section("tfgg_appointments_section", '', null, "tfgg-appointments-options");
+
+        add_settings_field("tfgg_scp_appointments_allow", "Enable Appointments:", "display_appointments_allow", "tfgg-appointments-options", "tfgg_appointments_section");
+        register_setting("tfgg_appointments_section", "tfgg_scp_appointments_allow");
+        
+        add_settings_field("tfgg_scp_appointments_allowed_hrs", "Appts Must Be Booked Hrs In Advance:", "display_appointments_allowed_hrs", "tfgg-appointments-options", "tfgg_appointments_section");
+        register_setting("tfgg_appointments_section", "tfgg_scp_appointments_allowed_hrs");
+        
+        add_settings_field("tfgg_scp_appointments_allow_cancel", "Allow Cancellations:", "display_appointments_allow_cancel", "tfgg-appointments-options", "tfgg_appointments_section");
+        register_setting("tfgg_appointments_section", "tfgg_scp_appointments_allow_cancel");
+        
+        add_settings_field("tfgg_scp_appointments_cancel_allowed_hrs", "Appts Must Be Cancelled Hrs In Advance:", "display_appointments_cancel_allowed_hrs", "tfgg-appointments-options", "tfgg_appointments_section");
+        register_setting("tfgg_appointments_section", "tfgg_scp_appointments_cancel_allowed_hrs");
+        
+        add_settings_field("tfgg_scp_appt_update_employee", "Log Updates As:", "display_appt_update_employee", "tfgg-appointments-options", "tfgg_appointments_section");
+        register_setting("tfgg_appointments_section", "tfgg_scp_appt_update_employee");
+        
+        add_settings_field("tfgg_scp_appt_equip_dir", "Equipment Images Dir:", "display_appt_images_dir", "tfgg-appointments-options", "tfgg_appointments_section");
+        register_setting("tfgg_appointments_section", "tfgg_scp_appt_equip_dir");
+    }
+    
+    function tfgg_scp_admin_appointments(){
+        tfgg_scp_admin_menu_header();
+    ?>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-8">
+                    <div class="card">
+                        <h5 class="card-header">Appointments</h5>
+                        <div class="card-body">
+                            <form method="POST" action="options.php">
+                            <?php
+                            settings_fields('tfgg_appointments_section');
+                            do_settings_sections('tfgg-appointments-options');
+                            ?>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <div class="form-group col-12">
+                                        <button type="submit" class="btn btn-primary"><?php echo __('Save Settings');?></button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php
     }
     
     function display_appointments_allow(){

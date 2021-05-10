@@ -1,12 +1,65 @@
 <?php
 
-function tfgg_scp_store_selction_description(){
-    echo '<br/>';
-    echo '<p>Please select the stores you wish users to be able to select throughout this portal</p>';
-    echo '<p>If no stores are selected, all stores returned from the API will be used (barring stores containing "CLOSED" and "DELETED" in their description</p>';
-    echo '<p>If a store specific registration slug is entered, when that page is loaded, the registration store selection will be disabled</p>';
-    echo '<p>If no store specifc registration package/promo is selected, the default package/promo will be used</p>';
-}
+    function tfgg_scp_admin_store_selection_options(){
+        add_settings_section("tfgg_store_selection_section", '', null, "tfgg-store-selection");
+
+        add_settings_field("tfgg_scp_store_cart_details_page","Store Cart Details Content:","display_tfgg_store_cart_details_page", "tfgg-store-selection", "tfgg_store_selection_section");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_cart_details_page");
+
+        //2019-10-23 CB V1.1.2.1 - new fields
+        add_settings_field("tfgg_scp_store_selection","Stores For Use:","display_tfgg_store_selection", "tfgg-store-selection", "tfgg_store_selection_section");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_selection");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_appts_selection");
+
+        //2020-02-27 CB V1.2.4.23 - new field
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_cart_details_id");
+
+        //2020-07-15 CB V1.2.6.5 - new field
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_registration_selection");
+
+        //2021-02-14 CB V1.3.0.1 - new field
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_slugs");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_promos");
+        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_pkgs");
+
+        register_setting("tfgg_store_selection_section","tfgg_scp_online_registration_selection");
+        register_setting("tfgg_store_selection_section","tfgg_scp_online_reg_promos");
+        register_setting("tfgg_store_selection_section","tfgg_scp_online_reg_pkgs");
+    }
+
+    function tfgg_scp_admin_stores_to_use(){
+        tfgg_scp_admin_menu_header();
+        ?>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <h5 class="card-header">Stores To Use</h5>
+                        <div class="card-body">
+                            <p class="card-text">Please select the stores you wish users to be able to select throughout this portal</p>
+                            <p class="card-text">If no stores are selected, all stores returned from the API will be used (barring stores containing "CLOSED" and "DELETED" in their description</p>
+                            <p class="card-text">If a store specific registration slug is entered, when that page is loaded, the registration store selection will be disabled</p>
+                            <p class="card-text">If no store specifc registration package/promo is selected, the default package/promo will be used</p>
+                            <form method="POST" action="options.php">
+                            <?php
+                            settings_fields('tfgg_store_selection_section');
+                            do_settings_sections('tfgg-store-selection');
+                            ?>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <div class="form-group col-12">
+                                        <button type="submit" class="btn btn-primary"><?php echo __('Save Settings');?></button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php
+    }
 
 function display_tfgg_store_cart_details_page(){
     ?>

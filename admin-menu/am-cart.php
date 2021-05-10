@@ -1,7 +1,109 @@
 <?php
 
-function tfgg_scp_cart_description(){
-    echo '<p>Cart Settings</p>';
+    function tfgg_scp_admin_cart_options(){
+        add_settings_section("tfgg_cart_section", '', null, "tfgg-cart-options");
+
+        add_settings_field("tfgg_scp_enable_cart","Enable Cart:","display_tfgg_enable_cart", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_enable_cart");
+
+        add_settings_field("tfgg_scp_cart_slug","Cart Slug:","display_tfgg_cart_slug", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_slug");
+
+        //2021-04-07 CB V1.3.3.1 - new field
+        add_settings_field("tfgg_scp_cart_success_slug","Cart Success Slug:","display_tfgg_cart_success_slug", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_success_slug");
+
+        add_settings_field("tfgg_scp_cart_menu_link_text","Cart Menu Link Label:","display_tfgg_menu_link_label", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_menu_link_text");
+
+        //2020-07-15 CB V1.2.6.5 - new currency symbol option
+        add_settings_field("tfgg_scp_cart_currency_symbol","Currency Symbol:","display_tfgg_cart_currency_symbol", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_currency_symbol");
+
+        add_settings_field("tfgg_scp_cart_employee","Process Transactions As:","display_tfgg_cart_employee", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_employee");
+
+        add_settings_field("tfgg_scp_cart_max_item_count","Max item count:","display_tfgg_cart_max_item_count", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_max_item_count");
+
+        add_settings_field("tfgg_scp_cart_allow_paypal_payment","Allow PayPal Payments:","display_tfgg_allow_paypal_payment", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_allow_paypal_payment");
+
+        add_settings_field("tfgg_scp_cart_paypal_tandc_label","PayPal T&C Label:","display_tfgg_paypal_tand_label", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_tandc_label");
+
+        add_settings_field("tfgg_scp_cart_paypal_payment","Process Paypal Payments As:","display_tfgg_paypal_payment", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_payment");
+
+        add_settings_field("tfgg_scp_cart_paypal_clientid","PayPal Client ID:","display_tfgg_paypal_clientid", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_clientid");
+
+        add_settings_field("tfgg_scp_cart_save_demographics","Allow Save Demographics:","display_tfgg_save_cart_demographics", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_save_demographics");
+
+        add_settings_field("tfgg_save_cart_demographics_label","Save Demographics Label:","display_tfgg_save_cart_demographics_label", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_save_cart_demographics_label");
+
+        add_settings_field("tfgg_scp_cart_save_commpref","Allow Save Comm Pref:","display_tfgg_save_cart_commpref", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_save_commpref");
+
+        add_settings_field("tfgg_scp_cart_save_commpref_label","Save Comm Pref Label:","display_tfgg_scp_cart_save_commpref_label", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_save_commpref_label");
+
+        add_settings_field("tfgg_scp_cart_allow_sage_payment","Allow SagePay Payments:","display_tfgg_allow_sage_payment", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_allow_sage_payment");
+
+        add_settings_field("tfgg_scp_cart_sage_payment","Process SagePay Payments As:","display_tfgg_sage_payment", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_payment");
+
+        add_settings_field("tfgg_scp_cart_sage_pay_sandbox","Use SagePay Sandbox:","display_tfgg_sage_pay_sandbox", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_pay_sandbox");
+
+
+        add_settings_field("tfgg_scp_cart_sage_vendor_name","SagePay Vendor Name:","display_tfgg_sage_vendor_name", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_vendor_name");
+
+        add_settings_field("tfgg_scp_cart_sage_vendor_name","SagePay Vendor Name:","display_tfgg_sage_vendor_name", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_vendor_name");
+
+        add_settings_field("tfgg_scp_cart_sage_key","SagePay Integration Key:","display_tfgg_sage_key", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_key");
+
+        add_settings_field("tfgg_scp_cart_sage_pass","SagePay Integration Password:","display_tfgg_sage_pass", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_pass");
+
+        add_settings_field("tfgg_scp_cart_success_message","Successful Cart Message:","display_tfgg_successful_cart_message", "tfgg-cart-options", "tfgg_cart_section");
+        register_setting("tfgg_cart_section","tfgg_scp_cart_success_message");
+    }
+
+function tfgg_scp_admin_cart(){
+    tfgg_scp_admin_menu_header();
+    ?>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <div class="card">
+                    <h5 class="card-header">Cart</h5>
+                    <div class="card-body">
+                        <form method="POST" action="options.php">
+                        <?php
+                        settings_fields('tfgg_cart_section');
+                        do_settings_sections('tfgg-cart-options');
+                        ?>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <div class="form-group col-12">
+                                    <button type="submit" class="btn btn-primary"><?php echo __('Save Settings');?></button>
+                                </div>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
 }
 
 function display_tfgg_enable_cart(){

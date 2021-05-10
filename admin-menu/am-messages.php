@@ -1,5 +1,52 @@
 <?php
 
+    function tfgg_scp_admin_messages_options(){
+        add_settings_section("tfgg_messages_section", '', null, "tfgg-messages-options");
+        
+        add_settings_field("tfgg_scp_appts_success", "Successful Appointment Booking:", "display_appts_success", "tfgg-messages-options", "tfgg_messages_section");
+        register_setting("tfgg_messages_section", "tfgg_scp_appts_success");
+
+        add_settings_field("tfgg_scp_appts_fail", "Failed Appointment Booking:", "display_appts_fail", "tfgg-messages-options", "tfgg_messages_section");
+        register_setting("tfgg_messages_section", "tfgg_scp_appts_fail");
+
+        add_settings_field("tfgg_scp_instore_registration_success", "Successful Instore Registration:", "display_successful_reg_instore", "tfgg-messages-options", "tfgg_messages_section");
+        register_setting("tfgg_messages_section", "tfgg_scp_instore_registration_success");
+
+        add_settings_field("tfgg_scp_instore_registration_validation_fail", "Instore Validation Fail:", "display_fail_validation_reg_instore", "tfgg-messages-options", "tfgg_messages_section");
+        register_setting("tfgg_messages_section", "tfgg_scp_instore_registration_validation_fail");
+    }
+
+    function tfgg_scp_admin_message_text(){
+        tfgg_scp_admin_menu_header();
+        ?>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-11">
+                    <div class="card">
+                        <h5 class="card-header">Messages</h5>
+                        <div class="card-body">
+                            <form method="POST" action="options.php">
+                            <?php
+                            settings_fields('tfgg_messages_section');
+                            do_settings_sections('tfgg-messages-options');
+                            ?>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <div class="form-group col-12">
+                                        <button type="submit" class="btn btn-primary"><?php echo __('Save Settings');?></button>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
 function display_appts_success(){
     $settings = array(
         'textarea_rows' => 15,

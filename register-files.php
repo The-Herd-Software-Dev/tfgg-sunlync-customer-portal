@@ -21,7 +21,7 @@
     add_action( 'admin_enqueue_scripts', 'load_api_scripts' );
 
     function tfgg_scp_load_admin_recaptcha($hook_suffix){
-        if($hook_suffix==='toplevel_page_tfgg-sunlync-cp-admin-menu'){
+        if($hook_suffix==='sunlync-cp_page_tfgg-scp-admin-recaptcha'){
             if((get_option('tfgg_scp_recaptcha_site_key','')!=='')&&
             (get_option('tfgg_scp_recaptcha_secret_key','')!=='')){
                 if(is_admin() && current_user_can('administrator')){

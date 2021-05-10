@@ -4,335 +4,57 @@
 */
 
     function tfgg_sunlync_cp_options(){
-        //sections
-        add_settings_section("tfgg_shortcodes", '', null, "tfgg-shortcodes");
-        add_settings_section("tfgg_api_section", '', null, "tfgg-api-options");
-        add_settings_section("tfgg_misc_options_section", '', null, "tfgg-misc-options");
-        add_settings_section("tfgg_registration_options_section", '', null, "tfgg-registration-options");
-        add_settings_section("tfgg_registration_options_section_instore", '', null, "tfgg-registration-options-instore");
-        add_settings_section("tfgg_scp_recaptcha_options", '', null, "tfgg-scp-recaptcha-options");
-        add_settings_section("tfgg_customer_acct_section", '', null, "tfgg-customer-acct-options");
-        add_settings_section("tfgg_appointments_section", '', null, "tfgg-appointments-options");
-        add_settings_section("tfgg_messages_section", '', null, "tfgg-messages-options");
-        add_settings_section("tfgg_store_selection_section", '', null, "tfgg-store-selection");
-        add_settings_section("tfgg_service_selection_section", '', null, "tfgg-service-selection");
-        add_settings_section("tfgg_cart_section", '', null, "tfgg-cart-options");
-        
-        //tfgg_shortcodes
-        add_settings_field("tfgg_scp_cplogin_page", "Login Page:", "display_cplogin_page", "tfgg-shortcodes", "tfgg_shortcodes");
-        register_setting("tfgg_shortcodes", "tfgg_scp_cplogin_page");
-        
-        add_settings_field("tfgg_scp_cplogin_page_success", "Login Redirect:", "display_cplogin_page_success", "tfgg-shortcodes", "tfgg_shortcodes");
-        register_setting("tfgg_shortcodes", "tfgg_scp_cplogin_page_success");
-        
-        add_settings_field("tfgg_scp_acct_overview", "Account Overview:", "display_acct_overview", "tfgg-shortcodes", "tfgg_shortcodes");
-        register_setting("tfgg_shortcodes", "tfgg_scp_acct_overview");
-        
-        add_settings_field("tfgg_scp_cpnewuser_page", "Registration Page (Online):", "display_cpnewuser_page", "tfgg-shortcodes", "tfgg_shortcodes");
-        register_setting("tfgg_shortcodes", "tfgg_scp_cpnewuser_page");
-
-        add_settings_field("tfgg_scp_cpnewuser_success_page", "Registration Page (Online) Success:", "display_cpnewuser_success_page", "tfgg-shortcodes", "tfgg_shortcodes");
-        register_setting("tfgg_shortcodes", "tfgg_scp_cpnewuser_success_page");
-
-        add_settings_field("tfgg_scp_cpnewuser_page_instore", "Registration Page (instore):", "display_cpnewuser_page_instore", "tfgg-shortcodes", "tfgg_shortcodes");
-        register_setting("tfgg_shortcodes", "tfgg_scp_cpnewuser_page_instore");
-        
-        add_settings_field("tfgg_scp_cpappt_page", "Appt Booking Page:", "display_cpappt_page", "tfgg-shortcodes", "tfgg_shortcodes");
-        register_setting("tfgg_shortcodes", "tfgg_scp_cpappt_page");
-
-        //2020-02-16 CB V1.2.4.16
-        add_settings_field("tfgg_scp_cpappt_success", "Appt Booking Success Redirect:", "display_cpappt_redirect", "tfgg-shortcodes", "tfgg_shortcodes");
-        register_setting("tfgg_shortcodes", "tfgg_scp_cpappt_success");
-        
-        //tfgg_api_section
-        add_settings_field("tfgg_scp_api_protocol", "Protocol:", "display_tfgg_api_protocol", "tfgg-api-options", "tfgg_api_section");
-        register_setting("tfgg_api_section", "tfgg_scp_api_protocol");
-        
-        add_settings_field("tfgg_scp_api_url", "URL:", "display_tfgg_api_url", "tfgg-api-options", "tfgg_api_section");
-        register_setting("tfgg_api_section", "tfgg_scp_api_url");
-        
-        add_settings_field("tfgg_scp_api_port", "Port:", "display_tfgg_api_port", "tfgg-api-options", "tfgg_api_section");
-        register_setting("tfgg_api_section", "tfgg_scp_api_port");
-        
-        add_settings_field("tfgg_scp_api_mrkt", "Market:", "display_tfgg_api_market", "tfgg-api-options", "tfgg_api_section");
-        register_setting("tfgg_api_section", "tfgg_scp_api_mrkt");
-        
-        add_settings_field("tfgg_scp_api_user", "Username:", "display_tfgg_api_user", "tfgg-api-options", "tfgg_api_section");
-        register_setting("tfgg_api_section", "tfgg_scp_api_user");
-        
-        add_settings_field("tfgg_scp_api_pass", "Password:", "display_tfgg_api_pass", "tfgg-api-options", "tfgg_api_section");
-        register_setting("tfgg_api_section", "tfgg_scp_api_pass");        
-        
-        //tfgg_appointments_section
-        add_settings_field("tfgg_scp_appointments_allow", "Enable Appointments:", "display_appointments_allow", "tfgg-appointments-options", "tfgg_appointments_section");
-        register_setting("tfgg_appointments_section", "tfgg_scp_appointments_allow");
-        
-        add_settings_field("tfgg_scp_appointments_allowed_hrs", "Appts Must Be Booked Hrs In Advance:", "display_appointments_allowed_hrs", "tfgg-appointments-options", "tfgg_appointments_section");
-        register_setting("tfgg_appointments_section", "tfgg_scp_appointments_allowed_hrs");
-        
-        add_settings_field("tfgg_scp_appointments_allow_cancel", "Allow Cancellations:", "display_appointments_allow_cancel", "tfgg-appointments-options", "tfgg_appointments_section");
-        register_setting("tfgg_appointments_section", "tfgg_scp_appointments_allow_cancel");
-        
-        add_settings_field("tfgg_scp_appointments_cancel_allowed_hrs", "Appts Must Be Cancelled Hrs In Advance:", "display_appointments_cancel_allowed_hrs", "tfgg-appointments-options", "tfgg_appointments_section");
-        register_setting("tfgg_appointments_section", "tfgg_scp_appointments_cancel_allowed_hrs");
-        
-        add_settings_field("tfgg_scp_appt_update_employee", "Log Updates As:", "display_appt_update_employee", "tfgg-appointments-options", "tfgg_appointments_section");
-        register_setting("tfgg_appointments_section", "tfgg_scp_appt_update_employee");
-        
-        add_settings_field("tfgg_scp_appt_equip_dir", "Equipment Images Dir:", "display_appt_images_dir", "tfgg-appointments-options", "tfgg_appointments_section");
-        register_setting("tfgg_appointments_section", "tfgg_scp_appt_equip_dir");
-
-        //onscreen and in email messages
-        add_settings_field("tfgg_scp_appts_success", "Successful Appointment Booking:", "display_appts_success", "tfgg-messages-options", "tfgg_messages_section");
-        register_setting("tfgg_messages_section", "tfgg_scp_appts_success");
-
-        add_settings_field("tfgg_scp_appts_fail", "Failed Appointment Booking:", "display_appts_fail", "tfgg-messages-options", "tfgg_messages_section");
-        register_setting("tfgg_messages_section", "tfgg_scp_appts_fail");
-
-        add_settings_field("tfgg_scp_instore_registration_success", "Successful Instore Registration:", "display_successful_reg_instore", "tfgg-messages-options", "tfgg_messages_section");
-        register_setting("tfgg_messages_section", "tfgg_scp_instore_registration_success");
-
-        add_settings_field("tfgg_scp_instore_registration_validation_fail", "Instore Validation Fail:", "display_fail_validation_reg_instore", "tfgg-messages-options", "tfgg_messages_section");
-        register_setting("tfgg_messages_section", "tfgg_scp_instore_registration_validation_fail");
-
-        /* 2019-10-13 CB V1.1.1.1 - deprecated
-        add_settings_field("tfgg_scp_email_pass_reset", "Password Reset Email:", "display_email_pass_rest", "tfgg-messages-options", "tfgg_messages_section");
-        register_setting("tfgg_messages_section", "tfgg_scp_email_pass_reset");*/
-
-        add_settings_field("tfgg_scp_store_cart_details_page","Store Cart Details Content:","display_tfgg_store_cart_details_page", "tfgg-store-selection", "tfgg_store_selection_section");
-        register_setting("tfgg_store_selection_section","tfgg_scp_store_cart_details_page");
-
-        //2019-10-23 CB V1.1.2.1 - new fields
-        add_settings_field("tfgg_scp_store_selection","Stores For Use:","display_tfgg_store_selection", "tfgg-store-selection", "tfgg_store_selection_section");
-        register_setting("tfgg_store_selection_section","tfgg_scp_store_selection");
-        register_setting("tfgg_store_selection_section","tfgg_scp_store_appts_selection");
-
-        //2020-02-27 CB V1.2.4.23 - new field
-        register_setting("tfgg_store_selection_section","tfgg_scp_store_cart_details_id");
-
-        //2020-07-15 CB V1.2.6.5 - new field
-        register_setting("tfgg_store_selection_section","tfgg_scp_store_registration_selection");
-
-        //2021-02-14 CB V1.3.0.1 - new field
-        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_slugs");
-        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_promos");
-        register_setting("tfgg_store_selection_section","tfgg_scp_store_reg_pkgs");
-
-        register_setting("tfgg_store_selection_section","tfgg_scp_online_registration_selection");
-        register_setting("tfgg_store_selection_section","tfgg_scp_online_reg_promos");
-        register_setting("tfgg_store_selection_section","tfgg_scp_online_reg_pkgs");
-
-        //misc section
-        add_settings_field("tfgg_scp_customer_service_email", "Customer Service E-Mail:", "display_customer_service_email", "tfgg-misc-options", "tfgg_misc_options_section");
-        register_setting("tfgg_misc_options_section", "tfgg_scp_customer_service_email");
-
-        //customer acct section
-        add_settings_field("tfgg_scp_update_employee", "Log Updates As:", "display_update_employee", "tfgg-customer-acct-options", "tfgg_customer_acct_section");
-        register_setting("tfgg_customer_acct_section", "tfgg_scp_update_employee");
-
-        add_settings_field("tfgg_scp_demogrphics_allow", "Enable Demographics Updates:", "display_demogrphics_allow", "tfgg-customer-acct-options", "tfgg_customer_acct_section");
-        register_setting("tfgg_customer_acct_section", "tfgg_scp_demogrphics_allow");
-        
-        add_settings_field("tfgg_scp_comm_pref_allow", "Enable Marketing Updates:", "display_comm_pref_allow", "tfgg-customer-acct-options", "tfgg_customer_acct_section");
-        register_setting("tfgg_customer_acct_section", "tfgg_scp_comm_pref_allow");
-
-        //registration section
-        //online
-        add_settings_field("tfgg_scp_cust_info_reg_title", "Registration Title:", "display_reg_title_online","tfgg-registration-options","tfgg_registration_options_section");
-        register_setting("tfgg_registration_options_section","tfgg_scp_cust_info_reg_title");
-
-        add_settings_field("tfgg_scp_tandc_label", "Terms & Conditions Label:", "display_tandc_label_online","tfgg-registration-options","tfgg_registration_options_section");
-        register_setting("tfgg_registration_options_section","tfgg_scp_tandc_label");
-
-        add_settings_field("tfgg_scp_marketing_optin_label", "Marketing Opt In Label:", "display_marketing_optin_label_online","tfgg-registration-options","tfgg_registration_options_section");
-        register_setting("tfgg_registration_options_section","tfgg_scp_marketing_optin_label");
-              
-        add_settings_field("tfgg_scp_registration_source_label", "Registration Source:", "display_registration_source_label_online","tfgg-registration-options","tfgg_registration_options_section");
-        register_setting("tfgg_registration_options_section","tfgg_scp_registration_source_label");
-
-        add_settings_field("tfgg_scp_reg_promo", "Default Registration Promo:", "display_reg_promo_online", "tfgg-registration-options", "tfgg_registration_options_section");
-        register_setting("tfgg_registration_options_section", "tfgg_scp_reg_promo");
-
-        add_settings_field("tfgg_scp_reg_package", "Default Registration Package:", "display_reg_package_online", "tfgg-registration-options", "tfgg_registration_options_section");
-        register_setting("tfgg_registration_options_section", "tfgg_scp_reg_package");
-
-        add_settings_field("tfgg_scp_online_reg_recaptcha_req", "Google Recaptcha Required:", "display_reg_online_recaptcha_req", "tfgg-registration-options", "tfgg_registration_options_section");
-        register_setting("tfgg_registration_options_section", "tfgg_scp_online_reg_recaptcha_req");
-
-        //instore
-        add_settings_field("tfgg_scp_cust_info_reg_title_instore", "Registration Title:", "display_reg_title_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore","tfgg_scp_cust_info_reg_title_instore");
-
-        add_settings_field("tfgg_scp_tandc_label_instore", "Terms & Conditions:", "display_tandc_label_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore","tfgg_scp_tandc_label_instore");
-
-        add_settings_field("tfgg_scp_tandc_slug_instore", "Terms & Conditions Slug:", "display_tandc_slug_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore","tfgg_scp_tandc_slug_instore");
-
-        add_settings_field("tfgg_scp_marketing_optin_label_instore", "Marketing Opt In:", "display_marketing_optin_label_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore","tfgg_scp_marketing_optin_label_instore");
-
-        add_settings_field("tfgg_scp_marketing_slug_instore", "Marketing Slug:", "display_marketing_slug_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore","tfgg_scp_marketing_slug_instore");
-
-        add_settings_field("tfgg_scp_skin_type_info_slug_instore", "Skintype Info Slug:", "display_skin_type_info_slug", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_skin_type_info_slug_instore");
-        
-        add_settings_field("tfgg_scp_registration_source_label_instore", "Registration Source:", "display_registration_source_label_instore","tfgg-registration-options-instore","tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore","tfgg_scp_registration_source_label_instore");
-
-        add_settings_field("tfgg_scp_reg_promo_instore", "Promo For Registration:", "display_reg_promo_instore", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_reg_promo_instore");
-
-        add_settings_field("tfgg_scp_reg_package_instore", "Package For Registration:", "display_reg_package_instore", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_reg_package_instore");
-
-        add_settings_field("tfgg_scp_instore_reg_recaptcha_req", "Google Recaptcha Required:", "display_reg_instore_recaptcha_req", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_instore_reg_recaptcha_req");
-        //2019-11-19 CB V1.2.4.2 - added
-        add_settings_field("tfgg_scp_instore_reg_password_hint", "Instore Password Hint:", "display_password_hint_reg_instore", "tfgg-registration-options-instore", "tfgg_registration_options_section_instore");
-        register_setting("tfgg_registration_options_section_instore", "tfgg_scp_instore_reg_password_hint");
-
-        //service selection
-        add_settings_field("tfgg_scp_services_sale_slug","Services Sale Slug:","display_tfgg_services_sale_slug", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_services_sale_slug");
-
-        add_settings_field("tfgg_scp_package_header_label","Package Display Header:","display_tfgg_package_header_label", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_header_label");
-
-        add_settings_field("tfgg_scp_package_allow_search","Allow Package Search:","display_tfgg_package_allow_search", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_allow_search");
-
-        add_settings_field("tfgg_scp_package_unit_minutes","Rename 'Minutes':","display_tfgg_package_units_minutes", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_minutes");
-
-        add_settings_field("tfgg_scp_package_unit_sessions","Rename 'Sessions':","display_tfgg_package_units_sessions", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_sessions");
-
-        add_settings_field("tfgg_scp_package_unit_credits","Rename 'Credits':","display_tfgg_package_units_credits", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_unit_credits");
-
-        add_settings_field("tfgg_scp_package_selection","Packages For Sale:","display_tfgg_package_selection", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_selection");
-
-        //add_settings_field("tfgg_scp_package_alias","Package Alias:","", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_alias");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_img");
-        register_setting("tfgg_service_selection_section","tfgg_scp_package_free_text");
-
-        add_settings_field("tfgg_scp_membership_header_label","Membership Display Header:","display_tfgg_membership_header_label", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_membership_header_label");
-
-        add_settings_field("tfgg_scp_membership_allow_search","Allow Membership Search:","display_tfgg_membership_allow_search", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_membership_allow_search");
-
-        add_settings_field("tfgg_scp_membership_selection","Memberships For Sale:","display_tfgg_membership_selection", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_membership_selection");
-
-        //add_settings_field("tfgg_scp_membership_alias","Membership Alias:","", "tfgg-service-selection", "tfgg_service_selection_section");
-        register_setting("tfgg_service_selection_section","tfgg_scp_membership_alias");
-        register_setting("tfgg_service_selection_section","tfgg_scp_membership_img");
-        register_setting("tfgg_service_selection_section","tfgg_scp_membership_free_text");
-
-        //cart options
-        add_settings_field("tfgg_scp_enable_cart","Enable Cart:","display_tfgg_enable_cart", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_enable_cart");
-
-        add_settings_field("tfgg_scp_cart_slug","Cart Slug:","display_tfgg_cart_slug", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_slug");
-
-        //2021-04-07 CB V1.3.3.1 - new field
-        add_settings_field("tfgg_scp_cart_success_slug","Cart Success Slug:","display_tfgg_cart_success_slug", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_success_slug");
-
-        add_settings_field("tfgg_scp_cart_menu_link_text","Cart Menu Link Label:","display_tfgg_menu_link_label", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_menu_link_text");
-
-        //2020-07-15 CB V1.2.6.5 - new currency symbol option
-        add_settings_field("tfgg_scp_cart_currency_symbol","Currency Symbol:","display_tfgg_cart_currency_symbol", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_currency_symbol");
-
-        add_settings_field("tfgg_scp_cart_employee","Process Transactions As:","display_tfgg_cart_employee", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_employee");
-
-        add_settings_field("tfgg_scp_cart_max_item_count","Max item count:","display_tfgg_cart_max_item_count", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_max_item_count");
-
-        add_settings_field("tfgg_scp_cart_allow_paypal_payment","Allow PayPal Payments:","display_tfgg_allow_paypal_payment", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_allow_paypal_payment");
-
-        add_settings_field("tfgg_scp_cart_paypal_tandc_label","PayPal T&C Label:","display_tfgg_paypal_tand_label", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_tandc_label");
-
-        add_settings_field("tfgg_scp_cart_paypal_payment","Process Paypal Payments As:","display_tfgg_paypal_payment", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_payment");
-
-        add_settings_field("tfgg_scp_cart_paypal_clientid","PayPal Client ID:","display_tfgg_paypal_clientid", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_paypal_clientid");
-
-        add_settings_field("tfgg_scp_cart_save_demographics","Allow Save Demographics:","display_tfgg_save_cart_demographics", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_save_demographics");
-
-        add_settings_field("tfgg_save_cart_demographics_label","Save Demographics Label:","display_tfgg_save_cart_demographics_label", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_save_cart_demographics_label");
-
-        add_settings_field("tfgg_scp_cart_save_commpref","Allow Save Comm Pref:","display_tfgg_save_cart_commpref", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_save_commpref");
-
-        add_settings_field("tfgg_scp_cart_save_commpref_label","Save Comm Pref Label:","display_tfgg_scp_cart_save_commpref_label", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_save_commpref_label");
-
-        add_settings_field("tfgg_scp_cart_allow_sage_payment","Allow SagePay Payments:","display_tfgg_allow_sage_payment", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_allow_sage_payment");
-
-        add_settings_field("tfgg_scp_cart_sage_payment","Process SagePay Payments As:","display_tfgg_sage_payment", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_payment");
-
-        add_settings_field("tfgg_scp_cart_sage_pay_sandbox","Use SagePay Sandbox:","display_tfgg_sage_pay_sandbox", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_pay_sandbox");
-
-
-        add_settings_field("tfgg_scp_cart_sage_vendor_name","SagePay Vendor Name:","display_tfgg_sage_vendor_name", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_vendor_name");
-
-        add_settings_field("tfgg_scp_cart_sage_vendor_name","SagePay Vendor Name:","display_tfgg_sage_vendor_name", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_vendor_name");
-
-        add_settings_field("tfgg_scp_cart_sage_key","SagePay Integration Key:","display_tfgg_sage_key", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_key");
-
-        add_settings_field("tfgg_scp_cart_sage_pass","SagePay Integration Password:","display_tfgg_sage_pass", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_sage_pass");
-
-        add_settings_field("tfgg_scp_cart_success_message","Successful Cart Message:","display_tfgg_successful_cart_message", "tfgg-cart-options", "tfgg_cart_section");
-        register_setting("tfgg_cart_section","tfgg_scp_cart_success_message");
-
-        //2021-04-13 CB V1.4.1.1 - new reCaptcha options
-        add_settings_field("tfgg_scp_recaptcha_site_key","reCaptcah Site Key:","display_tfgg_recaptcha_site_key", "tfgg-scp-recaptcha-options", "tfgg_scp_recaptcha_options");
-        register_setting("tfgg_scp_recaptcha_options","tfgg_scp_recaptcha_site_key");
-        
-        add_settings_field("tfgg_scp_recaptcha_secret_key","reCaptcah Secret Key:","display_tfgg_recaptcha_secret_key", "tfgg-scp-recaptcha-options", "tfgg_scp_recaptcha_options");
-        register_setting("tfgg_scp_recaptcha_options","tfgg_scp_recaptcha_secret_key");
-
-        add_settings_field("tfgg_scp_recaptcha_score","reCaptcah Score:","display_tfgg_recaptcha_score", "tfgg-scp-recaptcha-options", "tfgg_scp_recaptcha_options");
-        register_setting("tfgg_scp_recaptcha_options","tfgg_scp_recaptcha_score");
-        
+        tfgg_scp_admin_api_options();
+        tfgg_scp_admin_appointments_options();
+        tfgg_scp_admin_cart_options();
+        tfgg_scp_admin_cust_acct_options();
+        tfgg_scp_admin_messages_options();
+        tfgg_scp_admin_misc_options();
+        tfgg_scp_admin_recaptcha_options();
+        tfgg_scp_admin_registration_options();
+        tfgg_scp_admin_registration_options_instore();
+        tfgg_scp_admin_services_options();
+        tfgg_scp_admin_shortcodes_options();
+        tfgg_scp_admin_store_selection_options(); 
+        tfgg_scp_admin_affiliate_marketing_options();       
     }
     
     add_action("admin_init", "tfgg_sunlync_cp_options");
     
-    include('admin-menu/am-api.php');
-    include('admin-menu/am-misc.php');
-    include('admin-menu/am-registration.php');
-    include('admin-menu/am-customer-acct.php');
-    include('admin-menu/am-appointments.php');
-    include('admin-menu/am-shortcodes.php');
-    include('admin-menu/am-messages.php');
-    include('admin-menu/am-store-selection.php');
-    include('admin-menu/am-services.php');
-    include('admin-menu/am-cart.php');
-    include('admin-menu/am-card-tran-log.php');//2020-03-22 CB V1.2.6.3 - added
-    include('admin-menu/am-recaptcha.php');//2021-04-13 CB V1.4.1.1 - added
+    require_once('admin-menu/am-api.php');
+    require_once('admin-menu/am-misc.php');
+    require_once('admin-menu/am-registration.php');
+    require_once('admin-menu/am-customer-acct.php');
+    require_once('admin-menu/am-appointments.php');
+    require_once('admin-menu/am-shortcodes.php');
+    require_once('admin-menu/am-messages.php');
+    require_once('admin-menu/am-store-selection.php');
+    require_once('admin-menu/am-services.php');
+    require_once('admin-menu/am-cart.php');
+    require_once('admin-menu/am-card-tran-log.php');//2020-03-22 CB V1.2.6.3 - added
+    require_once('admin-menu/am-recaptcha.php');//2021-04-13 CB V1.4.1.1 - added
+    require_once('admin-menu/am-affiliate-marketing.php');//2021-04-13 CB V1.4.1.1 - added
+
+    function tfgg_scp_enqueue_admin_styles_scripts(){
+        wp_enqueue_style( 'tfgg-admin-styles', plugins_url( 'admin-menu/css/layout.css', __FILE__ ) );
+    }
+    add_action( 'admin_enqueue_scripts', 'tfgg_scp_enqueue_admin_styles_scripts' );
+
+
+    add_action('admin_menu','tfgg_sunlync_cp_admin_menu_option');
+    //change the order here to affect the order in the menu
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_shortcodes');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_recaptcha');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_stores_to_use');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_registration');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_appointments');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_cart');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_cart_services_for_sale');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_customer_accts');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_message_text');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_affiliate_marketing');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_misc');
+
 
     function tfgg_sunlync_cp_admin_menu_option(){
         add_menu_page('Sunlync Customer Portal',
@@ -343,166 +65,142 @@
         '',
         5);
     }
-    add_action('admin_menu','tfgg_sunlync_cp_admin_menu_option');
-    
-    /*function tfgg_sunlync_cp_demo_menu_option(){
-        $menuLabel=get_option('tfgg_scp_demogrphics_menu_label');
-        
-        if($menuLabel==''){
-            $menuLabel='Instore Account';
-        }
-        add_users_page($menuLabel,$menuLabel,'read','tfgg-sunlync-cp-demographics-menu','tfgg_sunlync_cp_demographics_page','',4);    
+
+    function tfgg_scp_admin_submenu_shortcodes(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Shortcodes',
+            'Shortcodes &nbsp; Redirects',
+            'manage_options',
+            'tfgg-scp-admin-shortcodes',
+            'tfgg_scp_admin_shortcodes'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_recaptcha(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP reCaptcha',
+            'Google reCaptcha',
+            'manage_options',
+            'tfgg-scp-admin-recaptcha',
+            'tfgg_scp_admin_recaptcha'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_stores_to_use(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Stores to Use',
+            'Stores To Use',
+            'manage_options',
+            'tfgg-scp-admin-stores-to-use',
+            'tfgg_scp_admin_stores_to_use'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_registration(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Registration',
+            'Registration',
+            'manage_options',
+            'tfgg-scp-admin-registration',
+            'tfgg_scp_admin_registration'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_appointments(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Appointments',
+            'Appointments',
+            'manage_options',
+            'tfgg-scp-admin-appointments',
+            'tfgg_scp_admin_appointments'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_cart(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Cart',
+            'Cart',
+            'manage_options',
+            'tfgg-scp-admin-cart',
+            'tfgg_scp_admin_cart'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_cart_services_for_sale(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Services For Sale',
+            'Services For Sale',
+            'manage_options',
+            'tfgg-scp-admin-cart-services-for-sale',
+            'tfgg_scp_admin_cart_services_for_sale'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_customer_accts(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Customer Accts',
+            'Customer Accts',
+            'manage_options',
+            'tfgg-scp-admin-customer-accts',
+            'tfgg_scp_admin_customer_accts'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_message_text(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Messages',
+            'Message Text',
+            'manage_options',
+            'tfgg-scp-admin-message-text',
+            'tfgg_scp_admin_message_text'
+        );
     }
     
-    function tfgg_sunlync_cp_appt_menu_option(){
-        $menuLabel=get_option('tfgg_scp_appointments_menu_label');
-        
-        if($menuLabel==''){
-            $menuLabel='Appointments';
-        }
-        add_users_page($menuLabel,$menuLabel,'read','tfgg-sunlync-cp-appointments-menu','tfgg_sunlync_cp_appointments_page','',4);  
-        
-    }*/
-    
-    
-    /*if(get_option('tfgg_scp_demogrphics_allow')==1){
-        add_action('admin_menu','tfgg_sunlync_cp_demo_menu_option');
+    function tfgg_scp_admin_submenu_misc(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Misc.',
+            'Misc.',
+            'manage_options',
+            'tfgg-scp-admin-misc',
+            'tfgg_scp_admin_misc'
+        );
     }
-    
-    if(get_option('tfgg_scp_appointments_allow')==1){
-        add_action('admin_menu','tfgg_sunlync_cp_appt_menu_option');
-    }*/
-    
-    function tfgg_sunlync_cp_demographics_page(){
-        
+
+    function tfgg_scp_admin_submenu_affiliate_marketing(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Affil Mrkting.',
+            'Affiliate Marketing',
+            'manage_options',
+            'tfgg-scp-affiliate-marketing',
+            'tfgg_scp_affiliate_marketing'
+        );
     }
-    
-    function tfgg_sunlync_cp_appointments_page(){
-        
-    }
-    
-    function tfgg_sunlync_cp_page(){
-        $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'tfgg-shortcodes';
+
+    //this header should be added to all pages
+    function tfgg_scp_admin_menu_header(){
         ?>
-            <div class="wrap">
-                <h2>TFGG Sunlync Customer Portal</h2>
-                <?php if( isset($_GET['settings-updated']) ) { ?>
-                    <div id="message" class="updated">
-                        <p><strong><?php _e('Settings saved.') ?></strong></p>
-                    </div>
-                <?php }?> 
-            </div>
-            <div class="nav-tab-wrapper">
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-shortcodes" class="nav-tab <?php echo $active_tab == 'tfgg-shortcodes' ? 'nav-tab-active' : ''; ?>">Shortcodes & Redirect</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-api-options" class="nav-tab <?php echo $active_tab == 'tfgg-api-options' ? 'nav-tab-active' : ''; ?>">API Connection</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-recaptcha" class="nav-tab <?php echo $active_tab == 'tfgg-recaptcha' ? 'nav-tab-active' : ''; ?>">reCaptcha</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-store-selection" class="nav-tab <?php echo $active_tab == 'tfgg-store-selection' ? 'nav-tab-active' : ''; ?>">Stores To Use</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-online-registration" class="nav-tab <?php echo $active_tab == 'tfgg-online-registration' ? 'nav-tab-active' : ''; ?>">Online Registration</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-instore-registration" class="nav-tab <?php echo $active_tab == 'tfgg-instore-registration' ? 'nav-tab-active' : ''; ?>">Instore Registration</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-customer-acct-options" class="nav-tab <?php echo $active_tab == 'tfgg-customer-acct-options' ? 'nav-tab-active' : ''; ?>">Customer Acct</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-appointments-options" class="nav-tab <?php echo $active_tab == 'tfgg-appointments-options' ? 'nav-tab-active' : ''; ?>">Appointments</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-messages-options" class="nav-tab <?php echo $active_tab == 'tfgg-messages-options' ? 'nav-tab-active' : ''; ?>">Message Text</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-service-options" class="nav-tab <?php echo $active_tab == 'tfgg-service-options' ? 'nav-tab-active' : ''; ?>">Services For Sale</a>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-cart-options" class="nav-tab <?php echo $active_tab == 'tfgg-cart-options' ? 'nav-tab-active' : ''; ?>">Cart</a>
-                <?php
-                /*<a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-cart-card-log" class="nav-tab <?php echo $active_tab == 'tfgg-cart-card-log' ? 'nav-tab-active' : ''; ?>">Card Log</a>*/
-                ?>
-                <a href="?page=tfgg-sunlync-cp-admin-menu&tab=tfgg-misc-options" class="nav-tab <?php echo $active_tab == 'tfgg-misc-options' ? 'nav-tab-active' : ''; ?>">Misc.</a>
-            </div>
-            <form method="POST" action="options.php">
-            <?php
-                $hideSubmitButton = '';
-                switch($active_tab){
-                    case 'tfgg-shortcodes':
-                        list_out_shortcodes();
-                        ?>
-                        -------------
-                        <?php
-                        settings_fields('tfgg_shortcodes');
-                        do_settings_sections('tfgg-shortcodes');
-                    break;
-                    case 'tfgg-api-options':
-                        ?>
-                        <div id="tfgg-api-options-test-api-response" class="notice is-dismissible" style="display:none">
-                            <p>API Responded With: <strong><span id="tfgg-api-test-response"></span></strong></p>
-                        </div>
-                        <?php
-                        settings_fields('tfgg_api_section');
-                        do_settings_sections('tfgg-api-options');
-                        break;
-                    case 'tfgg-customer-acct-options':
-                        settings_fields('tfgg_customer_acct_section');
-                        do_settings_sections('tfgg-customer-acct-options');
-                        break;
-                    case 'tfgg-online-registration':
-                        display_registration_settings_title_online();
-                        settings_fields('tfgg_registration_options_section');
-                        do_settings_sections('tfgg-registration-options');
-                        break;
-                    case 'tfgg-instore-registration':
-                        display_registration_settings_title_instore();
-                        settings_fields('tfgg_registration_options_section_instore');
-                        do_settings_sections('tfgg-registration-options-instore'); 
-                        break;
-                    case 'tfgg-appointments-options':
-                        settings_fields('tfgg_appointments_section');
-                        do_settings_sections('tfgg-appointments-options');
-                        break;
-                    case 'tfgg-messages-options':
-                        settings_fields('tfgg_messages_section');
-                        do_settings_sections('tfgg-messages-options');
-                        break;
-                    case 'tfgg-misc-options':
-                        settings_fields('tfgg_misc_options_section');
-                        do_settings_sections('tfgg-misc-options');
-                        break;
-                    //2019-10-23 CB V1.1.2.1 - new setting section
-                    case 'tfgg-store-selection':
-                        tfgg_scp_store_selction_description();
-                        settings_fields('tfgg_store_selection_section');
-                        do_settings_sections('tfgg-store-selection');
-                        break;
-                    //2019-11-11 CB V2.0.0.1 - new setting section for cart integration
-                    case 'tfgg-service-options':
-                        tfgg_scp_service_selction_description();
-                        settings_fields('tfgg_service_selection_section');
-                        do_settings_sections('tfgg-service-selection');
-                        break;
-                    case 'tfgg-cart-options':
-                        settings_fields('tfgg_cart_section');
-                        do_settings_sections('tfgg-cart-options');
-                        break;
-                    //2020-03-22 CB V1.2.6.3 - added
-                    case 'tfgg-cart-card-log':
-                        display_tfgg_card_data_log();
-                        $hideSubmitButton = 'style="display:none"';
-                        break;
-                    case 'tfgg-recaptcha':
-                        settings_fields('tfgg_scp_recaptcha_options');
-                        do_settings_sections('tfgg-scp-recaptcha-options');
-                        break;
-                }//switch
-            ?>
-            <input type="submit" class="button button-primary" <?php echo $hideSubmitButton; ?> value="Save Changes"/>
-            </form>
-            <?php
-            if(($active_tab=='tfgg-api-options')&&
-            (get_option('tfgg_scp_api_protocol')!='')&&
-            (get_option('tfgg_scp_api_url')!='')&&
-            (get_option('tfgg_scp_api_port')!='')&&
-            (get_option('tfgg_scp_api_mrkt')!='')){
-                ?>
-                <br/><br/>
-                <button class="button button-primary" onclick="TestAPICredentials()" value="Test Credentials" />Test Credentials</button>
-                <?php
-            }
-            if(($active_tab=='tfgg-recaptcha')&&
-            (get_option('tfgg_scp_recaptcha_site_key')!='')&&
-            (get_option('tfgg_scp_recaptcha_secret_key')!='')&&
-            (current_user_can('administrator'))){
-            display_tfgg_recaptcha_test();
-            }
-            
+        <div class="container-fluid">
+            <h2>TFGG Sunlync Customer Portal</h2>
+            <?php if( isset($_GET['settings-updated']) ) { ?>
+                <div id="message" class="updated">
+                    <p><strong><?php _e('Settings saved.') ?></strong></p>
+                </div>
+            <?php }?> 
+        </div>
+        <?php
     }
+
+    
 
 ?>
