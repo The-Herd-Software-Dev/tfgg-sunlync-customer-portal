@@ -3657,7 +3657,7 @@
 
 //2020-03-22 CB V1.2.6.3 - added new code too display a log of SagePay / PayPal transaction staging and results
 
-    function tfgg_scp_logging_check(){
+    /*function tfgg_scp_logging_check(){
 
         if( !function_exists('get_plugin_data') ){
             require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -3670,7 +3670,7 @@
             tfgg_scp_upgrade_portal_tables();       
         };
 
-    }  
+    } */
 
 
     function tfgg_scp_upgrade_portal_tables(){
@@ -4087,5 +4087,103 @@
         curl_exec($c);
         curl_close($c);
         
+    }
+
+    function tfgg_scp_freebie_marketing_create_tbl(){
+        global $wpdb;
+        $charset_collate = $wpdb->collate;
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+        //* Create the table
+        $table_name = $wpdb->prefix . 'scp_marketing_freebies';
+        $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+            id INTEGER NOT NULL AUTO_INCREMENT,
+            deleted tinyint(1) not null default 0,
+            post_slug TEXT NOT NULL,
+            active_from DATE NOT NULL,
+            active_to DATE,
+            freebie_type char(1) NOT NULL,
+            freebie_desc varchar(150),
+            type_number varchar(10),
+            one_time tinyint(1) not null default 0,
+            once_every_x int(10) not null default 0,
+            courtesy_tan_time tinyint not null default 0,
+            pkg_units tinyint not null default 0,
+            exp_date DATE,
+            PRIMARY KEY (id)
+            )COLLATE {$charset_collate}";
+
+        dbDelta( $sql );
+
+        $success = empty($wpdb->last_error);
+
+        if(!$success){
+           add_action('admin_notices','tfgg_scp_card_log_error'); 
+        }
+    }
+
+    function tfgg_scp_get_freebie_marketing_records($freebieID, $rangeStart, $rangeEnd, $freebieSlug){
+
+        global $wpdb;
+
+        $sql = "SELECT * FROM {$wpdb->base_prefix}scp_marketing_freebies";
+        $conditions=array();
+
+        if($freebieID<>''){
+            $sql.=" WHERE id = %s and deleted=0";
+            array_push($conditions,$freebieID);
+        }elseif($freebieSlug<>''){
+            $sql.=" WHERE post_slug = %s and deleted=0";
+            array_push($conditions,$freebieSlug);
+        }
+
+        $sql.=" ORDER BY post_slug ASC LIMIT %d, %d";
+        array_push($conditions,$rangeStart,$rangeEnd);
+
+        $results = $wpdb->get_results(
+            $wpdb->prepare($sql,$conditions)
+        );
+        //$results = $wpdb->get_results($sql);
+
+        if($wpdb->num_rows==0){
+            return false;
+        }else{
+            return $results;    
+        }
+
+    }
+
+    function tfgg_get_equipment_types(){
+        $url=tfgg_get_api_url().'TSunLyncAPI/CIPGetEquipTypes/sTypeNumber/sCategoryNumber/sManufacturerNo';
+        
+        $url=str_replace('sTypeNumber','',$url);
+        $url=str_replace('sCategoryNumber','',$url);
+        $url=str_replace('sManufacturerNo','',$url);
+
+        try{
+            $data = tfgg_execute_api_request('GET',$url,'');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+					"response"=>$data[0]->WARNING);
+			}
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            $equipment = array_slice($data,1,-1);
+            $result["equipment"]=$equipment;
+            return json_encode($result);
+        }
     }
 ?>

@@ -33,7 +33,8 @@
     require_once('admin-menu/am-cart.php');
     require_once('admin-menu/am-card-tran-log.php');//2020-03-22 CB V1.2.6.3 - added
     require_once('admin-menu/am-recaptcha.php');//2021-04-13 CB V1.4.1.1 - added
-    require_once('admin-menu/am-affiliate-marketing.php');//2021-04-13 CB V1.4.1.1 - added
+    require_once('admin-menu/am-affiliate-marketing.php');//2021-04-13 CB V1.5.1.1 - added
+    require_once('admin-menu/am-freebie-marketing.php');//2021-05-10 CB V1.6.1.1 - added
 
     function tfgg_scp_enqueue_admin_styles_scripts(){
         wp_enqueue_style( 'tfgg-admin-styles', plugins_url( 'admin-menu/css/layout.css', __FILE__ ) );
@@ -53,6 +54,7 @@
     add_action('admin_menu', 'tfgg_scp_admin_submenu_customer_accts');
     add_action('admin_menu', 'tfgg_scp_admin_submenu_message_text');
     add_action('admin_menu', 'tfgg_scp_admin_submenu_affiliate_marketing');
+    add_action('admin_menu', 'tfgg_scp_admin_submenu_freebie_marketing');
     add_action('admin_menu', 'tfgg_scp_admin_submenu_misc');
 
 
@@ -184,6 +186,17 @@
             'manage_options',
             'tfgg-scp-affiliate-marketing',
             'tfgg_scp_affiliate_marketing'
+        );
+    }
+
+    function tfgg_scp_admin_submenu_freebie_marketing(){
+        add_submenu_page(
+            'tfgg-sunlync-cp-admin-menu',
+            'SCP Freebie Mrkting.',
+            'Freebie Marketing',
+            'manage_options',
+            'tfgg-scp-freebie-marketing',
+            'tfgg_scp_freebie_marketing'
         );
     }
 
