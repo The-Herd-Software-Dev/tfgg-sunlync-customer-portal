@@ -4143,7 +4143,6 @@
         $results = $wpdb->get_results(
             $wpdb->prepare($sql,$conditions)
         );
-        //$results = $wpdb->get_results($sql);
 
         if($wpdb->num_rows==0){
             return false;
@@ -4183,6 +4182,61 @@
             $result["results"]="success";
             $equipment = array_slice($data,1,-1);
             $result["equipment"]=$equipment;
+            return json_encode($result);
+        }
+    }
+
+    function tfgg_scp_process_freebie_marketing($slug, $cn){
+        //first check if there is an active freebie for this slug
+        
+        $results = tfgg_scp_get_freebie_marketing_records('',0,1,$slug);
+        
+        if(!$results){
+            return false;
+        }
+
+        $results=$results[0];
+
+        $url=tfgg_get_api_url().'TSunLyncAPI/TFGG_ApplyMarketingPromo/sClientNumber/sFreebieType/sTypeNumber/sEmployeeNumber/sExpDate/'.
+        'sOneTime/sWithinDays/sCampaignID/sCourtesyTanTime/sStoreCode/sPackageUnit';
+        
+        $url=str_replace('sClientNumber',$cn,$url);
+        $url=str_replace('sFreebieType',$results->freebie_type,$url);
+        $url=str_replace('sTypeNumber',$results->type_number,$url);
+        $url=str_replace('sEmployeeNumber','0000000001',$url);
+        $url=str_replace('sExpDate',$results->exp_date,$url);
+        $url=str_replace('sOneTime',$results->one_time,$url);
+        $url=str_replace('sWithinDays',$results->once_every_x,$url);
+        $url=str_replace('sCampaignID',$slug,$url);
+        $url=str_replace('sCourtesyTanTime',$results->courtesy_tan_time,$url);
+        $url=str_replace('sStoreCode','0000000001',$url);
+        $url=str_replace('sPackageUnit',$results->pkg_units,$url);
+
+        try{
+            $data = tfgg_execute_api_request('GET',$url,'');
+        }catch(Exception $e){
+            $result["results"]="error";
+            $result["error_message"]=$e->getMessage(); 
+            return json_encode($result);
+        }
+
+        if((array_key_exists('ERROR',$data[0]))||(array_key_exists('WARNING',$data[0]))){
+			if(array_key_exists('ERROR',$data[0])){
+				$result=array("results"=>"FAIL",
+                    "freebie_desc"=>$results->freebie_desc,
+					"response"=>$data[0]->ERROR);
+			}else{
+				$result=array("results"=>"FAIL",
+                    "freebie_desc"=>$results->freebie_desc,
+					"response"=>$data[0]->WARNING);
+			}
+			
+			return json_encode($result);
+		}else{
+		       
+            $result["results"]="success";
+            $result["freebie_desc"]=$results->freebie_desc;
+            $result["response"]=array_slice($data,1,-1);
             return json_encode($result);
         }
     }

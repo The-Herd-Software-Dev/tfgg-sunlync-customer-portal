@@ -30,6 +30,7 @@
     require_once('register-files.php');
     require_once('tfgg-sunlync-errors.php');
     require_once('tfgg-sunlync-emp-dashboard.php');
+    require_once('freebie-mrkting.php');
 
     //2019-09-23 CB V1.0.0.2 - added
     if ( is_admin()  ) {        

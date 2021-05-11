@@ -182,7 +182,7 @@ function tfgg_scp_freebie_marketing_create(){
             </div>
         </div>
         <div class="form-row" id="tfgg_scp_freebie_type_package_pnl" style="display:none">
-            <div class="form-group col-4">
+            <div class="form-group col-3">
                 <label for="tfgg_scp_freebie_package">Package</label>
                 <select class="form-control" name="tfgg_scp_freebie_package">
                     <option value="">Please Select...</option>
@@ -193,9 +193,13 @@ function tfgg_scp_freebie_marketing_create(){
                     ?>
                 </select>
             </div>
-            <div class="form-group col-4">
+            <div class="form-group col-2">
                 <label for="tfgg_scp_freebie_package_units">Units</label>
                 <input class="form-control" type="text" name="tfgg_scp_freebie_package_units" id="tfgg_scp_freebie_package_units"/>
+            </div>
+            <div class="form-group col-3">
+                <label for="tfgg_scp_freebie_package_exp">Expiration Date</label>
+                <input class="form-control" type="date" name="tfgg_scp_freebie_package_exp" id="tfgg_scp_freebie_package_exp"/>
             </div>
         </div>
         <div class="form-row" id="tfgg_scp_freebie_type_membership_pnl" style="display:none">
@@ -431,7 +435,7 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
             </div>
         </div>
         <div class="form-row" id="tfgg_scp_freebie_type_package_pnl" <?php echo ($freebie->freebie_type=='P'?'':'style="display:none"');?>>
-            <div class="form-group col-4">
+            <div class="form-group col-3">
                 <label for="tfgg_scp_freebie_package">Package</label>
                 <select class="form-control" name="tfgg_scp_freebie_package">
                     <option value="">Please Select...</option>
@@ -443,10 +447,15 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
                     ?>
                 </select>
             </div>
-            <div class="form-group col-4">
+            <div class="form-group col-2">
                 <label for="tfgg_scp_freebie_package_units">Units</label>
                 <input class="form-control" type="text" name="tfgg_scp_freebie_package_units" id="tfgg_scp_freebie_package_units"
                 value="<?php echo $freebie->pkg_units;?>"/>
+            </div>
+            <div class="form-group col-3">
+                <label for="tfgg_scp_freebie_package_exp">Expiration Date</label>
+                <input class="form-control" type="date" name="tfgg_scp_freebie_package_exp" id="tfgg_scp_freebie_package_exp"
+                value="<?php echo $freebie->exp_date;?>"/>
             </div>
         </div>
         <div class="form-row" id="tfgg_scp_freebie_type_membership_pnl" <?php echo ($freebie->freebie_type=='M'?'':'style="display:none"');?>>
@@ -643,7 +652,7 @@ function tfgg_scp_process_freebie_save(){
                 $type_desc = $arr[0];
                 $tan_time = 0;
                 $pkg_units = $_POST['tfgg_scp_freebie_package_units'];
-                $exp_date='';
+                $exp_date=$_POST['tfgg_scp_freebie_package_exp'];
                 break;
             case 'M':
                 $arr = explode(':',$_POST['tfgg_scp_freebie_membership']);
@@ -673,7 +682,7 @@ function tfgg_scp_process_freebie_save(){
         global $wpdb;
 
         if(array_key_exists('tfgg_scp_freebie_id',$_POST)){
-            $wpdb->insert("{$wpdb->base_prefix}scp_marketing_freebies",
+            $wpdb->update("{$wpdb->base_prefix}scp_marketing_freebies",
             array('post_slug' =>$postSlug,
                 'active_from' =>$activeFrom,
                 'active_to' =>$activeTo,
@@ -681,7 +690,7 @@ function tfgg_scp_process_freebie_save(){
                 'freebie_desc' =>$type_desc,
                 'type_number'=>$type_number,
                 'one_time'=>$one_time,
-                'within_x_days'=>$once_every_x,
+                'once_every_x'=>$once_every_x,
                 'courtesy_tan_time'=>$tan_time,
                 'pkg_units'=>$pkg_units,
                 'exp_date'=>$exp_date),

@@ -115,6 +115,14 @@
                                         [cp_sunlync_success_cart]
                                     </div>
                                 </div>
+                                <div class="row shortcode">
+                                    <div class="col-sm-12 col-md-4">
+                                        <strong>Freebie Marketing Apply:</strong>
+                                    </div>
+                                    <div class="col-sm-12 col-md-8">
+                                        [cp_sunlync_freebie_marketing_apply]
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

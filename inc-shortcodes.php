@@ -143,6 +143,11 @@ function tfgg_cp_sunlync_cart_success(){
 }
 add_shortcode('cp_sunlync_success_cart','tfgg_cp_sunlync_cart_success');
 
+function tfgg_cp_sunlync_freebie_marketing_apply(){
+    return tfgg_scp_output_freebie_marketing_processing();
+}
+add_shortcode('cp_sunlync_freebie_marketing_apply','tfgg_cp_sunlync_freebie_marketing_apply');
+
 /*function cp_registration_instore(){
     return tfgg_scp_registration(true);
 }
