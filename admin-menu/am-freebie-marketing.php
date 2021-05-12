@@ -3,7 +3,8 @@
 function tfgg_scp_freebie_marketing(){
     
     if((array_key_exists('action',$_GET))&&
-    ($_GET['action']=='delete')){
+    ($_GET['action']=='delete')&&
+    (array_key_exists('tfgg_freebie_id',$_GET))){
         tfgg_scp_freebie_marketing_delete($_GET['tfgg_freebie_id']);
     }
 
@@ -20,7 +21,11 @@ function tfgg_scp_freebie_marketing(){
         if(array_key_exists('action',$_GET)){
             switch($_GET['action']){
                 case 'edit':
-                    tfgg_scp_freebie_marketing_edit($_GET['tfgg_freebie_id']);
+                    if(array_key_exists('tfgg_freebie_id',$_GET)){
+                        tfgg_scp_freebie_marketing_edit($_GET['tfgg_freebie_id']);
+                    }else{ 
+                        tfgg_scp_freebie_marketing_edit(-1);
+                    }
                     break;
                 case 'create':
                     tfgg_scp_freebie_marketing_create();
@@ -599,11 +604,21 @@ function tfgg_scp_freebie_marketing_index(){
         <tbody>
         <?php
             foreach($freebies as &$details){
+                switch($details->freebie_type){
+                    case 'T': $freebie_desc = 'Tan on';
+                        break;
+                    case 'P': $freebie_desc = 'Package:';
+                        break;
+                    case 'M': $freebie_desc = 'Membership:';
+                        break;
+                    case 'C': $freebie_desc = 'Promotion:';
+                }
+                $freebie_desc .= ' '.$details->freebie_desc;
                 echo'<tr>
                     <td>'.$details->post_slug.'</td>
                     <td>'.$details->active_from.' - '.$details->active_to.'</td>
                     <td>'.$details->freebie_type.'</td>
-                    <td>'.$details->freebie_desc.'</td>
+                    <td>'.$freebie_desc.'</td>
                     <td>'.($details->one_time=='1'?'Yes':'No').'</td>
                     <td>'.$details->once_every_x.'</td>
                     <td><a href="#" class="dashicons dashicons-edit-large" onclick="window.location.search+=\'&action=edit&tfgg_freebie_id='.$details->id.'\';"></a>
