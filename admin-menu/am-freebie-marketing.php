@@ -1,6 +1,12 @@
 <?php
 
 function tfgg_scp_freebie_marketing(){
+    
+    if((array_key_exists('action',$_GET))&&
+    ($_GET['action']=='delete')){
+        tfgg_scp_freebie_marketing_delete($_GET['tfgg_freebie_id']);
+    }
+
     tfgg_scp_admin_menu_header();
     tfgg_sunlync_cp_show_error_messages(); 
     ?>
@@ -536,6 +542,20 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
     }
 }
 
+function tfgg_scp_freebie_marketing_delete($freebieID){
+    global $wpdb;
+    $wpdb->delete("{$wpdb->base_prefix}scp_marketing_freebies",
+            array('id'=>$freebieID));
+
+    $success = empty($wpdb->last_error);
+
+    if(!$success){
+        tfgg_cp_errors()->add('error_deleting_freebie',__('There was an error deleting the freebie database record: '.$wpdb->last_error));
+    }else{
+        tfgg_cp_errors()->add('success',__('Freebie successfully deleted')); 
+    }
+}
+
 function tfgg_scp_freebie_marketing_index(){
     //show all the currently configured freebies
 
@@ -587,7 +607,7 @@ function tfgg_scp_freebie_marketing_index(){
                     <td>'.($details->one_time=='1'?'Yes':'No').'</td>
                     <td>'.$details->once_every_x.'</td>
                     <td><a href="#" class="dashicons dashicons-edit-large" onclick="window.location.search+=\'&action=edit&tfgg_freebie_id='.$details->id.'\';"></a>
-                    <a href="#" class="dashicons dashicons-database-remove"></a></td>
+                    <a href="#" class="dashicons dashicons-database-remove" onclick="window.location.search+=\'&action=delete&tfgg_freebie_id='.$details->id.'\';"></a></td>
                 </tr>';
             }
         ?>
@@ -603,7 +623,8 @@ function tfgg_scp_get_freebie_marketing_footer(){
     <div class="card-footer">
         <div class="float-right">
     <?php
-    if(array_key_exists('action',$_GET)){
+    if((array_key_exists('action',$_GET))&&
+    ($_GET['action']!='delete')){
         tfgg_scp_get_freebie_marketing_footer_cancel_btn();
     }else{
         tfgg_scp_get_freebie_marketing_footer_add_new_btn();
