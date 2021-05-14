@@ -5,9 +5,10 @@
 
         global $post;
 		$post_slug = $post->post_name;
-
+        
         if(!array_key_exists('cn',$_GET)){
             //no clientnumber, so just leave
+            echo 'no clientnumber';
             return ob_get_clean();
         }
         

@@ -108,6 +108,9 @@
         if(isset($_SESSION['tfgg_reg_resp'])){
             unset($_SESSION['tfgg_reg_resp']);
         }
+        if(isset($_SESSION['sunlync_lastvisit'])){
+            unset($_SESSION['sunlync_lastvisit']);
+        }
 
         session_write_close();
         $result["logout"]=site_url();//possible configurable option
@@ -457,6 +460,7 @@
             $_SESSION['clientHomeStore'] = $demo->homeStore;
             $_SESSION['sunlync_firstname'] = $demo->first_name;
             $_SESSION['sunlync_lastname'] = $demo->last_name;
+            $_SESSION['sunlync_lastvisit'] = $demo->lastvisit;
             session_write_close();
 
             if(!isset($_SESSION['tfgg_scp_cartid'])){
@@ -3375,8 +3379,16 @@
             return;
         }
 
-        $output = get_option('tfgg_scp_google_mrkting_script','');
-        if($output!=''){
+        $event = get_option('tfgg_scp_google_mrkting_event','');
+        $tracker = get_option('tfgg_scp_google_mrkting_tracker','');
+
+        if(($event!='')&&($tracker!='')){
+            $output = '<!-- Event snippet for Purchase conversion page --> 
+            <script> gtag(\'event\', \'{{event}}\', { \'send_to\': \'{{tracker}}\', \'value\': \'{{amt}}\', 
+            \'currency\': \'GBP\', \'transaction_id\': \'{{receipt}}\' }); </script>';
+
+            $output = str_replace('{{event}}',$event,$output);
+            $output = str_replace('{{tracker}}',$tracker,$output);
             $output = str_replace('{{amt}}',$amt,$output);
             $output = str_replace('{{receipt}}',$receipt,$output);
             echo $output;
@@ -4197,19 +4209,37 @@
 
         $results=$results[0];
 
+        $demographics = json_decode(tfgg_api_get_client_demographics($cn));
+        if(StrToUpper($demographics->results)!='SUCCESS'){
+            return false;
+        }
+        $storecode = $demographics->demographics[0]->homeStore;
+        unset($demoghraphics);
+        
+        if(($storecode=='0000000000')||($storecode=='')||(StrToUpper($storecode)=='NULL')){
+            $storecode='0000000053';
+        }
+
+        //the above call sets some session variables we don't want, so unset them here
+        unset($_SESSION['clientHomeStore']);
+        unset($_SESSION['sunlync_firstname']);
+        unset($_SESSION['sunlync_lastname']);
+        unset($_SESSION['sunlync_lastvisit']);
+        session_write_close();
+
         $url=tfgg_get_api_url().'TSunLyncAPI/TFGG_ApplyMarketingPromo/sClientNumber/sFreebieType/sTypeNumber/sEmployeeNumber/sExpDate/'.
         'sOneTime/sWithinDays/sCampaignID/sCourtesyTanTime/sStoreCode/sPackageUnit';
         
         $url=str_replace('sClientNumber',$cn,$url);
         $url=str_replace('sFreebieType',$results->freebie_type,$url);
         $url=str_replace('sTypeNumber',$results->type_number,$url);
-        $url=str_replace('sEmployeeNumber','0000000001',$url);
+        $url=str_replace('sEmployeeNumber',get_option('tfgg_scp_update_employee','0000000001'),$url);
         $url=str_replace('sExpDate',$results->exp_date,$url);
         $url=str_replace('sOneTime',$results->one_time,$url);
         $url=str_replace('sWithinDays',$results->once_every_x,$url);
         $url=str_replace('sCampaignID',$slug,$url);
         $url=str_replace('sCourtesyTanTime',$results->courtesy_tan_time,$url);
-        $url=str_replace('sStoreCode','0000000001',$url);
+        $url=str_replace('sStoreCode',$storecode,$url);
         $url=str_replace('sPackageUnit',$results->pkg_units,$url);
 
         try{

@@ -26,8 +26,14 @@
         add_settings_field("tfgg_scp_enable_google_mrkting", "Enable Google:", "display_tfgg_enable_google", "tfgg-google-affiliate-marketing-options", "tfgg_google_affiliate_marketing_section");
         register_setting("tfgg_google_affiliate_marketing_section", "tfgg_scp_enable_google_mrkting");
 
-        add_settings_field("tfgg_scp_google_mrkting_script", "Marketing Script:", "display_tfgg_scp_google_mrkting_script", "tfgg-google-affiliate-marketing-options", "tfgg_google_affiliate_marketing_section");
-        register_setting("tfgg_google_affiliate_marketing_section", "tfgg_scp_google_mrkting_script");
+        //add_settings_field("tfgg_scp_google_mrkting_script", "Marketing Script:", "display_tfgg_scp_google_mrkting_script", "tfgg-google-affiliate-marketing-options", "tfgg_google_affiliate_marketing_section");
+        //register_setting("tfgg_google_affiliate_marketing_section", "tfgg_scp_google_mrkting_script");
+
+        add_settings_field("tfgg_scp_google_mrkting_event", "Event Description:", "display_tfgg_event_desc_google", "tfgg-google-affiliate-marketing-options", "tfgg_google_affiliate_marketing_section");
+        register_setting("tfgg_google_affiliate_marketing_section", "tfgg_scp_google_mrkting_event");
+
+        add_settings_field("tfgg_scp_google_mrkting_tracker", "Tracker:", "display_tfgg_tracker_google", "tfgg-google-affiliate-marketing-options", "tfgg_google_affiliate_marketing_section");
+        register_setting("tfgg_google_affiliate_marketing_section", "tfgg_scp_google_mrkting_tracker");
     }
 
     function tfgg_scp_affiliate_marketing(){
@@ -127,28 +133,16 @@
         <?php
     }
 
-    function display_tfgg_scp_google_mrkting_script(){
-        $settings = array(
-            'textarea_rows' => 15,
-            'tabindex' => 1,
-            'media_buttons' => false,
-            'wpautop' => false
-        );
-        wp_editor( get_option('tfgg_scp_google_mrkting_script'), 'tfgg_scp_google_mrkting_script', $settings); 
-    
-        if(wp_is_mobile()){
+    function display_tfgg_event_desc_google(){
         ?>
-        <div>
-        <?php }else{ ?>
-        <div style="font-size: small">
-        <?php } ?>
-            <p>Placeholders: <ul>
-            <li>{{receipt}} -> The unique transaction receipt</li>
-            <li>{{amt}} -> The transaction amount</li>
-            </ul></p>
-        </div>
-        <?php
-        
+        <input type="text" name="tfgg_scp_google_mrkting_event" value="<?php echo get_option('tfgg_scp_google_mrkting_event'); ?>" style="width: 60%" />
+        <?php  
+    }
+
+    function display_tfgg_tracker_google(){
+        ?>
+        <input type="text" name="tfgg_scp_google_mrkting_tracker" value="<?php echo get_option('tfgg_scp_google_mrkting_tracker'); ?>" style="width: 60%" />
+        <?php  
     }
 
 ?>

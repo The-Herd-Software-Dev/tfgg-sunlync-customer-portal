@@ -50,7 +50,184 @@ function tfgg_scp_freebie_marketing(){
     <?php
 }
 
+function tfgg_scp_freebie_marketing_validation_script(){
+?>
+    <script>
+
+        function resetMarketingFreebieValidation(){
+            var alerts = document.getElementsByClassName('mrkting_alert');
+            for(var i=0; i<alerts.length; i++){
+                alerts[i].innerHTML='';
+            }
+        }
+
+        function validateMarketingFreebie_slug(slug){
+            var slugRegex=/^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+            return slugRegex.test(slug);
+        }
+
+        function validateMarketingFreebie_dates(activeFrom, activeTo){
+            if((activeFrom!='')&&(activeTo!='')){
+                var dFrom = new Date(activeFrom)
+                var dTo = new Date(activeTo);
+            }else{
+                var dFrom = new Date();
+                var dTo = new Date();
+            }
+            if(dTo<dFrom){
+                var thisAlert = document.getElementById('freebie_alert_for_tfgg_scp_freebie_active_from_to');
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Invalid Active Dates';
+                thisAlert.style.display='block';
+                return false;
+            }else{
+                return true;
+            }
+        }
+
+        function validateMarketingFreebie_tan(){
+
+            var value = jQuery('#tfgg_scp_freebie_equipment').children("option:selected").val();
+            var thisAlert = document.getElementById('freebie_alert_for_tfgg_scp_freebie_type');
+            if(value==''){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please select equipment';
+                thisAlert.style.display='block';
+            }
+
+            if(jQuery('#tfgg_scp_freebie_equipment_time').val()<1){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please set a courtesy time';
+                thisAlert.style.display='block';
+            }
+
+            return thisAlert.innerHTML==='';
+
+        }
+
+        function validateMarketingFreebie_pkg(){
+            var value = jQuery('#tfgg_scp_freebie_package').children("option:selected").val();
+            var thisAlert = document.getElementById('freebie_alert_for_tfgg_scp_freebie_type');
+            if(value==''){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please select a package';
+                thisAlert.style.display='block';
+            }
+            
+            if(jQuery('#tfgg_scp_freebie_package_units').val()<1){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please set a number of units to give';
+                thisAlert.style.display='block';
+            }
+
+            if(jQuery('#tfgg_scp_freebie_package_exp').val()==''){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please set an expiration date';
+                thisAlert.style.display='block';
+            }
+
+            return thisAlert.innerHTML==='';    
+            
+        }
+
+        function validateMarketingFreebie_mem(){
+
+            var value = jQuery('#tfgg_scp_freebie_membership').children("option:selected").val();
+            var thisAlert = document.getElementById('freebie_alert_for_tfgg_scp_freebie_type');
+            if(value==''){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please select a membership';
+                thisAlert.style.display='block';
+            }
+
+            if(jQuery('#tfgg_scp_freebie_mem_exp').val()==''){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please set an expiration date';
+                thisAlert.style.display='block';
+            }
+
+            return thisAlert.innerHTML==='';
+            
+        }
+
+        function validateMarketingFreebie_promo(){
+
+            var value = jQuery('#tfgg_scp_freebie_promo').children("option:selected").val();
+            var thisAlert = document.getElementById('freebie_alert_for_tfgg_scp_freebie_type');
+            if(value==''){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please select a promotion';
+                thisAlert.style.display='block';
+            }
+            return thisAlert.innerHTML==='';
+            
+        }
+
+        function validateMarketingFreebie_redeemPeriod(){
+            var value = jQuery("input[type=radio][name=tfgg_scp_freebie_redeem]:checked").val();
+            var thisAlert = document.getElementById('freebie_alert_for_tfgg_scp_freebie_redeem');
+            if((value==1)&&(jQuery('#tfgg_scp_freebie_redeem_once_every_days').val()<1)){
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Please set a redemption period';
+                thisAlert.style.display='block';
+            }
+            return thisAlert.innerHTML==='';
+        }
+
+        function validateMarketingFreebie(){
+            allowSubmit = true;
+            event.preventDefault();
+            jQuery('#tfgg_scp_freebie_submit').prop('disabled',true);
+            jQuery('#tfgg_scp_freebie_submit').html('Validating');
+            resetMarketingFreebieValidation();
+
+            if(!validateMarketingFreebie_slug(document.getElementById('tfgg_scp_freebie_slug').value)){
+                allowSubmit = false;
+                var thisAlert = document.getElementById('freebie_alert_for_tfgg_scp_freebie_slug');
+                if(thisAlert.innerHTML!=''){ thisAlert.innerHTML+='<br/>';}
+                thisAlert.innerHTML+='Invalid Post Slug';
+                thisAlert.style.display='block';
+            }
+
+            if(!validateMarketingFreebie_dates(document.getElementById('tfgg_scp_freebie_active_from').value,
+            document.getElementById('tfgg_scp_freebie_active_to').value)){
+                allowSubmit = false;
+            }
+
+            var freebieType = jQuery("input[type=radio][name=tfgg_scp_freebie_type]:checked").val();
+            switch(freebieType){
+                case 'T':
+                    if(!validateMarketingFreebie_tan()){allowSubmt = false;}
+                    break;
+                case 'P':
+                    if(!validateMarketingFreebie_pkg()){allowSubmt = false;}
+                    break;
+                case 'M':
+                    if(!validateMarketingFreebie_mem()){allowSubmt = false;}
+                    break;
+                case 'C':
+                    if(!validateMarketingFreebie_promo()){allowSubmt = false;}
+                    break;
+            }
+
+            if(!validateMarketingFreebie_redeemPeriod()){allowSubmt = false;}
+
+            if(allowSubmit){
+                //if all validation passes
+                jQuery('#tfgg_scp_freebie_submit').html('Submitting');
+                document.getElementById('tfgg_scp_freebie_marketing_form').submit();
+            }else{
+                jQuery('#tfgg_scp_freebie_submit').html('Save Freebie');
+                jQuery('#tfgg_scp_freebie_submit').prop('disabled',false);  
+            }
+        }
+
+    </script>
+<?php
+}
+
 function tfgg_scp_freebie_marketing_create(){
+
     //create a new freebie
     $promoList = json_decode(tfgg_api_get_promos());
     if((StrToupper($promoList->results)==='SUCCESS')&&
@@ -84,10 +261,9 @@ function tfgg_scp_freebie_marketing_create(){
     }else{
         $equipmentList='';
     }
-?>
-    <style>
 
-    </style>
+    tfgg_scp_freebie_marketing_validation_script();
+?>
     <script>
         function switchFreebiePnl(id){
             //hide all the panels!
@@ -111,29 +287,25 @@ function tfgg_scp_freebie_marketing_create(){
                     break;
             }
         }
-
-        function validateCourtesyTanTime(){
-
-        }
     </script>
     <div class="container-fluid">
-    <form method="post">
+    <form method="post" id="tfgg_scp_freebie_marketing_form">
         <div class="form-row">
-            <div class="form-group col-8 text-muted" id="freebie_alert_for_tfgg_scp_freebie_slug" style="font-size: .8em; margin-bottom:.5em">
+            <div class="form-group col-8 text-muted" style="font-size: .8em; margin-bottom:.5em">
                 The page the user visits that uniquely identifies this freebie
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-4">
                 <label for="tfgg_scp_freebie_slug">Post Slug</label>
-                <input class="form-control" type="text" name="tfgg_scp_freebie_slug" id="tfgg_scp_freebie_slug"required/>
+                <input class="form-control" type="text" name="tfgg_scp_freebie_slug" id="tfgg_scp_freebie_slug" required/>
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-12 text-danger" id="freebie_alert_for_tfgg_scp_freebie_slug"></div>
+            <div class="form-group col-12 text-danger mrkting_alert" id="freebie_alert_for_tfgg_scp_freebie_slug"></div>
         </div>
         <div class="form-row">
-            <div class="form-group col-9 text-muted" id="freebie_alert_for_tfgg_scp_freebie_slug" style="font-size: .8em; margin-bottom:.5em">
+            <div class="form-group col-9 text-muted" style="font-size: .8em; margin-bottom:.5em">
                 The dates between which this freebie can be applied
             </div>
         </div>
@@ -148,10 +320,10 @@ function tfgg_scp_freebie_marketing_create(){
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-12 text-danger" id="freebie_alert_for_tfgg_scp_freebie_active_from_to"></div>
+            <div class="form-group col-12 text-danger mrkting_alert" id="freebie_alert_for_tfgg_scp_freebie_active_from_to"></div>
         </div>
         <div class="form-row">
-            <div class="form-group col-9 text-muted" id="freebie_alert_for_tfgg_scp_freebie_slug" style="font-size: .8em; margin-bottom:.5em">
+            <div class="form-group col-9 text-muted"  style="font-size: .8em; margin-bottom:.5em">
                 The freebie type the user it to receive
             </div>
         </div>
@@ -178,7 +350,7 @@ function tfgg_scp_freebie_marketing_create(){
         <div class="form-row" id="tfgg_scp_freebie_type_courtesy_tan_pnl">
             <div class="form-group col-4">
                 <label for="tfgg_scp_freebie_equipment">Courtesy Tan Equipment</label>
-                <select class="form-control" name="tfgg_scp_freebie_equipment">
+                <select class="form-control" name="tfgg_scp_freebie_equipment" id="tfgg_scp_freebie_equipment">
                     <option value="">Please Select...</option>
                     <?php
                         foreach($equipmentList as &$details){
@@ -195,7 +367,7 @@ function tfgg_scp_freebie_marketing_create(){
         <div class="form-row" id="tfgg_scp_freebie_type_package_pnl" style="display:none">
             <div class="form-group col-3">
                 <label for="tfgg_scp_freebie_package">Package</label>
-                <select class="form-control" name="tfgg_scp_freebie_package">
+                <select class="form-control" name="tfgg_scp_freebie_package" id="tfgg_scp_freebie_package">
                     <option value="">Please Select...</option>
                     <?php
                         foreach($packageList as &$details){
@@ -216,7 +388,7 @@ function tfgg_scp_freebie_marketing_create(){
         <div class="form-row" id="tfgg_scp_freebie_type_membership_pnl" style="display:none">
             <div class="form-group col-4">
                 <label for="tfgg_scp_freebie_membership">Membership</label>
-                <select class="form-control" name="tfgg_scp_freebie_membership">
+                <select class="form-control" name="tfgg_scp_freebie_membership" id="tfgg_scp_freebie_membership">
                     <option value="">Please Select...</option>
                     <?php
                         foreach($membershipList as &$details){
@@ -227,13 +399,13 @@ function tfgg_scp_freebie_marketing_create(){
             </div>
             <div class="form-group col-4">
                 <label for="tfgg_scp_freebie_membership_exp">Expiration Date</label>
-                <input class="form-control" type="text" name="tfgg_scp_freebie_membership_exp" id="tfgg_scp_freebie_membership_exp"/>
+                <input class="form-control" type="date" name="tfgg_scp_freebie_membership_exp" id="tfgg_scp_freebie_membership_exp"/>
             </div>
         </div>
         <div class="form-row" id="tfgg_scp_freebie_type_promotion_pnl" style="display:none">
             <div class="form-group col-4">
                 <label for="tfgg_scp_freebie_promo">Customer Promotion</label>
-                <select  class="form-control" name="tfgg_scp_freebie_promo">
+                <select  class="form-control" name="tfgg_scp_freebie_promo" id="tfgg_scp_freebie_promo">
                     <option value="">Please Select...</option>
                     <?php
                         foreach($promoList as &$details){
@@ -244,11 +416,11 @@ function tfgg_scp_freebie_marketing_create(){
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-12 text-danger" id="freebie_alert_for_tfgg_scp_freebie_type"></div>
+            <div class="form-group col-12 text-danger mrkting_alert" id="freebie_alert_for_tfgg_scp_freebie_type"></div>
         </div>
         
         <div class="form-row">
-            <div class="form-group col-9 text-muted" id="freebie_alert_for_tfgg_scp_freebie_slug" style="font-size: .8em; margin-bottom:.5em">
+            <div class="form-group col-9 text-muted"  style="font-size: .8em; margin-bottom:.5em">
                 How often the user may receive this particular freebie
             </div>
         </div>
@@ -269,12 +441,12 @@ function tfgg_scp_freebie_marketing_create(){
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-12 text-danger" id="freebie_alert_for_tfgg_scp_freebie_redeem"></div>
+            <div class="form-group col-12 text-danger mrkting_alert" id="freebie_alert_for_tfgg_scp_freebie_redeem"></div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <div class="form-group col-12">
-                    <button type="submit" class="btn btn-primary"><?php echo __('Save Freebie');?></button>
+                    <button type="submit" id="tfgg_scp_freebie_submit" class="btn btn-primary" onclick="validateMarketingFreebie();"><?php echo __('Save Freebie');?></button>
                 </div>
             </div>
         </div>
@@ -327,10 +499,9 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
         }else{
             $equipmentList='';
         }
-    ?>
-        <style>
 
-</style>
+        tfgg_scp_freebie_marketing_validation_script();
+    ?>
 <script>
     function switchFreebiePnl(id){
         //hide all the panels!
@@ -354,15 +525,11 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
                 break;
         }
     }
-
-    function validateCourtesyTanTime(){
-
-    }
     </script>
     <div class="container-fluid">
-    <form method="post">
+    <form method="post" id="tfgg_scp_freebie_marketing_form">
         <div class="form-row">
-            <div class="form-group col-8 text-muted" id="freebie_alert_for_tfgg_scp_freebie_slug" style="font-size: .8em; margin-bottom:.5em">
+            <div class="form-group col-8 text-muted"  style="font-size: .8em; margin-bottom:.5em">
                 The page the user visits that uniquely identifies this freebie
             </div>
         </div>
@@ -374,10 +541,10 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-12 text-danger" id="freebie_alert_for_tfgg_scp_freebie_slug"></div>
+            <div class="form-group col-12 text-danger mrkting_alert" id="freebie_alert_for_tfgg_scp_freebie_slug" ></div>
         </div>
         <div class="form-row">
-            <div class="form-group col-9 text-muted" id="freebie_alert_for_tfgg_scp_freebie_slug" style="font-size: .8em; margin-bottom:.5em">
+            <div class="form-group col-9 text-muted"  style="font-size: .8em; margin-bottom:.5em">
                 The dates between which this freebie can be applied
             </div>
         </div>
@@ -394,10 +561,10 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-12 text-danger" id="freebie_alert_for_tfgg_scp_freebie_active_from_to"></div>
+            <div class="form-group col-12 text-danger mrkting_alert" id="freebie_alert_for_tfgg_scp_freebie_active_from_to"></div>
         </div>
         <div class="form-row">
-            <div class="form-group col-9 text-muted" id="freebie_alert_for_tfgg_scp_freebie_slug" style="font-size: .8em; margin-bottom:.5em">
+            <div class="form-group col-9 text-muted"  style="font-size: .8em; margin-bottom:.5em">
                 The freebie type the user it to receive
             </div>
         </div>
@@ -428,7 +595,7 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
         <div class="form-row" id="tfgg_scp_freebie_type_courtesy_tan_pnl" <?php echo ($freebie->freebie_type=='T'?'':'style="display:none"');?>>
             <div class="form-group col-4">
                 <label for="tfgg_scp_freebie_equipment">Courtesy Tan Equipment</label>
-                <select class="form-control" name="tfgg_scp_freebie_equipment">
+                <select class="form-control" name="tfgg_scp_freebie_equipment" id="tfgg_scp_freebie_equipment">
                     <option value="">Please Select...</option>
                     <?php
                         foreach($equipmentList as &$details){
@@ -448,7 +615,7 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
         <div class="form-row" id="tfgg_scp_freebie_type_package_pnl" <?php echo ($freebie->freebie_type=='P'?'':'style="display:none"');?>>
             <div class="form-group col-3">
                 <label for="tfgg_scp_freebie_package">Package</label>
-                <select class="form-control" name="tfgg_scp_freebie_package">
+                <select class="form-control" name="tfgg_scp_freebie_package" id="tfgg_scp_freebie_package">
                     <option value="">Please Select...</option>
                     <?php
                         foreach($packageList as &$details){
@@ -472,7 +639,7 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
         <div class="form-row" id="tfgg_scp_freebie_type_membership_pnl" <?php echo ($freebie->freebie_type=='M'?'':'style="display:none"');?>>
             <div class="form-group col-4">
                 <label for="tfgg_scp_freebie_membership">Membership</label>
-                <select class="form-control" name="tfgg_scp_freebie_membership">
+                <select class="form-control" name="tfgg_scp_freebie_membership" id="tfgg_scp_freebie_membership">
                     <option value="">Please Select...</option>
                     <?php
                         foreach($membershipList as &$details){
@@ -491,7 +658,7 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
         <div class="form-row" id="tfgg_scp_freebie_type_promotion_pnl" <?php echo ($freebie->freebie_type=='C'?'':'style="display:none"');?>>
             <div class="form-group col-4">
                 <label for="tfgg_scp_freebie_promo">Customer Promotion</label>
-                <select  class="form-control" name="tfgg_scp_freebie_promo">
+                <select  class="form-control" name="tfgg_scp_freebie_promo" id="tfgg_scp_freebie_promo">
                     <option value="">Please Select...</option>
                     <?php
                         foreach($promoList as &$details){
@@ -503,11 +670,11 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-12 text-danger" id="freebie_alert_for_tfgg_scp_freebie_type"></div>
+            <div class="form-group col-12 text-danger mrkting_alert" id="freebie_alert_for_tfgg_scp_freebie_type"></div>
         </div>
         
         <div class="form-row">
-            <div class="form-group col-9 text-muted" id="freebie_alert_for_tfgg_scp_freebie_slug" style="font-size: .8em; margin-bottom:.5em">
+            <div class="form-group col-9 text-muted"  style="font-size: .8em; margin-bottom:.5em">
                 How often the user may receive this particular freebie
             </div>
         </div>
@@ -530,12 +697,12 @@ function tfgg_scp_freebie_marketing_edit($freebieID){
             </div>
         </div>
         <div class="form-row">
-            <div class="form-group col-12 text-danger" id="freebie_alert_for_tfgg_scp_freebie_redeem"></div>
+            <div class="form-group col-12 text-danger mrkting_alert" id="freebie_alert_for_tfgg_scp_freebie_redeem"></div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <div class="form-group col-12">
-                    <button type="submit" class="btn btn-primary"><?php echo __('Save Freebie');?></button>
+                    <button type="submit" id="tfgg_scp_freebie_submit" class="btn btn-primary"><?php echo __('Save Freebie');?></button>
                 </div>
             </div>
         </div>
@@ -717,50 +884,73 @@ function tfgg_scp_process_freebie_save(){
         }
         global $wpdb;
 
+        //check that the slug doesn't already exist
+        $existCheck = tfgg_scp_get_freebie_marketing_records('',0,1,$postSlug);
+
         if(array_key_exists('tfgg_scp_freebie_id',$_POST)){
-            $wpdb->update("{$wpdb->base_prefix}scp_marketing_freebies",
-            array('post_slug' =>$postSlug,
-                'active_from' =>$activeFrom,
-                'active_to' =>$activeTo,
-                'freebie_type' =>$type,
-                'freebie_desc' =>$type_desc,
-                'type_number'=>$type_number,
-                'one_time'=>$one_time,
-                'once_every_x'=>$once_every_x,
-                'courtesy_tan_time'=>$tan_time,
-                'pkg_units'=>$pkg_units,
-                'exp_date'=>$exp_date),
-            array('id'=>$_POST['tfgg_scp_freebie_id']));
 
-            $success = empty($wpdb->last_error);
-
-            if(!$success){
-                tfgg_cp_errors()->add('error_updating_freebie',__('There was an error updating the freebie database record: '.$wpdb->last_error));
+            if(!$existCheck){
+                $update = true;
             }else{
-                tfgg_cp_errors()->add('success',__('Freebie successfully updated')); 
+                //need to check if the returned id matches
+                if($existCheck[0]->id == $_POST['tfgg_scp_freebie_id']){
+                    $update = true;
+                }else{
+                    $update = false;
+                    tfgg_cp_errors()->add('error_creating_freebie',__('The post slug you are trying to use, '.$postSlug.', already exists, please use another')); 
+                }
+            }
+
+            if($update){
+                $wpdb->update("{$wpdb->base_prefix}scp_marketing_freebies",
+                array('post_slug' =>$postSlug,
+                    'active_from' =>$activeFrom,
+                    'active_to' =>$activeTo,
+                    'freebie_type' =>$type,
+                    'freebie_desc' =>$type_desc,
+                    'type_number'=>$type_number,
+                    'one_time'=>$one_time,
+                    'once_every_x'=>$once_every_x,
+                    'courtesy_tan_time'=>$tan_time,
+                    'pkg_units'=>$pkg_units,
+                    'exp_date'=>$exp_date),
+                array('id'=>$_POST['tfgg_scp_freebie_id']));
+
+                $success = empty($wpdb->last_error);
+
+                if(!$success){
+                    tfgg_cp_errors()->add('error_updating_freebie',__('There was an error updating the freebie database record: '.$wpdb->last_error));
+                }else{
+                    tfgg_cp_errors()->add('success',__('Freebie successfully updated')); 
+                }
             }
         }else{
-            $wpdb->insert("{$wpdb->base_prefix}scp_marketing_freebies",
-            array(
-                'post_slug' =>$postSlug,
-                'active_from' =>$activeFrom,
-                'active_to' =>$activeTo,
-                'freebie_type' =>$type,
-                'freebie_desc' =>$type_desc,
-                'type_number'=>$type_number,
-                'one_time'=>$one_time,
-                'once_every_x'=>$once_every_x,
-                'courtesy_tan_time'=>$tan_time,
-                'pkg_units'=>$pkg_units,
-                'exp_date'=>$exp_date,
-            ));
 
-            $success = empty($wpdb->last_error);
+            if(!$existCheck){
+                $wpdb->insert("{$wpdb->base_prefix}scp_marketing_freebies",
+                array(
+                    'post_slug' =>$postSlug,
+                    'active_from' =>$activeFrom,
+                    'active_to' =>$activeTo,
+                    'freebie_type' =>$type,
+                    'freebie_desc' =>$type_desc,
+                    'type_number'=>$type_number,
+                    'one_time'=>$one_time,
+                    'once_every_x'=>$once_every_x,
+                    'courtesy_tan_time'=>$tan_time,
+                    'pkg_units'=>$pkg_units,
+                    'exp_date'=>$exp_date,
+                ));
 
-            if(!$success){
-                tfgg_cp_errors()->add('error_creating_freebie',__('There was an error creating the freebie database record: '.$wpdb->last_error));
+                $success = empty($wpdb->last_error);
+
+                if(!$success){
+                    tfgg_cp_errors()->add('error_creating_freebie',__('There was an error creating the freebie database record: '.$wpdb->last_error));
+                }else{
+                    tfgg_cp_errors()->add('success',__('Freebie successfully saved')); 
+                }
             }else{
-                tfgg_cp_errors()->add('success',__('Freebie successfully saved')); 
+                    tfgg_cp_errors()->add('error_creating_freebie',__('The post slug you are trying to use, '.$postSlug.', already exists, please use another')); 
             }
         }
     }
